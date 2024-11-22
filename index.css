@@ -1,7 +1,9 @@
 * {font-family: 'DM Sans', sans-serif;}
 
-body{margin: 0px;
-  /* display:flex; */
+body{
+  margin: 0px;
+  display:flex;
+  flex-direction: column;
   height: 100vh;
 }
 
