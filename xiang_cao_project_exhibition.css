@@ -12,7 +12,7 @@ body{margin: 0px;}
 
 .member{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 h5 a, td a{
