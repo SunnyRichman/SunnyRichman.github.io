@@ -2,6 +2,24 @@
 
 body{margin: 0px;}
 
+nav{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background-color: #006c6ce0;
+}
+
+nav a{
+  color: #FFFFC9;
+  text-decoration: none;
+}
+
+nav a:hover{
+  color: #006c6ce0;
+  background-color: #FFFFC9;
+  text-decoration: none;
+}
+
 .header{
   margin: 0px;
   text-align: center;

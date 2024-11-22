@@ -10,9 +10,22 @@ body{margin: 0px;}
   padding: 20px;
 }
 
-.member{
+nav{
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  background-color: #006c6ce0;
+}
+
+nav a{
+  color: #FFFFC9;
+  text-decoration: none;
+}
+
+nav a:hover{
+  color: #006c6ce0;
+  background-color: #FFFFC9;
+  text-decoration: none;
 }
 
 h5 a, td a{
