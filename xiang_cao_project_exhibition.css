@@ -10,10 +10,10 @@ body{margin: 0px;}
   padding: 20px;
 }
 
-/* .member{
+.member{
   display: flex;
   flex-direction: row;
-} */
+}
 
 h5 a, td a{
   padding: 5px;
