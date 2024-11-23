@@ -7,7 +7,7 @@ body{
   height: 100vh;
 }
 
-.header{
+header{
   margin: 0px;
   text-align: center;
   background-color: #006C6C;
@@ -33,20 +33,6 @@ nav a:hover{
   text-decoration: none;
 }
 
-h5 a, td a{
-  padding: 5px;
-  color: #006C6C;
-  text-decoration: none;
-}
-
-h5 a:hover, td a:hover{
-  color: #FFFFC9;
-  background-color: #006C6C;
-  padding: 5px;
-  border-radius: 5px;
-  text-decoration: none;
-}
-
 .h3{
   display: block;
   background-color:#006c6c; 
@@ -54,21 +40,24 @@ h5 a:hover, td a:hover{
   padding:0.5em
 }
 
-.fieldset{
-  border: 2px solid #006c6c;
+fieldset{
+  padding: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #006C6C;
   border-radius: 5px;
-  width: 75%;
-  margin-left:auto;
-  margin-right:auto;
+  width: 75vw;
 }
-.footer{
+
+footer{
+  margin-top: auto;
   background-color: #006C6C;
   color: #FFFFC9;
   text-align: center;
   padding: 5px;
 }
-.footer a{color: #FFFFC9;}
+footer a{color: #FFFFC9;}
 
-.footer a:hover{color: #ffff62;}
+footer a:hover{color: #ffff62;}
 
 label{font-weight: bold;}
