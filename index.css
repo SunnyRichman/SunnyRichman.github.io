@@ -25,12 +25,19 @@ nav a:hover{
   text-decoration: none;
 }
 
-.header{
-  margin: 0px;
+header{
   text-align: center;
   background-color: #006C6C;
   color: #FFFFC9;
-  padding: 20px;
+}
+
+fieldset{
+  padding: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 3px solid #006C6C;
+  border-radius: 5px;
+  width: 75vw;
 }
 
 h5 a, td a{
@@ -54,21 +61,15 @@ h5 a:hover, td a:hover{
   padding:0.5em
 }
 
-.fieldset{
-  border: 2px solid #006c6c;
-  border-radius: 5px;
-  width: 75%;
-  margin-left:auto;
-  margin-right:auto;
-}
-.footer{
+footer{
+  margin-top: auto;
   background-color: #006C6C;
   color: #FFFFC9;
   text-align: center;
   padding: 5px;
 }
-.footer a{color: #FFFFC9;}
+footer a{color: #FFFFC9;}
 
-.footer a:hover{color: #ffff62;}
+footer a:hover{color: #ffff62;}
 
 label{font-weight: bold;}
