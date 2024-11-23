@@ -41,13 +41,13 @@ fieldset{
   width: 75vw;
 }
 
-h4 a, td a{
+h4 a, li a{
   padding: 5px;
   color: #006C6C;
   text-decoration: none;
 }
 
-h4 a:hover, td a:hover{
+h4 a:hover, li a:hover{
   color: #FFFFC9;
   background-color: #006C6C;
   padding: 5px;
