@@ -67,9 +67,7 @@ header{
   margin-left: auto;
   margin-right: auto;
   width: 75vw;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  overflow: visible;
   border: 2px solid #006C6C;
   border-radius: 5px;
 }
@@ -92,6 +90,17 @@ td{
   text-align: left;
   padding-left: 5px;
   padding-right: 20px;
+}
+
+.even a{
+  text-decoration: none;
+  color: #006C6C;
+}
+
+.even a:hover{
+  text-decoration: none;
+  color: #FFFFC9;
+  background-color: #006C6C;
 }
 
 .odd{
