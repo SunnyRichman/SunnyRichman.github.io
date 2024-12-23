@@ -1,0 +1,763 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 2 Structured Query Language - Data Definition Language (DDL)</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="161d3011-3dd1-808f-bae2-d6d92ada2ef9" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📖</span></div><h1 class="page-title">Lecture 2 Structured Query Language - Data Definition Language (DDL)</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><p id="162d3011-3dd1-80f8-8238-f45adfe37fe0" class=""><code><a href="https://sunnyrichman.github.io/itcs393/">🔙 Back to Table of Contents, Click here</a></code> </p><h3 id="161d3011-3dd1-8083-a3a9-ccb8ca35ca21" class="">Structured Query Languages </h3><hr id="161d3011-3dd1-808f-9ff3-c6279f75f682"/><ul id="161d3011-3dd1-8000-aec2-e4577367e8bc" class="bulleted-list"><li style="list-style-type:disc">SQL is the standard language for manipulate with Relational Databases</li></ul><ul id="161d3011-3dd1-8078-aea4-fb79c711173c" class="bulleted-list"><li style="list-style-type:disc"><em><strong>Five </strong></em>main SQL sublanguage command include</li></ul><div id="161d3011-3dd1-800a-95bd-e1b0e01eb3fe" class="column-list"><div id="b206d35a-7be2-4808-8be9-248a0b9b2ae1" style="width:20%" class="column"><p id="d6abbba8-b2da-4ce5-9a5b-34db2252524a" class=""><strong><span style="border-bottom:0.05em solid">DDL</span></strong> - Data Definition Language</p></div><div id="ed705ff3-d9e5-45f5-a0e0-1fde385ecf51" style="width:20%" class="column"><p id="7b5470c3-f5fb-4df3-beb0-6461903e470b" class=""><strong><span style="border-bottom:0.05em solid">DML</span></strong> - Data Manipulation Language</p></div><div id="3077d6e3-822a-437c-b84d-97995085275d" style="width:20%" class="column"><p id="33ea19ba-69a7-4be2-a6c5-0cfab7834263" class=""><strong><span style="border-bottom:0.05em solid">DQL</span></strong> - Data Query Language</p></div><div id="131e78be-eeb1-4d72-8eff-17d78ee7d822" style="width:20%" class="column"><p id="db8cc8c1-b0b7-4189-bdb1-73c06b61adc9" class=""><strong><span style="border-bottom:0.05em solid">DCL</span></strong> - Data Control Language</p></div><div id="b027f6ee-1aa0-412e-ae37-a8b5c4830208" style="width:20%" class="column"><p id="1e9aea98-0904-46b0-9527-bef644857693" class=""><strong><span style="border-bottom:0.05em solid">TCL</span></strong> - Transaction Control Language</p></div></div><h3 id="161d3011-3dd1-80da-8716-d014658266de" class="">Database-level Operations</h3><hr id="161d3011-3dd1-804b-883a-c9d1260331e3"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="162d3011-3dd1-80ca-8e87-fe7e976a67f2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE [DATABASE | SCHEMA] [IF NOT EXISTS] db_name [CREATE OPTION];
+
+CREATE OPTION:{[DEFAULT] CHARACTER SET [=] charset_name | [DEFAULT] COLLATE [=] collation_name | ENCRYPTION [=] {&#x27;Y&#x27; | &#x27;N&#x27;} }</code></pre><div id="162d3011-3dd1-803c-a81a-f782eeca5396" class="column-list"><div id="a90e4a18-de04-4fbc-ae5e-b8bf412d1cc1" style="width:18.75%" class="column"><p id="bafb6116-8741-4cd6-8bf3-a898a84a8478" class=""><strong>Character Set</strong></p><hr id="162d3011-3dd1-805b-b69b-ce25cd53eecd"/><p id="162d3011-3dd1-80f6-9478-f9586a362930" class="">A set of symbols and encodings. E.g., <code>utf8mb4</code> means 4-byte UTF-8 Unicode Encoding (support all Asian languages).</p></div><div id="816170e3-453e-443e-8e77-fa8193ef6be1" style="width:81.25%" class="column"><p id="1b21fab4-497b-4a3a-bd99-360182eceeab" class=""><strong>Collation</strong></p><hr id="162d3011-3dd1-804e-b98f-de424692d29a"/><p id="162d3011-3dd1-80cd-9312-f87c3fd65ea6" class="">A set of rules for comparing the encoding in the given character sets, i.e., order of symbols may be different in the different collation. E.g.,</p><div id="162d3011-3dd1-80dc-8225-c87545d53d0f" class="column-list"><div id="162d3011-3dd1-804f-a722-d8f576d0ff3c" style="width:100%" class="column"><ul id="162d3011-3dd1-80bf-8e6d-dad74412529f" class="bulleted-list"><li style="list-style-type:disc">Case-insensitive (<code>_ci</code>): A = a</li></ul></div><div id="162d3011-3dd1-80be-86ac-ecaef74ca300" style="width:100%" class="column"><ul id="162d3011-3dd1-80ad-acf9-e2ce240733a4" class="bulleted-list"><li style="list-style-type:disc">Case-sensitive (<code>_cs</code>): A ≠ a</li></ul></div><div id="162d3011-3dd1-8026-97b9-e4e63ac799b4" style="width:100%" class="column"><ul id="162d3011-3dd1-80f0-9373-c3bcba9732c3" class="bulleted-list"><li style="list-style-type:disc">Accent-insensitive (<code>_ai</code>): a = ấ</li></ul></div><div id="162d3011-3dd1-8096-9630-ed9ef192e2d7" style="width:100%" class="column"><ul id="162d3011-3dd1-808e-8556-f70117b030cc" class="bulleted-list"><li style="list-style-type:disc">Accent-sensitive (<code>_as</code>): a ≠ ấ</li></ul></div></div></div></div><p id="162d3011-3dd1-8039-854b-d080831aac18" class="">💡: The default MySQL server character set and collation are <code>utf8mb4</code> and <code>utf8mb4_0900_ai_ci</code>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="162d3011-3dd1-80cd-864c-eca84b3a2cb7" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">	CREATE DATABASE IF NOT EXISTS itcs393db DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci; -- with create option
+	CREATE DATABASE IF NOT EXISTS itcs393db; -- w/o create option</code></pre><div id="162d3011-3dd1-8037-8d3f-fbb82a6a4e9a" class="column-list"><div id="c5398ce3-8093-4db5-9c25-2103708c1963" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="162d3011-3dd1-8052-a570-e9abfa6594d1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">USE db_name; -- sets the current working database</code></pre></div><div id="7a5e4e85-f09d-42de-b427-2a9fda0035b2" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="162d3011-3dd1-80d9-a29c-cc3047efb781" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SHOW DATABASES; -- lists all available databases in the server</code></pre><p id="a2f7df44-b99c-4de3-870e-1f4840baaac7" class="">
+</p></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="162d3011-3dd1-8048-b787-f21bd084ab56" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER [DATABASE | SCHEMA] db_name [ALTER OPTION];
+
+ALTER OPTION:{ [DEFAULT] CHARACTER SET [=] charset_name | [DEFAULT] COLLATE [=] collation_name | [DEFAULT] ENCRYPTION [=] {&#x27;Y&#x27; | &#x27;N&#x27;} | READ ONLY [=] {DEFAULT | 0 | 1} };
+
+ALTER DATABASE itcs393db COLLATE utf8_general_ci; -- example</code></pre><div id="163d3011-3dd1-80a6-b426-da8028a5be66" class="column-list"><div id="c847ed81-8d51-49c4-b9be-630c58fbf6cd" style="width:50%" class="column"><h3 id="162d3011-3dd1-8035-b087-efd240d13f8c" class="">Table-level Operations</h3><hr id="162d3011-3dd1-809e-81e1-fcd4bfe81c9c"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="162d3011-3dd1-80be-a984-ecee6e0cb1e1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE [IF NOT EXISTS] tbl_name(
+	col_name data_type [col_constraint],
+	...
+	[PRIMARY KEY (column2 [,column2])]
+	[REFERENCES tablename] [, CONSTRAINT constraintName]
+);</code></pre></div><div id="0148227f-7e24-4c5f-ba3f-de4eda5b1852" style="width:50%" class="column"><h3 id="163d3011-3dd1-80c3-84b6-c424dfdfa5ae" class="">Basic Data Types and Constraints</h3><hr id="163d3011-3dd1-802e-b208-c131f6c7a74b"/><ul id="163d3011-3dd1-804d-bc48-d9368adb2434" class="bulleted-list"><li style="list-style-type:disc">Numeric Data Types: <code>INT</code> | <code>SMALLINT</code> | <code>DECIMAL</code></li></ul><ul id="163d3011-3dd1-8097-8f27-fe37509d3cc9" class="bulleted-list"><li style="list-style-type:disc">Date and Time Data Types (Displayed as zeros value):<div id="163d3011-3dd1-80e2-ae60-c40ec86ca77b" class="column-list"><div id="163d3011-3dd1-8004-87dd-fdeff477e3c2" style="width:68.75%" class="column"><ul id="163d3011-3dd1-8073-a0e4-d8bb0b1f0f64" class="bulleted-list"><li style="list-style-type:circle"><code>DATE</code>: ‘0000-00-00’</li></ul><ul id="163d3011-3dd1-8000-8a69-d9b978309a55" class="bulleted-list"><li style="list-style-type:disc"><code>TIME</code>: ‘00:00:00’</li></ul><p id="163d3011-3dd1-8068-accd-e3b367a8d8dc" class="">
+</p></div><div id="163d3011-3dd1-8035-9005-f240de78e089" style="width:131.25%" class="column"><ul id="163d3011-3dd1-8068-b2b3-de58893919da" class="bulleted-list"><li style="list-style-type:circle"><code>DATETIME</code>: ‘0000-00-00 00:00:00’</li></ul><ul id="163d3011-3dd1-8041-b04e-d0dd084fc96b" class="bulleted-list"><li style="list-style-type:disc"><code>TIMESTAMP</code>: ‘0000-00-00 00:00:00’</li></ul><ul id="163d3011-3dd1-80f0-ae24-f4d07437d4f2" class="bulleted-list"><li style="list-style-type:disc"><code>YEAR</code>: 0000</li></ul></div></div></li></ul><ul id="163d3011-3dd1-805e-9ddb-dbf81f59ef98" class="bulleted-list"><li style="list-style-type:disc">String Data Types: <code>CHAR</code> | <code>VARCHAR</code> | <code>ENUM</code> | <code>BLOB</code></li></ul></div></div><ul id="163d3011-3dd1-805c-899a-d9b85555582e" class="bulleted-list"><li style="list-style-type:disc">SQL constraints are used to specify rules for the data in a table</li></ul><ul id="163d3011-3dd1-80b8-8301-fa52765833fa" class="bulleted-list"><li style="list-style-type:disc">Used when create or modify table.</li></ul><ul id="163d3011-3dd1-8080-9826-dfd443c73b26" class="bulleted-list"><li style="list-style-type:disc">SQL Column Constraints<ul id="163d3011-3dd1-8051-960e-e9459b188821" class="bulleted-list"><li style="list-style-type:circle"><code>NOT NULL</code> - a column cannot store NULL value</li></ul><ul id="163d3011-3dd1-8045-ab3a-df693ada0765" class="bulleted-list"><li style="list-style-type:circle"><code>UNIQUE</code> - each row for a column must have a unique value</li></ul><ul id="163d3011-3dd1-80e3-8504-e85a512bb3fd" class="bulleted-list"><li style="list-style-type:circle"><code>PRIMARY KEY</code> – a column or more columns have a unique identity and cannot be NULL value. (<code>NOT NULL</code> and <code>UNIQUE</code> constraints)</li></ul></li></ul><ul id="163d3011-3dd1-8012-9571-f2cbb78ff831" class="bulleted-list"><li style="list-style-type:disc">SQL Constraints<div id="163d3011-3dd1-80bf-a7b7-c1740830b26f" class="column-list"><div id="9f6c3741-cef2-4d06-8346-7c118a55a10c" style="width:56.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="163d3011-3dd1-80e2-907d-f77460209182" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CONSTRAINT fk_PerOrders FOREIGN KEY (PID) REFERENCES Persons (PID);</code></pre></div><div id="ac1d2037-febd-497b-a42d-153cce6f4484" style="width:43.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="163d3011-3dd1-8024-8f6f-f7ab7ba7fcec" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CONSTRAINT chk_PersonGender CHECK (Gender in (&#x27;M&#x27;, &#x27;F&#x27;))</code></pre></div></div><div id="164d3011-3dd1-8060-80e3-e418b9c337f7" class="column-list"><div id="2f93d63f-3df0-4570-98bd-a25a56e121dc" style="width:43.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="163d3011-3dd1-80ab-b616-f9279f87ce31" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">USE itcs393db;
+
+-- The sequence of creating tables is important, i.e., create the table containing primary key first.
+CREATE TABLE IF NOT EXISTS staff(
+	staffID INT,
+	nationalID CHAR(13) UNIQUE NOT NULL,
+	firstname VARCHAR(50) NOT NULL,
+	lastname VARCHAR(50) NOT NULL,
+	address VARCHAR(200),
+	city VARCHAR(50),
+	CONSTRAINT pk_staff PRIMARY KEY (staffID)
+);</code></pre></div><div id="7b71f299-07e3-4868-902e-4cdc881a9c49" style="width:56.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="164d3011-3dd1-806f-8dcd-d09ea91d381f" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE IF NOT EXISTS department(
+	departmentID INT,
+	dept_name VARCHAR(50) UNIQUE NOT NULL,
+	managerID INT,
+	CONSTRAINT pk_dept PRIMARY KEY (departmentID)
+	CONSTRAINT fk_manager PRIMARY KEY (managerID) REFERENCES staff(staffID)
+);</code></pre><p id="89d4e0d9-e81c-4462-beb0-ab1d2340b1c8" class="">
+</p></div></div></li></ul><div id="165d3011-3dd1-800e-a5f5-eaa8878f9502" class="column-list"><div id="14fd5753-d92d-4578-8e4d-048dba5a0593" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-8023-837b-cd5a7c60f9f1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">DROP TABLE [IF EXISTS] tbl_name [, tbl_name] ...;
+
+-- The sequence of creating tables is important, i.e., drop the table containing foreign key first.
+-- Example
+
+DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS staff; -- or
+
+DROP TABLE IF EXISTS department, staff;</code></pre></div><div id="b85bfd07-0200-417a-af71-2ee0838936d6" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-802f-a89d-c2986cd6d08c" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">-- Changing any structures of a table
+ALTER TABLE tbl_name {ADD | MODIFY | CHANGE | DROP} ...;</code></pre><ul id="649af487-748b-4fb6-a551-3d076de712f7" class="bulleted-list"><li style="list-style-type:disc"><code>ALTER</code> can be used in<div id="165d3011-3dd1-803f-92f1-d097dc659778" class="column-list"><div id="165d3011-3dd1-8093-b126-ccbdd9eab973" style="width:100%" class="column"><ul id="165d3011-3dd1-80a4-8a9a-d832a6f90e43" class="bulleted-list"><li style="list-style-type:circle">Table definitions</li></ul><ul id="165d3011-3dd1-8023-bb94-e7ac6620d0e9" class="bulleted-list"><li style="list-style-type:disc">Table constraints</li></ul></div><div id="165d3011-3dd1-8062-9404-f4fbd1bf86c2" style="width:100%" class="column"><ul id="165d3011-3dd1-8024-b175-de0f06283497" class="bulleted-list"><li style="list-style-type:circle">Column definition</li></ul><ul id="165d3011-3dd1-8043-aa64-ca1ebecefff0" class="bulleted-list"><li style="list-style-type:disc">Column constraints</li></ul></div></div></li></ul></div></div><p id="165d3011-3dd1-80e5-93de-ebdb17e3db9b" class=""><code><strong>ALTER</strong></code><strong> Column Definitions - </strong><code><strong>ADD</strong></code><strong>: Add a New Column to an Existing Table</strong></p><hr id="165d3011-3dd1-8093-a114-e055b71e5a6f"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-80dc-803a-db16abc61008" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name ADD COLUMN col_name col_def [FIRST | AFTER existing column];
+
+-- Example
+ALTER TABLE staff
+ADD COLUMN phone VARCHAR(10) AFTER address, -- phone was added as a new column to the table staff and put after address
+ADD COLUMN country VARCHAR(10) AFTER city; -- country was added as a new column to the table staff and put after city</code></pre><p id="165d3011-3dd1-8000-836b-e8d56751bcc2" class=""><code><strong>ALTER</strong></code><strong> Column Definitions - </strong><code><strong>MODIFY</strong></code><strong>: Modify Existing Columns</strong></p><hr id="165d3011-3dd1-80a8-a3b4-c5271cb7db77"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-80fc-b0e4-e2cb356a959d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name MODIFY col_name new_col_def [FIRST | AFTER existing column];
+
+-- Example
+ALTER TABLE staff
+MODIFY COLUMN address VARCHAR(150) NOT NULL, -- address was modified into VARCHAR(150) and have constraint NOT NULL
+MODIFY COLUMN lastname VARCHAR(10) NOT NULL AFTER firstname; -- lastname was moved after firstname</code></pre><p id="165d3011-3dd1-8048-9cf3-d33ae8175e71" class=""><code><strong>ALTER</strong></code><strong> Column Definitions - </strong><code><strong>CHANGE</strong></code><strong>: Rename the Existing Columns</strong></p><hr id="165d3011-3dd1-808e-b378-e7a847e44808"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-803d-a256-d66e9126162a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name CHANGE COLUMN old_col_name new_col_name col_def [FIRST | AFTER existing column];
+
+-- Example
+ALTER TABLE staff
+CHANGE COLUMN firstname staff_fname VARCHAR(50) NOT NULL, -- firstname was renamed as staff_fname
+CHANGE COLUMN lastname staff_lname VARCHAR(50) NOT NULL; -- lastname was renamed as staff_lname</code></pre><p id="165d3011-3dd1-8095-a26e-f8d3b7bf0c4b" class=""><code><strong>ALTER</strong></code><strong> Column Definitions - </strong><code><strong>DROP</strong></code><strong>: Drop the Existing Columns</strong></p><hr id="165d3011-3dd1-80d9-9569-d377e3d84b71"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-805e-a60e-c12623695a9e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name DROP COLUMN column_name;
+
+-- Example
+ALTER TABLE staff DROP COLUMN country, -- country was removed from the table staff</code></pre><p id="165d3011-3dd1-802f-9778-fd1dcd326d6c" class=""><code><strong>ALTER</strong></code><strong> Constraints - </strong><code><strong>DEFAULT</strong></code><strong>: Set A Default Valur for the Table</strong></p><hr id="165d3011-3dd1-8076-ac03-f648918165ae"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-8048-bb4a-d41f0176ceed" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name ALTER column_name [SET DEFAULT default value | DROP DEFAULT];
+
+-- Example
+ALTER TABLE staff ALTER city SET DEFAULT &#x27;BKK&#x27;, -- city has the default value, filled in when there is no value input when inserting data records</code></pre><p id="165d3011-3dd1-8013-9bc0-fe26038c5032" class=""><code><strong>ALTER</strong></code><strong> Constraints - </strong><code><strong>CHECK</strong></code><strong>: Create a Condition or expression to check for the column</strong></p><hr id="165d3011-3dd1-801a-8a67-f3c186e2c968"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-805a-9d69-e8dd8afd83c1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name [ADD CONSTRAINT chk_const_name CHECK (expression)| DROP CONSTRAINT chk_const_name];
+
+-- Example
+ALTER TABLE department ADD CONSTRAINT chk_deptID CHECK (departmentID &gt;= 1); -- Table department has constraint chk_deptID to check if department ID is greater than or equal to 1</code></pre><p id="165d3011-3dd1-805d-a3b8-f4e81527b069" class=""><code><strong>ALTER</strong></code><strong> Constraints - </strong><code><strong>PRIMARY KEY</strong></code><strong>: Create a Constraint for Primary Key</strong></p><hr id="165d3011-3dd1-80db-b568-f57a36e58be7"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-806c-be12-d05d91e57ee2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name [ADD PRIMARY KEY (column_name)| DROP PRIMARY KEY];
+
+-- Example
+ALTER TABLE staff ADD PRIMARY KEY (staffID); -- staffID can be set to a primary key of the table</code></pre><p id="165d3011-3dd1-80b1-9931-cd6d74160233" class=""><code><strong>ALTER</strong></code><strong> Constraints - </strong><code><strong>FOREIGN KEY</strong></code><strong>: Create a Foreign Key and Constraint</strong></p><hr id="165d3011-3dd1-805d-9aeb-e70672a175b9"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-80c6-a1f0-fff8339628ea" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE tbl_name ADD CONSTRAINT FOREIGN KEY (column_name) REFERENCES ref_tbl(ref_col_name;
+
+-- Example
+ALTER TABLE staff ADD COLUMN s_deptID INT; -- s_deptID was added to the table staff, then
+ALTER TABLE staff ADD CONSTRAINT fk_staffdept FOREIGN KEY (s_deptID) REFERENCES Department (departmentID); -- the foreign key was added to refer to departmentID in the department table</code></pre><ul id="165d3011-3dd1-8011-8ee9-d125cfc7a69b" class="bulleted-list"><li style="list-style-type:disc"><strong>Referential action </strong>can be additional added for <code>FOREIGN KEY</code> during <code>CREATE</code> and <code>ALTER</code> statement</li></ul><div id="165d3011-3dd1-80ef-9f5d-ca7fcffb5d86" class="column-list"><div id="0cc4e8d3-7767-4593-8bb0-4fe320765ada" style="width:50%" class="column"><table id="165d3011-3dd1-80fd-8689-d8ee444aac2d" class="simple-table"><thead class="simple-table-header"><tr id="77e605a8-697e-4f7b-8474-1323bc839ff0"><th id="S&lt;vc" class="simple-table-header-color simple-table-header" style="width:116px">Actions</th><th id="\csE" class="simple-table-header-color simple-table-header" style="width:414px">Description</th></tr></thead><tbody><tr id="b6e047c7-072d-4f46-8348-f5b5a12aaf6a"><td id="S&lt;vc" class="" style="width:116px"><code>CASCADE</code></td><td id="\csE" class="" style="width:414px">Delete or update the row from the parent table and automatically <strong>delete or update the matching rows in the child table</strong>.</td></tr><tr id="8f0a2499-108d-4c2e-a697-c3fd9f316e46"><td id="S&lt;vc" class="" style="width:116px"><code>SET NULL</code></td><td id="\csE" class="" style="width:414px">Delete or update the row from the parent table and <strong>set the foreign key column or columns in the child table to NULL</strong>.</td></tr><tr id="165d3011-3dd1-80d6-9cd4-d78f0672e718"><td id="S&lt;vc" class="" style="width:116px"><code>RESTRICT</code> | <code>NO ACTION</code></td><td id="\csE" class="" style="width:414px">Rejects the delete or update operation for the parent table (Specifying <code>RESTRICT</code> or <code>NO ACTION</code> is set to the default when not specifying referential action.)</td></tr></tbody></table><p id="c8003288-20f6-487c-8d9e-1bed3239bb4a" class="">
+</p></div><div id="522d068d-f60f-454a-a0ab-6896cdb2f993" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="165d3011-3dd1-8034-8534-cfb015489e46" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER TABLE staff DROP CONSTRAINT fk_staffdept;
+
+ALTER TABLE staff ADD CONSTRAINT fk_staffdept FOREIGN KEY (s_deptID) REFERENCES Department(departmentID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+	
+-- fk_staffdept constraint was removed first, then, add a new constraint was added with referential actions: CASCADE</code></pre></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
