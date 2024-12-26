@@ -33,13 +33,6 @@ nav a:hover{
   text-decoration: none;
 }
 
-.h3{
-  display: block;
-  background-color:#006c6c; 
-  color:#FFFFC9;
-  padding:0.5em
-}
-
 fieldset{
   padding: 0px;
   margin-left: auto;
@@ -47,6 +40,46 @@ fieldset{
   border: 2px solid #006C6C;
   border-radius: 5px;
   width: 75vw;
+}
+
+.collapsible {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #006C6C;
+  color: #FFFFC9;
+  cursor: pointer;
+  width: 75vw;
+  border: none;
+  border-radius: 5px;
+  text-align: left;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.collapsible:hover {
+  background-color: #FFFFC9;
+  color: #006C6C;
+  
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  background-color: #FFFFC9;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75vw;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.content.expanded {
+  background-color: #FFFFC9;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75vw;
+  overflow: visible;
+  border: 2px solid #006C6C;
+  border-radius: 5px;
 }
 
 footer{
