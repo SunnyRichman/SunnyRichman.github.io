@@ -1,0 +1,733 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 3 Structured Query Language - Data Manipulation Language (DML): Data Import/Export and Backup/Restore</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="165d3011-3dd1-80c5-87a9-c33e725b7c14" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📖</span></div><h1 class="page-title">Lecture 3 Structured Query Language - Data Manipulation Language (DML): Data Import/Export and Backup/Restore</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><h3 id="166d3011-3dd1-806c-9f68-c34b70559b2d" class="">DML: <mark class="highlight-red">D</mark>ata <mark class="highlight-red">M</mark>anipulation <mark class="highlight-red">L</mark>anguage</h3><hr id="166d3011-3dd1-804b-9385-f3e4199945b4"/><p id="166d3011-3dd1-8051-9802-c8737c712200" class="">Commands used to manipulate data in a relational database.</p><div id="166d3011-3dd1-804c-b25a-e3cc12983782" class="column-list"><div id="5094da48-e7fa-4824-9717-61ae33cd754c" style="width:33.33333333333333%" class="column"><p id="1ff0c346-cd6a-46de-91a2-b3580d99efe8" class=""><code><strong>INSERT</strong></code><strong>: </strong>used to create a record.</p></div><div id="7433d003-192a-43c1-9ef2-7ca837abba36" style="width:33.33333333333333%" class="column"><p id="48fa298c-4c37-473d-aec9-4edafcc0e375" class=""><code><strong>UPDATE</strong></code><strong>: </strong>used to change records.</p></div><div id="326e0dee-ebba-4844-ac8e-02c7f5416273" style="width:33.33333333333333%" class="column"><p id="ecd82c77-05a9-4bc6-b19d-bcf37b216c16" class=""><code><strong>DELETE</strong></code><strong>: </strong>used to delete records.</p></div></div><h3 id="178d3011-3dd1-80e4-8999-c9ffbdefb747" class=""><code>INSERT</code></h3><hr id="178d3011-3dd1-80ae-9b86-c1e3e87a0668"/><p id="166d3011-3dd1-8005-8e02-da756b198bde" class=""><code><strong>INSERT</strong></code><strong> a new tuple</strong></p><hr id="167d3011-3dd1-80e1-85e6-f24fb7887e27"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="166d3011-3dd1-80f9-8037-e0f452ca6441" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO table(col1, col2, ..., coln)
+VALUE (val1, val2, ..., valn);
+
+INSERT INTO department -- w/o specific columns
+VALUE (1, &quot;IT&quot;, NULL);
+
+INSERT INTO department (departmentID, dept_name) -- with specific columns
+VALUE (2, &quot;Academic Affairs&quot;) -- another columns go NULL</code></pre><p id="178d3011-3dd1-8003-895e-ea3422b65d5a" class=""><code><strong>INSERT</strong></code><strong> a batch of tuples into a single table</strong></p><hr id="178d3011-3dd1-803e-8095-d550d801dd6c"/><div id="166d3011-3dd1-8007-954e-d07ae8ec8788" class="column-list"><div id="647af6c4-4517-4870-8c22-7b26a3e57189" style="width:62.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="166d3011-3dd1-80db-a934-c94b2896430a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO staff
+VALUE (1, &quot;1111111111111&quot;, &quot;Harry&quot;, &quot;Potter&quot;, &quot;4 Private Dr.&quot;, NULL, &quot;Surrey&quot;),
+	(2, &quot;2222222222222&quot;, &quot;Dobby&quot;, &quot;Doe&quot;, &quot;5 Public Dr.&quot;, &quot;0022221222&quot;, DEFAULT),
+	(3, &quot;3333333333333&quot;, &quot;Genie&quot;, &quot;Kales&quot;, &quot;6 Static Dr.&quot;, DEFAULT, NULL);</code></pre></div><div id="ed9a9755-4408-4305-962d-b65c69504c1b" style="width:37.5%" class="column"><ul id="9f63c658-1e64-411a-9743-daf15c1e19c9" class="bulleted-list"><li style="list-style-type:disc"><code>DEFAULT</code> will insert the default value of the column that was set during the <code>CREATE</code> table.</li></ul><ul id="166d3011-3dd1-8067-9142-fe88a84c2ec4" class="bulleted-list"><li style="list-style-type:disc"><code>NULL</code> can be interpreted as <em>unknown</em> or no data.</li></ul></div></div><p id="166d3011-3dd1-808c-98fc-fad0daba633b" class=""><strong>Violation in </strong><code><strong>INSERT</strong></code><strong> </strong></p><hr id="166d3011-3dd1-80af-855d-f7e0400ad3b4"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="166d3011-3dd1-8028-a572-fac1aeb52949" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO department(departmentID, dept_name)
+VALUES (2, &quot;Some Department&quot;); -- Assume that 2 was inserted as departmentID into department and departmentID is the primary key.
+-- Error Code: 1062. Duplicate entry ‘2’ for key ‘department.PRIMARY&#x27;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="166d3011-3dd1-8030-992b-fb7dcfbfa6f6" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO department(departmentID)
+VALUES (3); -- Assume that dept_name is was set as NOT NULL
+-- Error Code: 1364. Field &#x27;dept_name&#x27; doesn&#x27;t have a default value</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="166d3011-3dd1-80c4-ae19-c348dfedaf78" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO staff
+VALUES (4, &quot;1111111111111&quot;, &quot;News&quot;, &quot;Users&quot;, &quot;Somewhere&quot;, DEFAULT, DEFAULT);
+-- Error Code: 1062. Duplicate entry &#x27;1111111111111&#x27; for key &#x27;staff.nationalID&#x27;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="166d3011-3dd1-80f7-ace1-d2c35860aee3" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO department
+VALUES (3, &quot;Data Center&quot;, 5);
+-- Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`itcs393db`.`department`, CONSTRAINT `fk_manager` FOREIGN KEY (`managerID`) REFERENCES `staff` (`staffID`))</code></pre><h3 id="167d3011-3dd1-80e1-8d27-f8ab73803518" class=""><code>UPDATE</code></h3><hr id="167d3011-3dd1-805e-830e-e8a2f86ba1b3"/><p id="167d3011-3dd1-8031-b7af-d3461d598f0d" class=""><code><strong>UPDATE</strong></code><strong> an existing tuple</strong></p><hr id="178d3011-3dd1-800f-8cbf-f27af9600f0d"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="178d3011-3dd1-80d9-aee3-e792aa745aaa" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE tablename SET col_name=expression[, col_name=expression] [WHERE conditionlist ];
+
+UPDATE staff SET staff_fname=&quot;H.&quot; WHERE staffID=1; -- Use the primary key as a condition to uniquely identify the row to be updated</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="178d3011-3dd1-80ed-96a2-d5fb6c905a96" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE staff SET phone=&quot;001-123-4567&quot; WHERE staff_fname=&quot;H.&quot; AND staff_lname=&quot;Potter&quot;;
+-- Error Code: 1175. You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column...</code></pre><div id="178d3011-3dd1-8085-8afa-c12fc31d7ce3" class="column-list"><div id="178d3011-3dd1-80e3-98db-dcf6a0f07f2b" style="width:50%" class="column"><p id="178d3011-3dd1-80e8-80bc-e1831af9e1c7" class="">💡: <strong>Safe update mode</strong> in MySQL is designed to prevent accidental updates or deletions of data, which require the WHERE clause to use the key attribute to identify the record.</p></div><div id="178d3011-3dd1-801b-83b0-d6c197e797d9" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="178d3011-3dd1-808a-8c67-d1a5a78ee56c" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SET SQL_SAFE_UPDATES = 0; -- Turn off
+SET SQL_SAFE_UPDATES = 1; -- Turn on</code></pre></div></div><h3 id="178d3011-3dd1-80cd-bf41-c4a2a5c8b6e2" class=""><code><strong>DELETE</strong></code></h3><hr id="178d3011-3dd1-80cc-a253-c50671a9c27e"/><p id="178d3011-3dd1-8056-a315-edcfbe9ba7f3" class=""><code><strong>DELETE</strong></code><strong> an existing tuples</strong></p><hr id="178d3011-3dd1-8001-965c-fb510858fc18"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="178d3011-3dd1-805e-b8e2-f5b722ab55b8" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">DELETE FROM staff WHERE staffID = 1; -- Use the primary key as a condition to uniquely identify the row to be deleted
+DELETE FROM staff WHERE phone IS NULL; -- If a non-key attribute is used in the condition, the statement works only if the safe update mode is off.</code></pre><h3 id="178d3011-3dd1-8044-ace5-db258d10a3da" class="">RECAP: Referential Action</h3><hr id="178d3011-3dd1-8074-b71d-fd0b5f6fa3f8"/><p id="178d3011-3dd1-80b7-845e-e007fb324f3b" class=""><strong>Referential action</strong> can be added for FOREIGN KEY during CREATE and ALTER statement</p><table id="178d3011-3dd1-8020-bfb2-e27d764dd966" class="simple-table"><thead class="simple-table-header"><tr id="dc13ebb1-aff3-4e96-8934-c405272223b8"><th id="~}ty" class="simple-table-header-color simple-table-header" style="width:172.515625px">Referential Actions</th><th id="eIg^" class="simple-table-header-color simple-table-header" style="width:968px">Description</th></tr></thead><tbody><tr id="770e7dcf-d1f0-415b-93dc-9854edd77891"><th id="~}ty" class="simple-table-header-color simple-table-header" style="width:172.515625px"><code>CASCADE</code></th><td id="eIg^" class="" style="width:968px">Delete or update the row from the parent table and automatically <strong>delete or update the matching rows in the child table.</strong> </td></tr><tr id="72d98de4-4491-4cf9-94cf-4fd93c952a0c"><th id="~}ty" class="simple-table-header-color simple-table-header" style="width:172.515625px"><code>SET NULL</code></th><td id="eIg^" class="" style="width:968px">Delete or update the row from the parent table and <strong>set the foreign key column or columns in the child table to NULL</strong>.</td></tr><tr id="178d3011-3dd1-8057-be33-e4f5e5c7ab56"><th id="~}ty" class="simple-table-header-color simple-table-header" style="width:172.515625px"><code>RESTRICT | NO ACTION</code></th><td id="eIg^" class="" style="width:968px">- <strong>Rejects</strong> the delete or update operation for the parent table.<br/>- Specifying <br/><code>RESTRICT</code> (or <code>NO ACTION</code>) is set to the default when not specifying referential action.</td></tr></tbody></table><p id="dfd39f35-405d-4f31-b9db-2fb6779bbfd6" class=""><strong>Example: </strong><code><strong>RESTRICT</strong></code></p><hr id="17cd3011-3dd1-803c-9ae0-feb3dd029c94"/><div id="17cd3011-3dd1-8071-910e-e0f263e0583b" class="column-list"><div id="8ba1ef8a-9343-4dc2-bd80-3038a32b69e5" style="width:33.33333333333333%" class="column"><figure id="17cd3011-3dd1-8000-a76c-dd3a2b0c1bf3" class="image"><a href="image.png"><img style="width:273px" src="image.png"/></a></figure></div><div id="0007919d-dc28-4f5e-9f15-b2521dec1d18" style="width:33.33333333333333%" class="column"><figure id="17cd3011-3dd1-8032-a5d3-c7dd1a657505" class="image"><a href="image%201.png"><img style="width:354.9375px" src="image%201.png"/></a></figure></div><div id="c6b39f9d-fdd5-475b-9cd9-31de76ba8bea" style="width:33.33333333333333%" class="column"><p id="17cd3011-3dd1-80c1-be5e-ee946c340bfa" class=""><strong>Example</strong>: Referential Option are <code>ON UPDATE RESTRICT</code> and <code>ON DELETE RESTRICT</code></p></div></div><p id="17cd3011-3dd1-80c8-a214-f7b04c7fa0b2" class="">Given code</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-806f-9001-f219c60ff94e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE staff
+SET staffID=111 -- new staffID
+WHERE staffID=1;
+
+-- Error Code: 1451. Cannot delete or update a parent row: a foreign key constraint fails (`itcs393db`.`department`, CONSTRAINT `fk_manager` FOREIGN KEY (`managerID`) REFERENCES `staff` (`staffID`) ON DELETE RESTRICT ON UPDATE RESTRICT)</code></pre><p id="17cd3011-3dd1-8021-9a50-e7d12e12cc7c" class="">The update or delete operation are <strong>PROHIBITED</strong> if there is the references from the child table</p><p id="17cd3011-3dd1-80ff-96cc-f3c72060ff04" class=""><strong>Example: </strong><code><strong>CASCADE</strong></code></p><hr id="17cd3011-3dd1-8082-b4bf-ce336375aeb3"/><p id="17cd3011-3dd1-8048-a1a4-d251e4d75094" class=""><strong>Example</strong>: Referential Option are <code>ON UPDATE CASCADE</code> and <code>ON DELETE CASCADE</code></p><div id="17cd3011-3dd1-8006-8c2f-d704e01edf54" class="column-list"><div id="0b03b2dd-a512-4d3b-9e0e-415649bb53c5" style="width:37.5%" class="column"><figure id="17cd3011-3dd1-80c8-8043-ebcb1a40103f" class="image"><a href="image%202.png"><img src="image%202.png"/></a></figure><figure id="17cd3011-3dd1-8031-a2c5-d22a873847bb" class="image"><a href="image%203.png"><img style="width:416.59375px" src="image%203.png"/></a></figure></div><div id="76e0c8c1-1cf2-4c34-9786-399f17bdceac" style="width:62.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-8003-b59e-ee5fd4e1d2d2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE staff
+SET staffID=111 -- new staffID
+WHERE staffID=1;
+
+-- 1 row(s) affected Rows matched: 1 Changed: 1 Warnings: 0</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-8001-bb3b-cc18782df98c" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">DELETE FROM staff
+WHERE staffID=111;
+
+-- 1 row(s) affected</code></pre></div></div><p id="17cd3011-3dd1-8025-93db-f2b804765509" class="">The child table is automatically updated to the new value /deleted accordingly</p><p id="17cd3011-3dd1-802f-bd1a-db77c574e3b1" class=""><strong>Example: </strong><code><strong>SET NULL</strong></code></p><hr id="17cd3011-3dd1-80dc-8b26-d1b77ccb9b96"/><p id="17cd3011-3dd1-802f-9c64-eda17399da9b" class=""><strong>Example</strong>: Referential Option are <code>ON UPDATE SET NULL</code> and <code>ON DELETE SET NULL</code></p><div id="17cd3011-3dd1-800b-ac5a-e60253462f14" class="column-list"><div id="947f9745-53c8-4104-b2cc-d0c53157347d" style="width:37.5%" class="column"><figure id="17cd3011-3dd1-8058-9eec-d0c9c74dd519" class="image"><a href="image%204.png"><img style="width:416.59375px" src="image%204.png"/></a></figure><figure id="17cd3011-3dd1-8014-a26a-fc8a87eaa3f9" class="image"><a href="image%205.png"><img style="width:416.578125px" src="image%205.png"/></a></figure></div><div id="0e9019c7-47f4-49f1-80a1-d68d894405dc" style="width:62.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-8084-8fcf-c658677d4f3e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE staff
+SET staffID=111 -- new staffID
+WHERE staffID=1;
+
+-- 1 row(s) affected Rows matched: 1 Changed: 1 Warnings: 0</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-803b-9e57-e443cb1cf5f7" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">DELETE FROM staff
+WHERE staffID=111;
+
+-- 1 row(s) affected</code></pre></div></div><p id="17cd3011-3dd1-80de-8be4-f0845f2a13eb" class="">The child table is automatically updated /deleted to NULL accordingly</p><h3 id="17cd3011-3dd1-804b-a683-fc7f66e7d8e3" class="">Data Import, Export, and Backup</h3><hr id="17cd3011-3dd1-8029-9a1b-e36f93bf094a"/><p id="17cd3011-3dd1-80f9-a4e1-ffecde7f971d" class=""><strong>Table Data Import</strong></p><hr id="17cd3011-3dd1-804e-a966-f566b814a2b2"/><ul id="17cd3011-3dd1-80fa-9a63-eb2e9431655e" class="bulleted-list"><li style="list-style-type:disc">MySQL supports table data import using CSV and JSON files ⚠️: Database must be created prior to data import</li></ul><div id="17cd3011-3dd1-809b-9e23-d0f5e3139d12" class="column-list"><div id="ffa8cabf-f605-4819-bb28-00599632a77b" style="width:50%" class="column"><ul id="17cd3011-3dd1-80ad-829b-ff0bb6f5d62a" class="bulleted-list"><li style="list-style-type:disc"><strong>CSV</strong> stands for “Comma-separated values”, i.e., each column value is separated by a comma (or other separators such as semicolons or tabs)</li></ul><p id="17cd3011-3dd1-8064-b779-f637bebf5269" class=""><code>gender.csv</code></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-80b2-9bfc-d22561c70be8" class="code"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">id,gender
+1,Male
+2,Female
+3,N/A</code></pre></div><div id="da14e10f-d927-48a8-ba3e-c245c93fa6f3" style="width:50%" class="column"><ul id="17cd3011-3dd1-809e-964e-ca411418ffe1" class="bulleted-list"><li style="list-style-type:disc"><strong>JSON</strong> stands for “JavaScript Object Notation”, i.e., a plain text<br/>written in JavaScript object notation<br/></li></ul><p id="17cd3011-3dd1-80b4-814d-ec2df1da7937" class=""><code>gender.json</code></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-8058-9967-d710f49595c2" class="code"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">[{&quot;id&quot;:4, &quot;gender&quot;:&quot;Type4&quot;},
+{&quot;id&quot;:5, &quot;gender&quot;:&quot;Type5&quot;},
+{&quot;id&quot;:6, &quot;gender&quot;:&quot;Type6&quot;}]</code></pre></div></div><p id="17cd3011-3dd1-804f-b28b-ef47d8c108b1" class=""><strong>Import Data using GUI</strong></p><hr id="17cd3011-3dd1-8001-b751-f71f804f4206"/><div id="17cd3011-3dd1-80fc-9d64-faf12c871612" class="column-list"><div id="9a5a7cf0-d0ae-4948-9a20-c762114924fd" style="width:50%" class="column"><ul id="17cd3011-3dd1-8021-b8a0-d73ebefd6a7b" class="bulleted-list"><li style="list-style-type:disc">Import the data from a file to a new table</li></ul></div><div id="b32ccffc-873b-4476-ae95-242f739bd364" style="width:50%" class="column"><ul id="17cd3011-3dd1-8077-8282-ec9e4ed7f9d9" class="bulleted-list"><li style="list-style-type:disc">Import the data from a file to an existing table</li></ul></div></div><div id="17cd3011-3dd1-80c4-9746-e709b9af5c15" class="column-list"><div id="17cd3011-3dd1-803c-973d-fef2ad5bbff8" style="width:100%" class="column"><p id="17cd3011-3dd1-809f-9146-fd7c7eff2556" class=""><strong>Import Data into a New Table</strong></p><hr id="17cd3011-3dd1-807a-b4dc-e282e7d1c507"/><ol type="1" id="17cd3011-3dd1-8024-95b9-dbd0316cd4f3" class="numbered-list" start="1"><li>Open the Table Import Wizard by right-clicking on <code>Tables</code>.</li></ol><ol type="1" id="17cd3011-3dd1-805a-b560-f2915c213a2f" class="numbered-list" start="2"><li>Browse the Data Source: For example, select the CSV file you wish to import.</li></ol><ol type="1" id="17cd3011-3dd1-8006-b0f9-c734641ebbc3" class="numbered-list" start="3"><li>Choose the Database and Specify Table Name:<ul id="17cd3011-3dd1-8039-a75f-fe536bcfd012" class="bulleted-list"><li style="list-style-type:disc">Select “create new table”.</li></ul><ul id="17cd3011-3dd1-80d0-9715-ed785ad2fa92" class="bulleted-list"><li style="list-style-type:disc">Provide a name for the new table.</li></ul></li></ol><ol type="1" id="17cd3011-3dd1-80fc-b4f6-fbce133bc63c" class="numbered-list" start="4"><li>Select Data Encoding: Ensure the encoding matches the data source (e.g., utf8 that supports English, Thai, etc.).</li></ol><ol type="1" id="17cd3011-3dd1-80c8-b92f-d4a63f4789d6" class="numbered-list" start="5"><li>Review the Source Columns and Data Types: Confirm the columns and their data types align with the desired schema.</li></ol><ol type="1" id="17cd3011-3dd1-80db-a71d-fb739702cf26" class="numbered-list" start="6"><li>Proceed and Complete the Import.</li></ol></div><div id="17cd3011-3dd1-8027-b18f-ef6a5b7d9ad6" style="width:100%" class="column"><p id="17cd3011-3dd1-80a0-87cc-cea42167664c" class=""><strong>Import Data into an Existing Table</strong></p><hr id="17cd3011-3dd1-8034-97a2-e42d6a570238"/><ol type="1" id="17cd3011-3dd1-807c-bb55-f568c36ee6be" class="numbered-list" start="1"><li>Open the Table Import Wizard.</li></ol><ol type="1" id="17cd3011-3dd1-8055-b27b-fe9f887ba0fe" class="numbered-list" start="2"><li>Browse the Data Source: For example, choose a JSON file containing the data.</li></ol><ol type="1" id="17cd3011-3dd1-8002-8862-d86113af1d0b" class="numbered-list" start="3"><li>Select the Existing Table:<ul id="17cd3011-3dd1-8007-b9ac-f7dc01832c76" class="bulleted-list"><li style="list-style-type:disc">Choose the table where the data will be imported.</li></ul></li></ol><ol type="1" id="17cd3011-3dd1-80ca-bafa-d38a2c7fb76d" class="numbered-list" start="4"><li>Review Source Columns and Data Types: Ensure compatibility with the existing table schema.</li></ol><ol type="1" id="17cd3011-3dd1-8008-8350-d15b1c76f6a4" class="numbered-list" start="5"><li>Consider Relationships:<ul id="17cd3011-3dd1-806a-8928-f77aa73a8dd8" class="bulleted-list"><li style="list-style-type:disc">Check foreign key (FK) and primary key (PK) constraints.</li></ul><ul id="17cd3011-3dd1-8034-bf1e-c796476f2dd7" class="bulleted-list"><li style="list-style-type:disc">Verify data sequence if dependent on relationships.</li></ul></li></ol><ol type="1" id="17cd3011-3dd1-8052-897b-d8b934655163" class="numbered-list" start="6"><li>Proceed and Complete the Import.</li></ol></div></div><p id="17cd3011-3dd1-8030-9ea0-ecb68df5591e" class=""><strong>Table Data Export</strong></p><hr id="17cd3011-3dd1-8069-bf18-deaf5a595386"/><div id="17cd3011-3dd1-8063-a670-ef9e3f595bf9" class="column-list"><div id="b92bb54a-00e6-4114-8f75-468503f397e1" style="width:33.33333333333333%" class="column"><p id="17cd3011-3dd1-8047-8186-ff5b3419beb9" class=""><strong>Using the Table Data Export Wizard</strong></p><hr id="17cd3011-3dd1-8067-b736-e602744c9705"/><ol type="1" id="17cd3011-3dd1-800a-9364-c6ca451371ca" class="numbered-list" start="1"><li>Open the Table Data Export Wizard.</li></ol><ol type="1" id="17cd3011-3dd1-8071-84cd-e63c7a76d49e" class="numbered-list" start="2"><li>Select the Table Source: Choose the table you want to export data from.</li></ol><ol type="1" id="17cd3011-3dd1-8058-87a6-f12018d57c70" class="numbered-list" start="3"><li>Specify File Path and Type:<ul id="17cd3011-3dd1-8051-ac22-db88d5f9de88" class="bulleted-list"><li style="list-style-type:disc">Define the destination path for the exported file.</li></ul><ul id="17cd3011-3dd1-8074-8316-d99fb37f3171" class="bulleted-list"><li style="list-style-type:disc">Select the file type (e.g., CSV).</li></ul><ul id="17cd3011-3dd1-8065-bd41-d2f2be1f2b83" class="bulleted-list"><li style="list-style-type:disc">Configure file settings:<ul id="17cd3011-3dd1-8037-ad8e-e93250c23a83" class="bulleted-list"><li style="list-style-type:circle">Field Separator (e.g., <code>,</code> for CSV).</li></ul><ul id="17cd3011-3dd1-80db-819d-cb5f96fbfcd6" class="bulleted-list"><li style="list-style-type:circle">Line Separator (e.g., LF(Line Feed), CR(Carriage Return), or CR LF).</li></ul></li></ul></li></ol></div><div id="a705e23e-ef10-431c-aed2-395550d11fc4" style="width:45.83333333333333%" class="column"><p id="17cd3011-3dd1-80f9-bdb8-cb36430ee0c8" class=""><strong>Using Administration – Data Export</strong></p><hr id="17cd3011-3dd1-80b8-909b-fd11ab96b890"/><ol type="1" id="17cd3011-3dd1-804d-aa6d-e2fc40a289d9" class="numbered-list" start="1"><li>Open the Data Export Option in Administration.</li></ol><ol type="1" id="17cd3011-3dd1-80fe-afd2-f38e559b2df0" class="numbered-list" start="2"><li>Select the Database and Tables: Choose the database and specific tables for export.</li></ol><ol type="1" id="17cd3011-3dd1-8067-ba3b-c559fab40035" class="numbered-list" start="3"><li>Choose the Export Type:<ul id="17cd3011-3dd1-8010-b0e0-f2ceb6cc1254" class="bulleted-list"><li style="list-style-type:disc"><strong>Dump Data Only</strong>: Export data without schema definitions.</li></ul><ul id="17cd3011-3dd1-80e3-a4d8-c3af053250f5" class="bulleted-list"><li style="list-style-type:disc"><strong>Dump Project Folder</strong>: Exports each table into a separate file, allowing selective restoration but slower performance.</li></ul><ul id="17cd3011-3dd1-8031-baa2-da6b1b714917" class="bulleted-list"><li style="list-style-type:disc"><strong>Self-contained File</strong>: Exports all selected database objects into a single file for convenience.</li></ul></li></ol><p id="81aa35d4-fc42-496f-8c63-aaea136eca59" class="">
+</p></div><div id="2e94b178-ce4b-406f-9996-08f89c0e404b" style="width:20.833333333333318%" class="column"><p id="17cd3011-3dd1-804c-97a7-c5c48f3c42fb" class=""><strong>Export SQL Query Results</strong></p><hr id="17cd3011-3dd1-8094-a565-e23ecb233eff"/><ol type="1" id="17cd3011-3dd1-80cf-ad4f-ea184ce592af" class="numbered-list" start="1"><li>Run the SQL Query: Execute the desired query in the SQL editor.</li></ol><ol type="1" id="17cd3011-3dd1-8042-9bbd-d23219271766" class="numbered-list" start="2"><li>Export the Results:<ul id="17cd3011-3dd1-805a-941d-d8409243cb47" class="bulleted-list"><li style="list-style-type:disc">After executing, export the result set to a file.</li></ul><ul id="17cd3011-3dd1-8018-9c2a-c6cf8fa8f7f7" class="bulleted-list"><li style="list-style-type:disc">Choose a file type (e.g., CSV, JSON).</li></ul><ul id="17cd3011-3dd1-8051-8f57-c3109a07049c" class="bulleted-list"><li style="list-style-type:disc">Specify the destination path and file name.</li></ul></li></ol><p id="3e223b4d-2351-433c-b477-5b9a5e3482f0" class="">
+</p></div></div><p id="17cd3011-3dd1-806b-bee1-fa0b3ed8be1f" class=""><strong>Backup and Restore file</strong></p><hr id="17cd3011-3dd1-805a-90c2-ec9ced36a9c1"/><div id="17cd3011-3dd1-8066-a438-ea7b658cf258" class="column-list"><div id="9f80923e-f4fd-4a45-a253-8db5424555cc" style="width:50%" class="column"><p id="17cd3011-3dd1-8099-b381-d2638e644344" class=""><strong>Backup a Database</strong></p><hr id="17cd3011-3dd1-8007-bebb-c1c3552f051e"/><ol type="1" id="17cd3011-3dd1-8025-b8d1-db66563f6c6c" class="numbered-list" start="1"><li><strong>Open Administration – Data Export.</strong></li></ol><ol type="1" id="17cd3011-3dd1-805d-8230-f7f531fbe791" class="numbered-list" start="2"><li><strong>Select the Backup Type:</strong><ul id="17cd3011-3dd1-809b-a6ab-f69a3d66678d" class="bulleted-list"><li style="list-style-type:disc">Choose <strong>&quot;Dump Structure and Data&quot;</strong> to include both the database schema and its data.</li></ul></li></ol><ol type="1" id="17cd3011-3dd1-8025-a88e-eaf8532d1fbe" class="numbered-list" start="3"><li><strong>Export to a Self-contained File:</strong><ul id="17cd3011-3dd1-80a9-885d-f43feec619a7" class="bulleted-list"><li style="list-style-type:disc">Specify the destination folder.</li></ul><ul id="17cd3011-3dd1-8017-a891-d2686a9f59e9" class="bulleted-list"><li style="list-style-type:disc">Save the database into a single, self-contained file for easier management.</li></ul></li></ol></div><div id="56095065-9c9d-498c-9a96-574d2a9dcd49" style="width:50%" class="column"><p id="17cd3011-3dd1-8094-9ba6-dc6d90b26848" class=""><strong>Restore a Database</strong></p><hr id="17cd3011-3dd1-802a-9de2-c7a92ec2203c"/><ol type="1" id="17cd3011-3dd1-80bc-97ff-e0c3125de8c4" class="numbered-list" start="1"><li><strong>Open Administration – Data Import/Restore.</strong></li></ol><ol type="1" id="17cd3011-3dd1-80e2-a6ac-ca7c52dd828a" class="numbered-list" start="2"><li><strong>Choose the Restore Target:</strong><ul id="17cd3011-3dd1-80dc-8a5f-f7ecc3dc4029" class="bulleted-list"><li style="list-style-type:disc">Select an existing database to restore into or create a new database.</li></ul></li></ol><ol type="1" id="17cd3011-3dd1-80ae-bb71-daff8b79e5b4" class="numbered-list" start="3"><li><strong>Import the Backup File:</strong><ul id="17cd3011-3dd1-8031-8ec3-d8ca8ae355cf" class="bulleted-list"><li style="list-style-type:disc">Browse and select the previously exported self-contained file.</li></ul><ul id="17cd3011-3dd1-802e-bf08-cd66b96f3149" class="bulleted-list"><li style="list-style-type:disc">Start the restoration process.</li></ul></li></ol><p id="0b57b66f-9a7c-41e1-a602-bcaf20e0f586" class="">
+</p></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
