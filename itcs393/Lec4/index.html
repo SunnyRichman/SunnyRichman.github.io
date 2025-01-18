@@ -1,0 +1,706 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 4 Structured Query Language – Data Query Language (DQL)</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="165d3011-3dd1-8055-b5ad-defe8e605052" class="page sans"><header><h1 class="page-title">Lecture 4 Structured Query Language – Data Query Language (DQL)</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><p id="17fd3011-3dd1-8006-be98-c11fe3b92c5e" class=""><code><a href="https://sunnyrichman.github.io/itcs393/">🔙 Back to Table of Contents, Click here</a></code></p><h3 id="17cd3011-3dd1-80b4-ad25-ce5c89c2a30e" class="">Basic Data Query Language</h3><hr id="17cd3011-3dd1-8009-a3c8-d7a9a30e124a"/><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="17cd3011-3dd1-8063-8a57-d6e3ddc974fa"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="17cd3011-3dd1-8042-8b7a-c51019a95d40" class=""><strong>Database</strong>: classicmodels</p><hr id="17cd3011-3dd1-80d8-bf3a-d78511e2c8ac"/><div id="17cd3011-3dd1-8057-8ef0-d7785405f3b1" class="column-list"><div id="be49173e-df39-41db-b2ae-2a0be7c88973" style="width:37.5%" class="column"><figure id="17cd3011-3dd1-803e-9355-faf5f6b6f83b" class="image"><a href="image.png"><img style="width:524.484375px" src="image.png"/></a></figure></div><div id="55e4fcdc-9330-4a72-bf46-9e3008d67860" style="width:62.5%" class="column"><ul id="17cd3011-3dd1-8065-84aa-fc5156285e97" class="bulleted-list"><li style="list-style-type:disc"><strong>Customers</strong>: stores customer’s data and their contact information.</li></ul><ul id="17cd3011-3dd1-80c8-b1d3-e20989bc71a5" class="bulleted-list"><li style="list-style-type:disc"><strong>Products</strong>: stores a list of scale model cars.</li></ul><ul id="17cd3011-3dd1-80ed-b219-fd37df5e54e0" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductLines</strong>: stores a list of product line categories.</li></ul><ul id="17cd3011-3dd1-8085-8772-de04d34fa937" class="bulleted-list"><li style="list-style-type:disc"><strong>Orders</strong>: stores sales orders placed by customers.</li></ul><ul id="17cd3011-3dd1-8088-9b2a-c6062c45dbda" class="bulleted-list"><li style="list-style-type:disc"><strong>OrderDetails</strong>: stores sales order line items for each sales order</li></ul><ul id="17cd3011-3dd1-8021-8db6-f854b404ae86" class="bulleted-list"><li style="list-style-type:disc"><strong>Payments</strong>: stores payments made by customers based on their accounts.</li></ul><ul id="17cd3011-3dd1-80af-99ce-dc81eaba4619" class="bulleted-list"><li style="list-style-type:disc"><strong>Employees</strong>: stores all employee information as well as the organization structure such as who reports to whom.</li></ul><ul id="17cd3011-3dd1-8008-af5d-f19455b22301" class="bulleted-list"><li style="list-style-type:disc"><strong>Offices</strong>: stores sales office data.</li></ul></div></div></div></figure><div id="17cd3011-3dd1-805f-a540-fdb2f9d14bed" class="column-list"><div id="6d4e9c3b-1138-484c-962a-386c7346d583" style="width:43.75%" class="column"><h3 id="17cd3011-3dd1-80a6-8895-c78aa4e81b1b" class="">SQL Syntax</h3><hr id="17cd3011-3dd1-8097-bf71-cff67d2f2c22"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-8041-9e04-dd0906d2c9b3" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT [DISTINCT] [columns] [AS alias] FROM tablename
+[INNER|LEFT|RIGHT JOIN tablename2 ON conditions]
+[WHERE conditions] [GROUP BY columns] [HAVING conditions]
+[ORDER BY columns ASC|DESC]
+[LIMIT N];</code></pre></div><div id="acb670b5-4e76-4261-8777-ca0d61cac2e4" style="width:56.25%" class="column"><h3 id="17cd3011-3dd1-80c1-a2a3-efa63717b92a" class=""><code>SELECT</code>: <code>*</code></h3><hr id="17cd3011-3dd1-809f-aac3-f5df66bfc7d7"/><p id="17cd3011-3dd1-80bd-8772-c59679903b0e" class="">Use * to retrieve all columns/attributes from a table</p><p id="17cd3011-3dd1-809b-8221-d2538956ff05" class=""><span style="border-bottom:0.05em solid">Example</span>: Show all offices in the <code>classicmodels</code> database</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17cd3011-3dd1-8086-bbb1-f9a5e649caf0" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Offices;</code></pre><figure id="17cd3011-3dd1-804b-b69a-d148850e3545" class="image"><a href="image%201.png"><img style="width:624.890625px" src="image%201.png"/></a></figure></div></div><div id="17dd3011-3dd1-80ad-b316-f15658c76000" class="column-list"><div id="5cc7c652-0ddd-4441-a3d1-84912a5b9b52" style="width:50%" class="column"><h3 id="17dd3011-3dd1-80de-b277-d91050eebbd4" class=""><code>SELECT</code>: <code>[col_name]</code></h3><hr id="17dd3011-3dd1-8027-aca3-cb25eb66a8e4"/><p id="17dd3011-3dd1-800d-aafa-d3c5a9ea1f0a" class="">Use <code>column_name</code> to retrieve the specific columns/attributes from a table</p><p id="17dd3011-3dd1-80a6-a8d2-ef557c574e57" class=""><span style="border-bottom:0.05em solid">Example</span>: Show all office code, their city, and phone number</p><div id="17dd3011-3dd1-80e2-8ba4-c6244e48adb5" class="column-list"><div id="17dd3011-3dd1-8059-bb6d-ff14b88e189e" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17dd3011-3dd1-8058-a07f-d80855bbca19" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT officeCode, city, phone
+FROM Offices;</code></pre></div><div id="17dd3011-3dd1-8022-b64b-c0a21727b547" style="width:100%" class="column"><figure id="17dd3011-3dd1-80d4-bf65-c1bcf2ac4336" class="image"><a href="image%202.png"><img style="width:254.734375px" src="image%202.png"/></a></figure></div></div></div><div id="bc40e4a0-4df4-4fe0-b338-814661288448" style="width:50%" class="column"><h3 id="17dd3011-3dd1-80e5-919a-efcc67f71526" class=""><code>SELECT</code>: <code>alias</code></h3><hr id="17dd3011-3dd1-801c-8c64-f09fe47eb24f"/><p id="17dd3011-3dd1-80fc-9c5b-e81554057174" class="">Alias are used to give a table, or a column in a table, a temporary name.</p><p id="17dd3011-3dd1-8045-86c7-f922a9f84369" class=""><span style="border-bottom:0.05em solid">Example</span>: Show all office code, their city, and phone number</p><div id="17dd3011-3dd1-80a0-862a-c8719dec2de1" class="column-list"><div id="2c62ad9f-cea0-4e45-a175-355481a75fce" style="width:106.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="603eb626-fb87-4acd-b8d8-576ce9dd80d2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT officeCode AS &quot;Office Code&quot;, city AS &quot;City&quot;, phone AS &quot;Contact&quot;
+FROM Offices;</code></pre></div><div id="6e05b0ab-8466-42b4-a0e4-6112c1476cc9" style="width:87.49999999999999%" class="column"><figure id="17dd3011-3dd1-80ba-8a49-de80e63e95c6" class="image"><a href="image%203.png"><img style="width:237.734375px" src="image%203.png"/></a></figure></div></div></div></div><div id="17dd3011-3dd1-801e-9081-d028bc6045b9" class="column-list"><div id="abcf3a5a-794c-47bc-a25d-7e277c05f0c3" style="width:50%" class="column"><h3 id="2945fbd8-b716-4245-9123-5dccb4a1d7ce" class=""><code>SELECT</code>: <code>DISTINCT</code></h3><hr id="9fb1526b-3095-41aa-885f-db2f31a7907c"/><p id="fac619f8-69d7-4dca-883b-410ca09da23e" class="">Use <code>DISTINCT</code> to show only non-duplicate values of the column</p><p id="41265d8c-9d04-4d74-8c8c-856b3427d8a7" class=""><span style="border-bottom:0.05em solid">Example</span>: List all job title of the employees</p><div id="38c56982-9d34-4716-a690-c4265123a695" class="column-list"><div id="05f919f9-0a03-4bb6-8076-031bf2098e47" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a1bec8ef-4e79-4df2-ae28-09a1c992b06c" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT jobTitle
+FROM Employees;</code></pre><figure id="17dd3011-3dd1-804c-9a9d-dd9d57274b2d" class="image"><a href="image%204.png"><img style="width:144px" src="image%204.png"/></a></figure></div><div id="4f2b49e3-ec88-42a4-9e50-9779be5d4343" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17dd3011-3dd1-80bd-accf-c7b1b53349f6" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT(jobTitle)
+FROM Employees;</code></pre><figure id="17dd3011-3dd1-8056-826e-d1d4d0360a32" class="image"><a href="image%205.png"><img style="width:144px" src="image%205.png"/></a></figure></div></div></div><div id="952f152c-fc73-4b14-8747-2ef83dbc7770" style="width:50%" class="column"><h3 id="831a029e-7501-4201-ac73-2e5edd2efd39" class=""><code>SELECT</code>: <code>LIMIT</code></h3><hr id="11dd3637-ad9d-431a-aeed-946bcb4bf457"/><p id="17dd3011-3dd1-8010-9383-c3cd0992eabc" class="">Use LIMIT to select the TOP N rows from the result. By default, MySQL show only the top 1,000 rows of the result.</p><p id="df5fbd08-b195-4948-8154-5fadca9f552d" class=""><span style="border-bottom:0.05em solid">Example</span>: Show three offices</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="925b0004-db71-4e78-89a2-ec38414147c5" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Offices
+LIMIT 3;</code></pre><figure id="17dd3011-3dd1-80f0-ab31-c4713de4fde7" class="image"><a href="image%206.png"><img style="width:555.421875px" src="image%206.png"/></a></figure></div></div><h3 id="17dd3011-3dd1-807e-b1b7-d6eb4a8ecbc5" class=""><code>SELECT</code>: Computed Column </h3><hr id="17dd3011-3dd1-80d4-bd6b-da0add8d6f2a"/><div id="17dd3011-3dd1-804f-a8f5-c1fff5fe35fc" class="column-list"><div id="17dd3011-3dd1-8096-bf0d-cd9736ec7780" style="width:68.75%" class="column"><ul id="17dd3011-3dd1-802b-866d-f7b4e9430ecb" class="bulleted-list"><li style="list-style-type:disc">A <mark class="highlight-blue">computed column (or Derived Attribute)</mark> is a field that is the result of calculating using one or more existing fields.</li></ul><ul id="17dd3011-3dd1-80c8-b371-e54c11214ee3" class="bulleted-list"><li style="list-style-type:disc">Use <mark class="highlight-pink">arithmetic operations</mark> between columns and generate the computed column</li></ul><p id="17dd3011-3dd1-8017-a9fb-ed584c1ccd70" class=""><span style="border-bottom:0.05em solid">Example</span>: Calculate the total price of each order details</p><div id="17dd3011-3dd1-8082-a879-f3a0287ff4c9" class="column-list"><div id="17dd3011-3dd1-80e6-b1e0-f1be5b9357b4" style="width:118.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17dd3011-3dd1-8063-92a3-f9d86aa1f4e5" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT (quantityOrdered * priceEach) AS totalprice FROM Orderdetails;</code></pre><p id="17dd3011-3dd1-80f9-8b18-df902cf0a912" class="">
+</p></div><div id="17dd3011-3dd1-80f5-acb9-c9a80a1c1d99" style="width:18.750000000000007%" class="column"><figure id="17dd3011-3dd1-8016-905c-caa13a2839b6" class="image"><a href="image%207.png"><img style="width:81.890625px" src="image%207.png"/></a></figure></div></div></div><div id="17dd3011-3dd1-805c-b258-de31b28310c7" style="width:31.250000000000007%" class="column"><table id="17dd3011-3dd1-804f-b849-e838a1b43e9c" class="simple-table"><thead class="simple-table-header"><tr id="9ca0b491-f9d9-4f30-a02b-0ac8b7b6c57a"><th id="idcb" class="simple-table-header-color simple-table-header" style="width:82px">Operator</th><th id="~P]h" class="simple-table-header-color simple-table-header" style="width:243.4375px">Description</th></tr></thead><tbody><tr id="cf92d91c-2a81-44ab-bea5-12defaa712f2"><td id="idcb" class="" style="width:82px">+</td><td id="~P]h" class="" style="width:243.4375px">addition</td></tr><tr id="918184e1-5b84-4e8a-9af5-66997676ba45"><td id="idcb" class="" style="width:82px">-</td><td id="~P]h" class="" style="width:243.4375px">subtraction</td></tr><tr id="17dd3011-3dd1-8037-a59e-fe160483a5a4"><td id="idcb" class="" style="width:82px">*</td><td id="~P]h" class="" style="width:243.4375px">multiplication</td></tr><tr id="17dd3011-3dd1-80ee-b238-ea6f5a71ad35"><td id="idcb" class="" style="width:82px">/</td><td id="~P]h" class="" style="width:243.4375px">division</td></tr><tr id="17dd3011-3dd1-806d-b1ee-d9da002e4f94"><td id="idcb" class="" style="width:82px">^</td><td id="~P]h" class="" style="width:243.4375px">power (some app uses **)</td></tr></tbody></table></div></div><h3 id="17dd3011-3dd1-8072-b7ac-c708e6f88b12" class="">SQL Functions</h3><hr id="17dd3011-3dd1-805f-8340-cdf7d3fb2cb6"/><ul id="17dd3011-3dd1-801b-b720-d4b51814608c" class="bulleted-list"><li style="list-style-type:disc"><strong>Built-in functions</strong> applied on string, numeric, date value, i.e., attributes in the table</li></ul><ul id="17dd3011-3dd1-8046-b3e2-f097a2958326" class="bulleted-list"><li style="list-style-type:disc">Function may <strong>appear anywhere</strong> in an SQL statement where a value or an attribute can be used</li></ul><ul id="17dd3011-3dd1-803d-adc8-c033f10d018f" class="bulleted-list"><li style="list-style-type:disc">Usually depends on DBMS</li></ul><ul id="17dd3011-3dd1-80fa-95be-e600ed894023" class="bulleted-list"><li style="list-style-type:disc">MySQL (built-in) functions references: <a href="https://www.w3schools.com/sql/sql_ref_mysql.asp">https://www.w3schools.com/sql/sql_ref_mysql.asp</a></li></ul><div id="17dd3011-3dd1-80a0-8251-e6c6923b0b52" class="column-list"><div id="e921f3ee-cb74-4b62-a95d-ae2e1ca659c4" style="width:29.166666666666664%" class="column"><p id="7634111c-21e5-4696-81cb-f4822f7dbaff" class=""><strong>SQL </strong><mark class="highlight-red"><strong>String</strong></mark><strong> Functions</strong></p><hr id="17dd3011-3dd1-808e-b8d8-db75aabb4dfc"/><table id="17dd3011-3dd1-8061-a9ae-df2e4c381937" class="simple-table"><thead class="simple-table-header"><tr id="83c20ab2-bdd7-45f9-9882-34c741da33ee"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px">Functions</th><th id="tg=D" class="simple-table-header-color simple-table-header" style="width:192px">Description</th></tr></thead><tbody><tr id="0aabac9d-f2eb-47de-a4d0-05643f6f9969"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>CONCAT</code></th><td id="tg=D" class="" style="width:192px">Return concatenated string</td></tr><tr id="0ce4d1ee-e875-4cc2-8951-08c444ca0293"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>LEFT</code></th><td id="tg=D" class="" style="width:192px">Return the leftmost number of characters as specified</td></tr><tr id="2f5d12d6-074b-45d0-8603-286058119f5c"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>LOWER</code></th><td id="tg=D" class="" style="width:192px">Return the argument in lowercase</td></tr><tr id="1e7a7501-c3ff-4014-b46f-36a8ea97e7c8"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>LTRIM</code></th><td id="tg=D" class="" style="width:192px">Remove leading spaces</td></tr><tr id="528c0d3e-295d-45a1-9004-60d33dab4b73"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>REPLACE</code></th><td id="tg=D" class="" style="width:192px">Replace occurrences of a specified string</td></tr><tr id="21a6c48b-6946-4406-9a0b-52e3166658e1"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>RIGHT</code></th><td id="tg=D" class="" style="width:192px">Return the specified rightmost number of characters</td></tr><tr id="8b6e3e0d-3de7-43f0-b2ba-a4b1842e5b67"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>RTRIM</code></th><td id="tg=D" class="" style="width:192px">Remove trailing spaces</td></tr><tr id="1f8a04c9-9fd8-4348-b1ec-3a9c9002817d"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>TRIM</code></th><td id="tg=D" class="" style="width:192px">Remove leading and trailing spaces</td></tr><tr id="17dd3011-3dd1-800a-8cd4-c021e03e7282"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>UPPER</code></th><td id="tg=D" class="" style="width:192px">Convert to uppercase</td></tr></tbody></table></div><div id="6f51917a-e7d3-4dc8-a239-b0946c1902d1" style="width:41.666666666666664%" class="column"><p id="17dd3011-3dd1-807e-88a3-ed90af28e2c5" class=""><strong>SQL </strong><mark class="highlight-red"><strong>Numeric</strong></mark><strong> Functions</strong></p><hr id="17dd3011-3dd1-8063-8020-c51761744959"/><table id="17dd3011-3dd1-8041-8728-e7a0193e554b" class="simple-table"><thead class="simple-table-header"><tr id="1045626a-67b9-4b83-9d5e-96173e817524"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px">Functions</th><th id="tg=D" class="simple-table-header-color simple-table-header" style="width:327px">Description</th></tr></thead><tbody><tr id="3146549a-9acc-4844-9b3b-3ca20e786344"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>ABS</code></th><td id="tg=D" class="" style="width:327px">Return the absolute value</td></tr><tr id="fdacdcd3-9e42-4f2b-8696-96b055853201"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>POW</code></th><td id="tg=D" class="" style="width:327px">Return the argument raised to the specified power</td></tr><tr id="730b7e61-925a-45b5-b116-19542f05097a"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>ROUND</code></th><td id="tg=D" class="" style="width:327px">Round the number to to a specified number of decimal places.</td></tr><tr id="91726515-f1a5-4131-8c67-0b00c59ba78b"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>FLOOR</code></th><td id="tg=D" class="" style="width:327px">Returns the largest integer value that is &lt;= to a number</td></tr><tr id="c8f4ca7c-a3c1-42a3-a54e-d9c60c1e0c15"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>CEIL</code></th><td id="tg=D" class="" style="width:327px">Return the smallest integer value that is &gt;= to a number</td></tr><tr id="44947da4-1beb-4849-97de-74e96003ef2f"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>TRUNCATE</code></th><td id="tg=D" class="" style="width:327px">Truncates a number to the given number of decimal places</td></tr><tr id="83e46b2b-d7dc-411b-a10e-5cee868c7ddf"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>EXP</code></th><td id="tg=D" class="" style="width:327px">Returns e raised to the power of a specified number</td></tr><tr id="91a08ef2-e6f7-4ebe-97cd-d40c8f65d54b"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>LOG10</code></th><td id="tg=D" class="" style="width:327px">returns the natural logarithm of a number to base 10</td></tr><tr id="15f3f0a0-8c3c-4f75-b895-46ba2bf16b8c"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>RAND</code></th><td id="tg=D" class="" style="width:327px">Returns a random number</td></tr></tbody></table></div><div id="3cd7fb77-0dae-414e-8ad6-4f31120e0a80" style="width:29.166666666666668%" class="column"><p id="17dd3011-3dd1-8074-bd80-ce5595aa9a46" class=""><strong>SQL </strong><mark class="highlight-red"><strong>Date</strong></mark><strong> Functions</strong></p><hr id="17dd3011-3dd1-80fb-903f-c6a1f77f4bf7"/><table id="17dd3011-3dd1-806a-975d-c1acbc60fd60" class="simple-table"><thead class="simple-table-header"><tr id="801bcf46-22f9-40c0-ac87-7edd8414450c"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px">Functions</th><th id="tg=D" class="simple-table-header-color simple-table-header" style="width:201px">Description</th></tr></thead><tbody><tr id="59462221-019b-404d-83cb-c25ec5bf1fa7"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>CURDATE</code></th><td id="tg=D" class="" style="width:201px">Return the current date</td></tr><tr id="b993f6b3-42ca-4eb7-9a59-988c46d68c18"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>CURTIME</code></th><td id="tg=D" class="" style="width:201px">Return the current time</td></tr><tr id="17dd3011-3dd1-80bb-9fe4-c26f04577ae5"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>NOW</code></th><td id="tg=D" class="" style="width:201px">Return current date and time</td></tr><tr id="17dd3011-3dd1-80c3-9cea-d04ee63bc92d"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>DATE</code></th><td id="tg=D" class="" style="width:201px">Extract the date part of the date or datetime expression</td></tr><tr id="17dd3011-3dd1-80f5-88b9-f03faf0bd75d"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>DATEDIFF</code></th><td id="tg=D" class="" style="width:201px">Subtract two dates</td></tr><tr id="17dd3011-3dd1-8053-8869-d5c4a1949d3a"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>YEAR</code></th><td id="tg=D" class="" style="width:201px">Return the year part of a date</td></tr><tr id="17dd3011-3dd1-8096-86d8-e95f41ad7c02"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>MONTH</code></th><td id="tg=D" class="" style="width:201px">Return the month part of a date</td></tr><tr id="17dd3011-3dd1-808a-bd08-eb29b407c443"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>DAY</code></th><td id="tg=D" class="" style="width:201px">Return the day part of a date</td></tr><tr id="17dd3011-3dd1-8041-a6f4-fb05bcb6b186"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>MONTHNAME</code></th><td id="tg=D" class="" style="width:201px">Return the name of the month for a date</td></tr><tr id="17dd3011-3dd1-8084-9a17-fe1fce9d7f3c"><th id="X&lt;:i" class="simple-table-header-color simple-table-header" style="width:89px"><code>DAYOFWEEK</code></th><td id="tg=D" class="" style="width:201px">Returns the weekday index for a date (a number from 1-Sun to 7-Sat)</td></tr></tbody></table></div></div><p id="17dd3011-3dd1-8051-b4be-d5f3c675642d" class=""><strong>Example: SQL Functions</strong></p><hr id="17dd3011-3dd1-80fe-8d72-c43579c6bc1e"/><div id="17dd3011-3dd1-806d-bf74-fcb9d50d7916" class="column-list"><div id="17dd3011-3dd1-80df-a6d0-e397afea6fde" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17dd3011-3dd1-80eb-8ad6-d41babfff9f2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT officeCode, CONCAT(city, &#x27;, &#x27;, state, &#x27;, &#x27;, country) AS Location FROM Offices;</code></pre><figure id="17dd3011-3dd1-80ae-bad5-d7d021853893" class="image"><a href="image%208.png"><img style="width:213.984375px" src="image%208.png"/></a></figure></div><div id="fc3afaa9-bde3-4c40-8591-b007b82d22fe" style="width:50.000000000000014%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17dd3011-3dd1-809a-af7c-f092f0defe1e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT orderDate, YEAR(orderDate), MONTH(orderDate), DAY(orderDate), DAYNAME(orderDate) FROM Orders
+LIMIT 5;</code></pre><figure id="17dd3011-3dd1-8030-86e8-e2eb189392df" class="image"><a href="image%209.png"><img style="width:524.484375px" src="image%209.png"/></a></figure></div></div><h3 id="17dd3011-3dd1-80da-af53-d83428f6f490" class=""><code>SELECT</code> with conditions</h3><hr id="17dd3011-3dd1-806e-b1b4-e0f847032662"/><div id="17dd3011-3dd1-804e-9354-eda123074ad6" class="column-list"><div id="17dd3011-3dd1-80b8-be68-e3d6e15c1da9" style="width:43.75%" class="column"><ul id="17dd3011-3dd1-8097-ab20-f1a1b739f837" class="bulleted-list"><li style="list-style-type:disc">Use conditions to filter some records with <code>WHERE</code> clause</li></ul><ul id="17dd3011-3dd1-80ad-b878-ef647e6264a7" class="bulleted-list"><li style="list-style-type:disc">Use SQL operators and functions in <code>WHERE</code> clause to create conditions.</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17dd3011-3dd1-808b-a3ce-db52ecf63e3a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT [columns] FROM tablename WHERE [conditions]
+[ORDER BY [columns] ASC|DESC]
+[LIMIT N];</code></pre><p id="17dd3011-3dd1-80e0-8e56-d9c843364629" class=""><strong>SQL Operators: Comparisons</strong></p><hr id="17fd3011-3dd1-80b5-9ed8-e3be0d52b6c2"/><ul id="17fd3011-3dd1-80a0-ba85-d9b3a4139839" class="bulleted-list"><li style="list-style-type:disc">Comparison operators: <code>=</code>, <code>&lt;&gt;</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></li></ul><ul id="17fd3011-3dd1-80d3-9bcf-c2029def7c98" class="bulleted-list"><li style="list-style-type:disc">Example</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-806d-a1c1-c53d924cc7c3" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, state, creditLimit 
+FROM Customers
+WHERE (creditLimit &gt;= 30000 AND creditLimit &lt; 50000)
+AND state = &quot;MA&quot;;</code></pre></div><div id="17dd3011-3dd1-80bb-b4c8-d668eef5266f" style="width:56.25%" class="column"><p id="17dd3011-3dd1-80fd-a47c-f443e93c98a6" class=""><strong>SELECT with SQL Operators</strong></p><hr id="17dd3011-3dd1-80b7-8675-c214cf3c8e40"/><table id="17dd3011-3dd1-8037-8cdc-e6b4c482bf2f" class="simple-table"><thead class="simple-table-header"><tr id="408e3eaf-2c0d-4679-92fe-3bb5974a0427"><th id="Ejdp" class="simple-table-header-color simple-table-header" style="width:85px">Operator</th><th id="{;UA" class="simple-table-header-color simple-table-header" style="width:218.5px">Description</th><th id="IPy:" class="simple-table-header-color simple-table-header" style="width:78px">Operator</th><th id="Iqel" class="simple-table-header-color simple-table-header" style="width:222px">Description</th></tr></thead><tbody><tr id="2bcbc320-2655-4039-b003-e4e01346d2cd"><td id="Ejdp" class="" style="width:85px"><code>=</code></td><td id="{;UA" class="" style="width:218.5px">Equal</td><td id="IPy:" class="" style="width:78px"><code>AND</code></td><td id="Iqel" class="" style="width:222px">Logical AND operator</td></tr><tr id="b21e6678-fd66-4f3f-a954-b7e13df697ae"><td id="Ejdp" class="" style="width:85px"><code>&lt;&gt;</code></td><td id="{;UA" class="" style="width:218.5px">Not equal (some version use !=)</td><td id="IPy:" class="" style="width:78px"><code>OR</code></td><td id="Iqel" class="" style="width:222px">Logical OR operator</td></tr><tr id="17dd3011-3dd1-80a4-a269-dc9a97d24e7d"><td id="Ejdp" class="" style="width:85px"><code>&gt;</code></td><td id="{;UA" class="" style="width:218.5px">Greater than</td><td id="IPy:" class="" style="width:78px"><code>NOT</code></td><td id="Iqel" class="" style="width:222px">Logical NOT operator</td></tr><tr id="17dd3011-3dd1-805b-bd20-ff8fcddd95ef"><td id="Ejdp" class="" style="width:85px"><code>&lt;</code></td><td id="{;UA" class="" style="width:218.5px">Less than</td><td id="IPy:" class="" style="width:78px"><code>IS NULL</code></td><td id="Iqel" class="" style="width:222px">Check missing unknown data</td></tr><tr id="17dd3011-3dd1-80c5-9afa-cba402d575bf"><td id="Ejdp" class="" style="width:85px"><code>&gt;=</code></td><td id="{;UA" class="" style="width:218.5px">Greater than or equal</td><td id="IPy:" class="" style="width:78px"><code>LIKE</code></td><td id="Iqel" class="" style="width:222px">Checks the value matching given string pattern</td></tr><tr id="17dd3011-3dd1-802f-a532-e79978485b00"><td id="Ejdp" class="" style="width:85px"><code>&lt;=</code> </td><td id="{;UA" class="" style="width:218.5px">Less than or equal</td><td id="IPy:" class="" style="width:78px"><code>IN</code></td><td id="Iqel" class="" style="width:222px">Checks the value matching the value given in a list</td></tr><tr id="17dd3011-3dd1-80ad-b618-c1baae912e16"><td id="Ejdp" class="" style="width:85px"><code>BETWEEN</code></td><td id="{;UA" class="" style="width:218.5px">Between an inclusive range</td><td id="IPy:" class="" style="width:78px"></td><td id="Iqel" class="" style="width:222px"></td></tr></tbody></table><figure id="17fd3011-3dd1-8001-9c38-fa4a2441adcf" class="image"><a href="image%2010.png"><img style="width:277px" src="image%2010.png"/></a></figure></div></div><div id="17fd3011-3dd1-80fc-a25c-c0644d8b2d47" class="column-list"><div id="44c7f02a-33ff-4385-ad52-2233b0ced108" style="width:50%" class="column"><p id="e066a100-1ed1-4828-a6d9-b98e9eaf3b29" class=""><strong>SQL Operators: </strong><code><strong>IS NULL</strong></code><strong>/</strong><code><strong>IS NOT NULL</strong></code></p><hr id="17fd3011-3dd1-80fe-a03f-f09d58d5dd9e"/><p id="17fd3011-3dd1-8040-8989-f05fa036e0ba" class="">• Use <code>IS NULL</code> to check whether the attribute value is NULL</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-8048-a3e9-e9b1f7b8b8c6" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, state, city FROM Customers
+WHERE state IS NULL AND city IS NOT NULL AND country = &quot;Germany&quot;;</code></pre><figure id="17fd3011-3dd1-8065-99ed-d7a06238c1a6" class="image"><a href="image%2011.png"><img style="width:323px" src="image%2011.png"/></a></figure><p id="17fd3011-3dd1-80b0-844e-d424246b4d0f" class=""><strong>SQL Operators: </strong><code><strong>IN</strong></code></p><hr id="17fd3011-3dd1-80ec-8fe5-eee3ad8fde7b"/><ul id="17fd3011-3dd1-8033-9a47-dfce80065933" class="bulleted-list"><li style="list-style-type:disc">Checks whether attribute value matches any value within a given list</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-80e6-a7df-e94ed8fd2ee3" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Employees WHERE officeCode IN (1, 2, 3);</code></pre><figure id="17fd3011-3dd1-8082-b8bc-d2121b3e8beb" class="image"><a href="image%2012.png"><img style="width:555.484375px" src="image%2012.png"/></a></figure></div><div id="1fa8458c-03ca-43d4-a214-29c47052c1d9" style="width:50%" class="column"><p id="adb30bcf-e706-4bf8-942d-8f6e57f1bfc1" class=""><strong>SQL Operators: </strong><code><strong>LIKE</strong></code><strong> </strong></p><hr id="17fd3011-3dd1-8080-9cb4-d6426e5128d8"/><ul id="17fd3011-3dd1-803e-ab01-f9ad1f11843b" class="bulleted-list"><li style="list-style-type:disc">Used in conjunction with <mark class="highlight-blue"><strong>wildcards</strong></mark> to find patterns within string attributes<div id="17fd3011-3dd1-801f-8965-cb4f33c776b6" class="column-list"><div id="17fd3011-3dd1-8094-9fea-d157cec0f183" style="width:100%" class="column"><ul id="17fd3011-3dd1-8040-a050-f425bc4f3e0e" class="bulleted-list"><li style="list-style-type:circle">Percent (<code>%</code>): any characters</li></ul></div><div id="17fd3011-3dd1-80a4-848c-c926e5a47e0e" style="width:100%" class="column"><ul id="17fd3011-3dd1-8066-a1cf-c89e311a2720" class="bulleted-list"><li style="list-style-type:circle">Underscore (<code>_</code>): one character</li></ul></div></div></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-80c2-8a47-cfd36700a993" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT employeeNumber, lastName, firstName FROM Employees
+WHERE (lastName LIKE &quot;P%&quot; OR firstName LIKE &quot;A%&quot;) AND employeeNumber LIKE &quot;10__&quot;;</code></pre><figure id="17fd3011-3dd1-8077-a1b9-cf3e7a22354a" class="image"><a href="image%2013.png"><img style="width:252px" src="image%2013.png"/></a></figure><p id="17fd3011-3dd1-8008-8cbe-f2c841c46740" class=""><strong>SQL Operators: Variable Declaration</strong></p><hr id="17fd3011-3dd1-80c4-a4c3-d564f7c9c670"/><ul id="17fd3011-3dd1-801b-bf82-e6d8530e6377" class="bulleted-list"><li style="list-style-type:disc">Use <code>SET</code> and <code>@</code> to create a local variable, which can be used in the SQL <code>SELECT</code> statement.</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-8065-93ad-c453276f539c" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SET @mycity = &quot;Tokyo&quot;;
+SELECT * FROM Offices WHERE city=@mycity;</code></pre><figure id="17fd3011-3dd1-80b4-9c29-fb188c72fc5a" class="image"><a href="image%2014.png"><img style="width:555.359375px" src="image%2014.png"/></a></figure><p id="17fd3011-3dd1-804b-8bb4-dbd7edcf8473" class="">
+</p></div></div><h3 id="17fd3011-3dd1-803f-b91d-c47c582e4e55" class=""><code>SELECT</code>: Sorting</h3><hr id="17fd3011-3dd1-8095-b535-d6fc034f5f44"/><div id="17fd3011-3dd1-8054-8d17-d7abb7fc9c3f" class="column-list"><div id="4b45de4d-14dc-4967-9b0b-8efe38b93406" style="width:75%" class="column"><ul id="17fd3011-3dd1-8048-a1b7-d020fdae4ec2" class="bulleted-list"><li style="list-style-type:disc">Use ORDER BY to sort the results by the sort key</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-8035-983f-fb3fbc8e029d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT employeeNumber, lastName, firstName FROM Employees
+ORDER BY lastname ASC, firstname DESC;</code></pre><ul id="17fd3011-3dd1-8041-b6a0-eeba22858042" class="bulleted-list"><li style="list-style-type:disc">Sorting records can be performed more than one field:<div id="17fd3011-3dd1-80d9-a6cf-f57413a78f33" class="column-list"><div id="17fd3011-3dd1-8071-b88d-d44bf3a36cf6" style="width:93.75%" class="column"><ul id="17fd3011-3dd1-8030-9e0a-dc44253dfe65" class="bulleted-list"><li style="list-style-type:circle">The first sort field is called the <mark class="highlight-blue"><strong>major sort key</strong></mark>.</li></ul></div><div id="17fd3011-3dd1-80e0-9d8a-db398aa9f194" style="width:106.25%" class="column"><ul id="17fd3011-3dd1-8065-a29e-d74e72b352ac" class="bulleted-list"><li style="list-style-type:circle">The second sort field is called the <mark class="highlight-blue"><strong>minor sort key</strong></mark>.</li></ul><p id="17fd3011-3dd1-8051-bb02-d3b9975d699f" class="">
+</p></div></div></li></ul></div><div id="bed4ef9f-14e1-4c5d-9052-f19bea22eddd" style="width:25%" class="column"><figure id="17fd3011-3dd1-8046-8de4-e0d739a3da01" class="image"><a href="image%2015.png"><img style="width:256px" src="image%2015.png"/></a></figure></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
