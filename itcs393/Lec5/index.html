@@ -1,0 +1,695 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 5 Structured Query Language – Data Query Language (DQL): Aggregation, GROUP BY and HAVING</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="165d3011-3dd1-8047-8ffe-f766d3cef9f3" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📖</span></div><h1 class="page-title">Lecture 5 Structured Query Language – Data Query Language (DQL): Aggregation, GROUP BY and HAVING</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><p id="180d3011-3dd1-80f5-a465-c47d2d0909a5" class=""><code><a href="https://sunnyrichman.github.io/itcs393/">🔙 Back to Table of Contents, Click here</a></code></p><h3 id="17fd3011-3dd1-803e-8c06-e4d2c5c6d335" class="">Aggregate Functions</h3><hr id="17fd3011-3dd1-8065-b436-d5d9704e222d"/><ul id="17fd3011-3dd1-80ae-98b1-ca76ba69d1ea" class="bulleted-list"><li style="list-style-type:disc">Aggregate functions are used to summarize data</li></ul><div id="17fd3011-3dd1-80bb-8112-da538cb9f9f8" class="column-list"><div id="989f2db2-4c0b-4aa4-8a37-e22368db003c" style="width:16.666666666666668%" class="column"><p id="29a5863b-f3d2-4d69-8ce6-481dc5a8aa89" class=""><code><strong>COUNT</strong></code></p><hr id="17fd3011-3dd1-80e4-9cdf-d3266609273b"/><p id="17fd3011-3dd1-805e-9347-daecc4321e01" class="">Count number of not-null values of an attribute</p></div><div id="f9320bbc-5803-494d-9961-f150f4db8905" style="width:16.666666666666668%" class="column"><p id="e008a66c-9598-4939-8acf-1738f3de6f8d" class=""><code><strong>MAX</strong></code></p><hr id="17fd3011-3dd1-80e6-bfcf-c463886a7429"/><p id="17fd3011-3dd1-80b3-b587-c5258ba29506" class="">Find highest value in a table</p></div><div id="fdca4500-f60f-4697-9cb8-1f8917818a04" style="width:16.666666666666668%" class="column"><p id="17fd3011-3dd1-80d2-a55e-eafadd503191" class=""><code><strong>MIN</strong></code></p><hr id="17fd3011-3dd1-80cf-8a09-edeebeb66e1e"/><p id="31490dd3-eaaf-4f43-b5ee-cf363bc96496" class="">Find lowest value in a table</p></div><div id="285743bb-5c3d-4929-b8b8-5c272cd66ad8" style="width:16.666666666666668%" class="column"><p id="0cc4f28d-d8a6-43ba-9970-f0816ceeddda" class=""><code><strong>SUM</strong></code><strong> </strong></p><hr id="17fd3011-3dd1-80ad-a217-dd8dedd906fb"/><p id="17fd3011-3dd1-80e8-87c1-f237546059cb" class="">Compute total sum for any specified attribute</p></div><div id="7dcb4160-b938-4881-95fd-e450e54733e3" style="width:16.666666666666668%" class="column"><p id="a78b211c-0053-4cb6-be32-3b9b75f0e028" class=""><code><strong>AVG</strong></code></p><hr id="17fd3011-3dd1-8005-b17c-c8611d44af0c"/><p id="17fd3011-3dd1-806e-8d25-fd2a4901b252" class="">Compute the average value of any specified attribute</p><hr id="17fd3011-3dd1-807e-bbd9-c38d398fd83e"/></div><div id="17fd3011-3dd1-80e5-8058-ce681dc2b320" style="width:16.666666666666664%" class="column"><p id="17fd3011-3dd1-8088-a9fd-f092181ea408" class=""><code><strong>STDDEV</strong></code></p><hr id="17fd3011-3dd1-8058-a293-e0270f8b659e"/><p id="17fd3011-3dd1-8033-bed3-f652d5df7749" class="">Compute the population standard deviation</p></div></div><p id="f5a78bdd-584b-4368-99a3-d7595bb5ba4a" class=""><strong>Aggregate Function: </strong><code><strong>COUNT</strong></code></p><hr id="17fd3011-3dd1-8046-889e-d64f373e8448"/><ul id="17fd3011-3dd1-809e-aebf-c61a8bed921e" class="bulleted-list"><li style="list-style-type:disc">Used to find the total number not-null values of an attribute.</li></ul><div id="17fd3011-3dd1-808f-b710-dd8135a40d2e" class="column-list"><div id="260ea4b7-77ca-4a41-b800-6cb2da3e3109" style="width:56.25%" class="column"><ul id="17fd3011-3dd1-801b-9747-c0c9a16e51ba" class="bulleted-list"><li style="list-style-type:disc">List all managers in the company</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-80a5-aebc-c70cb3176c96" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Employees WHERE jobTitle LIKE &#x27;%Manager%&#x27;;</code></pre><figure id="17fd3011-3dd1-805f-b4bb-fa21f06ea095" class="image"><a href="image.png"><img style="width:555.421875px" src="image.png"/></a></figure></div><div id="bea1520a-19b7-470a-9d40-a9cc5b5746df" style="width:43.75%" class="column"><ul id="17fd3011-3dd1-8084-a93f-fe6e9c1265b2" class="bulleted-list"><li style="list-style-type:disc">How many employee who are managers?</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-809a-8706-fa5263b552ba" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT COUNT(*) AS numManager FROM Employees WHERE jobTitle LIKE &#x27;%Manager%&#x27;;</code></pre><figure id="17fd3011-3dd1-8044-9dee-cc14887529d6" class="image"><a href="image%201.png"><img style="width:101px" src="image%201.png"/></a></figure></div></div><ul id="a2cef2ef-371e-4020-b27f-1b72912db9e0" class="bulleted-list"><li style="list-style-type:disc">Can be used in conjunction with the <code>DISTINCT</code> (selecting non-duplicate value) clause</li></ul><div id="17fd3011-3dd1-80d9-b1c7-e037240d1451" class="column-list"><div id="c01d2003-cf7f-46f3-8d6a-aceb54974a96" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-802d-ad5a-c6a1af16603f" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT productVendor FROM Products;</code></pre><div id="17fd3011-3dd1-80f4-9d4a-e1ec78c2d5a8" class="column-list"><div id="17fd3011-3dd1-806b-9cbc-caf8a68403e0" style="width:100%" class="column"><figure id="17fd3011-3dd1-80a8-8f7f-f40ecd5c72f5" class="image"><a href="95fa14dd-e33e-46ea-99f4-38c3e511fe28.png"><img style="width:144px" src="95fa14dd-e33e-46ea-99f4-38c3e511fe28.png"/></a></figure></div><div id="17fd3011-3dd1-8046-9917-d8a6e849e1c8" style="width:100%" class="column"><figure id="17fd3011-3dd1-800b-a0d3-f0439f3068e0" class="image"><a href="3fee5a39-4097-4841-a134-abb1cb418c51.png"><img style="width:192px" src="3fee5a39-4097-4841-a134-abb1cb418c51.png"/></a></figure></div></div></div><div id="786faaec-a5a4-457a-b6b8-a93f0025e0d7" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-8075-90fd-dec141c6731e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT COUNT(DISTINCT productVendor) AS numVendor FROM Products;</code></pre><figure id="17fd3011-3dd1-801a-8a60-e78f40094e13" class="image"><a href="image%202.png"><img style="width:94px" src="image%202.png"/></a></figure></div></div><p id="17fd3011-3dd1-8005-bc31-f1e9e048077f" class=""><strong>Aggregate Function: </strong><code><strong>MAX</strong></code><strong>, </strong><code><strong>MIN</strong></code><strong>, </strong><code><strong>SUM</strong></code><strong>, </strong><code><strong>AVG</strong></code></p><hr id="17fd3011-3dd1-80a2-a363-f4656b0e959c"/><p id="17fd3011-3dd1-8059-a3d2-ccc2d7c1725f" class="">Find the total, minimum, average, and maximum amount of payments of this company in the year 2004.</p><div id="17fd3011-3dd1-80d2-afa9-f071ba50b8fd" class="column-list"><div id="17fd3011-3dd1-8010-9202-faea7210df2e" style="width:93.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-806e-928e-ff4cb6ce4697" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT SUM(amount), MIN(amount), AVG(amount), MAX(amount) FROM Payments WHERE YEAR(paymentDate)=2004;</code></pre></div><div id="17fd3011-3dd1-80c3-ac0d-d9ed4d2b167f" style="width:87.49999999999999%" class="column"><figure id="17fd3011-3dd1-8017-8723-d97208abf656" class="image"><a href="image%203.png"><img style="width:480px" src="image%203.png"/></a></figure></div></div><p id="17fd3011-3dd1-8022-b371-f0a1924fec2e" class=""><strong>Aggregate Function: </strong><code><strong>STDDEV</strong></code></p><hr id="17fd3011-3dd1-8066-8108-facffd3839b7"/><div id="17fd3011-3dd1-8089-93ac-df4b6d6ed0a5" class="column-list"><div id="6d561765-6ea2-4420-856e-3c3fc9a7081f" style="width:18.75%" class="column"><figure id="17fd3011-3dd1-8078-95e7-e9954959bab9" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mi>D</mi><mtext> </mtext><mo>=</mo><mtext> </mtext><msqrt><mfrac><mrow><mo>∑</mo><mi mathvariant="normal">∣</mi><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup></mrow><mi>N</mi></mfrac></msqrt></mrow><annotation encoding="application/x-tex">SD~=~\sqrt{\frac{\sum|x-\mu|^2}{N}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.44em;vertical-align:-0.7356em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace nobreak"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace nobreak"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7044em;"><span class="svg-align" style="top:-4.4em;"><span class="pstrut" style="height:4.4em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">μ</span><span class="mord"><span class="mord">∣</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-3.6644em;"><span class="pstrut" style="height:4.4em;"></span><span class="hide-tail" style="min-width:1.02em;height:2.48em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='2.48em' viewBox='0 0 400000 2592' preserveAspectRatio='xMinYMin slice'><path d='M424,2478
+c-1.3,-0.7,-38.5,-172,-111.5,-514c-73,-342,-109.8,-513.3,-110.5,-514
+c0,-2,-10.7,14.3,-32,49c-4.7,7.3,-9.8,15.7,-15.5,25c-5.7,9.3,-9.8,16,-12.5,20
+s-5,7,-5,7c-4,-3.3,-8.3,-7.7,-13,-13s-13,-13,-13,-13s76,-122,76,-122s77,-121,77,-121
+s209,968,209,968c0,-2,84.7,-361.7,254,-1079c169.3,-717.3,254.7,-1077.7,256,-1081
+l0 -0c4,-6.7,10,-10,18,-10 H400000
+v40H1014.6
+s-87.3,378.7,-272.6,1166c-185.3,787.3,-279.3,1182.3,-282,1185
+c-2,6,-10,9,-24,9
+c-8,0,-12,-0.7,-12,-2z M1001 80
+h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7356em;"><span></span></span></span></span></span></span></span></span></span></div></figure></div><div id="80e5046c-9474-4909-a708-0c6ade715f47" style="width:81.25%" class="column"><ul id="17fd3011-3dd1-801c-b7f9-f0e93dca54cc" class="bulleted-list"><li style="list-style-type:disc"><strong>Standard deviation</strong> is a statistical measure of diversity or variability in a data set.<ul id="17fd3011-3dd1-80bd-b940-c27c4a84a5a7" class="bulleted-list"><li style="list-style-type:circle">Low SD means data points are closed to the mean</li></ul><ul id="17fd3011-3dd1-80a6-b7f0-eae5d2df7568" class="bulleted-list"><li style="list-style-type:circle">High SD indicates greater variability in data points</li></ul></li></ul></div></div><p id="17fd3011-3dd1-8088-bb73-f985741687b9" class="">What is the average and standard deviation of MSRP of the &quot;Classic Cars&quot;?</p><div id="17fd3011-3dd1-80d0-80e6-f2d4bd331f15" class="column-list"><div id="b278460b-840b-433e-9f88-52cd3d074c00" style="width:68.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17fd3011-3dd1-8034-9dd5-d457ac76597d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT AVG(MSRP), FORMAT(STDDEV(MSRP),2) FROM Products WHERE productLine=&#x27;Classic Cars&#x27;;</code></pre></div><div id="0aa598a8-3355-4622-a2b4-7f6e074bd449" style="width:31.25%" class="column"><figure id="17fd3011-3dd1-8069-87cf-eb25fac559d5" class="image"><a href="image%204.png"><img style="width:336px" src="image%204.png"/></a></figure></div></div><h3 id="180d3011-3dd1-80ad-b28e-cc0f841225b9" class="">Aggregate Function: <code>GROUP BY</code></h3><hr id="180d3011-3dd1-80e4-8931-e33f147a8dc4"/><div id="180d3011-3dd1-80a4-b531-d21047fc9a45" class="column-list"><div id="dc545e35-b6dc-43d6-9bd6-ca4b3615905d" style="width:50%" class="column"><ul id="180d3011-3dd1-80e0-bf47-cf0221d26ab2" class="bulleted-list"><li style="list-style-type:disc">The aggregate functions can be used to summarize data based on group<ul id="180d3011-3dd1-80f5-ad22-de32effd8395" class="bulleted-list"><li style="list-style-type:circle">Example: How many products per vendor?</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="180d3011-3dd1-805c-9520-fda982443037" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM products ORDER BY productVendor ASC;</code></pre></li></ul></div><div id="f3340101-698d-4003-9b8a-a6a168e80877" style="width:50%" class="column"><figure id="180d3011-3dd1-8052-9b06-e8681b089a99" class="image"><a href="image%205.png"><img style="width:555.453125px" src="image%205.png"/></a></figure></div></div><div id="180d3011-3dd1-80cf-8b6c-f334a5bcc4fa" class="column-list"><div id="04b0e4bc-28eb-4970-86c8-d25b4def84b1" style="width:81.25%" class="column"><ul id="180d3011-3dd1-8075-9534-cc9ea7c84b1c" class="bulleted-list"><li style="list-style-type:disc"><code><strong>GROUP BY</strong></code>: Group rows into smaller collections by given columns, then, apply aggregate functions to summarize the data in each group.</li></ul><ul id="180d3011-3dd1-804f-a1dc-ef830f3781b4" class="bulleted-list"><li style="list-style-type:disc">💡: the GROUP BY clause is valid only when used in conjunction with one of the SQL aggregate functions</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="180d3011-3dd1-80cb-8a0c-d096a7d0ff93" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT productVendor, COUNT(productCode) as numProd FROM Products GROUP BY productVendor ORDER BY productVendor;</code></pre></div><div id="d411487a-70a7-4835-bd39-f40c94c8448e" style="width:18.750000000000004%" class="column"><figure id="180d3011-3dd1-80b7-8bcd-d172b12e51c5" class="image"><a href="image%206.png"><img style="width:192px" src="image%206.png"/></a></figure></div></div><p id="180d3011-3dd1-80bb-9200-f6e28e2f9c9d" class=""><code><strong>GROUP BY</strong></code><strong> with </strong><code><strong>HAVING</strong></code></p><hr id="180d3011-3dd1-8021-8b2f-fcf62a059cb8"/><div id="180d3011-3dd1-80bb-b496-dc3e3855954c" class="column-list"><div id="930e9fef-4e3e-489f-a98b-23feaa11f323" style="width:56.25%" class="column"><ul id="180d3011-3dd1-8021-bf78-fff200e45c73" class="bulleted-list"><li style="list-style-type:disc">The HAVING clause operates like the WHERE clause of the GROUP BY clause</li></ul><ul id="180d3011-3dd1-80ef-abe9-c2be856a6460" class="bulleted-list"><li style="list-style-type:disc">Only applied to the output of a GROUP BY operation</li></ul><ul id="180d3011-3dd1-80b3-b526-ccb8a0e85593" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Example</span>: What vendors providing exactly 8 products?</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="180d3011-3dd1-8080-8d91-c87c28c6e81d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT productVendor, COUNT(productCode) as numProd FROM Products 
+GROUP BY productVendor HAVING numProd = 8 ORDER BY productVendor;</code></pre></div><div id="4e426bda-0741-44f7-9688-1913aa7be840" style="width:43.74999999999999%" class="column"><figure id="180d3011-3dd1-8005-a29c-c94bbe41f8c8" class="image"><a href="image%207.png"><img style="width:204.71875px" src="image%207.png"/></a></figure></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
