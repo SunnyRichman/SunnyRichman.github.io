@@ -1,0 +1,745 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lab6 Structured Query Language – JOIN and SET</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="19fd3011-3dd1-8059-b252-c1699cab0ae2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🧪</span></div><h1 class="page-title">Lab6 Structured Query Language – JOIN and SET</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px;display:block"/></span>Type</th><td><span class="selected-value select-value-color-green">Lab</span></td></tr></tbody></table></header><div class="page-body"><p id="19fd3011-3dd1-81a4-8614-dba244430461" class=""><code><a href="https://sunnyrichman.github.io/itcs393">🔙 Back to Table of Contents, Click here</a></code></p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19fd3011-3dd1-8153-978d-d2fb5729c2db"><div style="font-size:1.5em"><span class="icon">📋</span></div><div style="width:100%"><p id="19fd3011-3dd1-8118-b752-fc01cef9ce0c" class=""><strong>Instructions</strong></p><hr id="19fd3011-3dd1-8175-83d9-e3c83c5d3328"/><ul id="19fd3011-3dd1-81ea-80a4-cf5bed006813" class="bulleted-list"><li style="list-style-type:disc">Submit .sql file, named as <code>Lab06_6XXXXXX.sql</code> to MyCourses</li></ul><ul id="19fd3011-3dd1-8147-96f8-d5186ef9c70e" class="bulleted-list"><li style="list-style-type:disc">If students cannot finish within the class time, students can submit until the end of the next class.</li></ul></div></figure><div id="19fd3011-3dd1-816e-8c67-d6c62dcbd805" class="column-list"><div id="19fd3011-3dd1-81c8-ad05-eacee890266a" style="width:50%" class="column"><figure id="19fd3011-3dd1-81b3-a7ce-ff82b2306e04" class="image"><a href="image.png"><img style="width:528px" src="image.png"/></a></figure></div><div id="19fd3011-3dd1-817b-8371-c3dd83dd36ea" style="width:50%" class="column"><p id="19fd3011-3dd1-81d7-b211-e3fbda4d9e31" class="">Use the given SQL scripts, classicmodel.sql to create a <code>classicmodels</code> database. The structure of the database is shown below:</p><ul id="19fd3011-3dd1-813a-b9e6-c754f2155020" class="bulleted-list"><li style="list-style-type:disc"><strong>Customers</strong>: stores customer’s data and their contact information</li></ul><ul id="19fd3011-3dd1-8182-aba2-f2cd096df90c" class="bulleted-list"><li style="list-style-type:disc"><strong>Products</strong>: stores a list of scale model cars.</li></ul><ul id="19fd3011-3dd1-81f8-8828-de42c5cdb981" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductLines</strong>: stores a list of product line categories.</li></ul><ul id="19fd3011-3dd1-816f-894a-cc417c31cb87" class="bulleted-list"><li style="list-style-type:disc"><strong>Orders</strong>: stores sales orders placed by customers.</li></ul><ul id="19fd3011-3dd1-81c2-b8fb-d774eff55bb6" class="bulleted-list"><li style="list-style-type:disc"><strong>OrderDetails</strong>: stores sales order line items for each sales order.</li></ul><ul id="19fd3011-3dd1-8104-8f3d-f8d02dd8a25f" class="bulleted-list"><li style="list-style-type:disc"><strong>Payments</strong>: stores payments made by customers based on their accounts.</li></ul><ul id="19fd3011-3dd1-81f9-a9b1-c958a425635d" class="bulleted-list"><li style="list-style-type:disc"><strong>Employees</strong>: stores all employee information as well as the organization structure such as who reports to whom.</li></ul><ul id="19fd3011-3dd1-8112-9a33-e92de22cb088" class="bulleted-list"><li style="list-style-type:disc"><strong>Offices</strong>: stores sales office data.</li></ul></div></div><p id="19fd3011-3dd1-8155-94e9-f687674f10e2" class="">Create <code>Lab06_6XXXXXX.sql</code> to store the answer for the following query tasks and comment your ID, name, and the question number accordingly:</p><ol type="1" id="19fd3011-3dd1-810b-93d8-c6d20f400232" class="numbered-list" start="1"><li>Show the top 3 most sold product (judged by the total number of quantity ordered) of the “Ships” product line. The result must include the product code, the product name, the total number of quantity ordered and the total amount of sales (calculated by the quantity ordered multiplied by the price).<br/>For the purpose of the lab, <br/><mark class="highlight-red">use any types of SQL JOIN to solve the problem and No subquery is allowed for this question</mark>.</li></ol><div id="19fd3011-3dd1-811f-8100-f6997020a8dd" class="column-list"><div id="19fd3011-3dd1-81ab-88ad-d3cf86f50876" style="width:25%" class="column"><p id="19fd3011-3dd1-81a7-9ddd-f7ca82ad6f67" class="">Expected 3 rows, 4 columns.</p><figure id="19fd3011-3dd1-8016-9bfb-f740ac547edb" class="image"><a href="image%201.png"><img style="width:345.296875px" src="image%201.png"/></a></figure></div><div id="19fd3011-3dd1-81de-bb7a-f67cad9fdcdb" style="width:75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-8184-a798-c0f7a2064592" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT o.productCode, p.productName, SUM(o.quantityOrdered) AS totalQuantity, SUM(o.quantityOrdered*o.priceEach) AS totalSales FROM products p
+INNER JOIN orderdetails o ON p.productCode = o.productCode
+WHERE p.productLine = &quot;Ships&quot;
+GROUP BY p.productCode ORDER BY totalQuantity DESC
+LIMIT 3;</code></pre></div></div><ol type="1" id="19fd3011-3dd1-81d0-9109-cd51fc046ed4" class="numbered-list" start="2"><li>List all sale managers (employee number, full name, job title) and their subordinate sale representatives under their supervision. <br/><br/><strong>Note</strong>: The attribute <code>reportsTo</code> shows the recursive relationship. The value indicates the employee number of their manager that he/she reports to.<br/>For the purpose of the lab, <br/><mark class="highlight-red">use any types of SQL JOIN to solve the problem and No subquery is allowed for this question</mark>.</li></ol><div id="19fd3011-3dd1-8180-b0f1-cdeee4231f04" class="column-list"><div id="19fd3011-3dd1-8194-997b-d4096bb81b33" style="width:25%" class="column"><p id="19fd3011-3dd1-815c-a0ce-c82db6bc4e7a" class="">Expected 3 rows, 4 columns.</p><figure id="19fd3011-3dd1-802e-9d63-d1dcd63e6385" class="image"><a href="image%202.png"><img style="width:288px" src="image%202.png"/></a></figure></div><div id="19fd3011-3dd1-8154-a0e6-c9abada31066" style="width:75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-8167-b81e-d5458ed15330" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT e.employeeNumber, CONCAT(e.firstName,&quot; &quot;,e.lastName) AS fullname, e.jobTitle, COUNT(e.reportsTo) AS numSubEmp FROM employees e
+INNER JOIN employees emp ON e.employeeNumber = emp.reportsTo
+WHERE e.jobTitle LIKE &quot;Sale% Manager%&quot;
+GROUP BY employeeNumber;</code></pre></div></div><ol type="1" id="19fd3011-3dd1-81b5-8af2-d031b822ebca" class="numbered-list" start="3"><li>Find the total numbers of quantity ordered per product line for the complete order, sorted the results from the highest numbers to the lowest ones.<br/><br/><strong>Note</strong>: the complete order is considered from the order with the status &#x27;Shipped&#x27;.<br/>For the purpose of the lab, <br/><mark class="highlight-red">use any types of SQL JOIN to solve the problem and No subquery is allowed for this question</mark>.</li></ol><div id="19fd3011-3dd1-8153-8fc3-daffbdef9b35" class="column-list"><div id="19fd3011-3dd1-813f-87be-e87a53817300" style="width:25%" class="column"><p id="19fd3011-3dd1-8151-a268-ff9aa862da47" class="">Expected 7 rows, 2 columns.</p><figure id="19fd3011-3dd1-80de-b6a7-d9421973122b" class="image"><a href="image%203.png"><img style="width:220px" src="image%203.png"/></a></figure></div><div id="19fd3011-3dd1-81ba-b368-ce5a5a5b3ddb" style="width:75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-81c8-a97b-e8397ceb088a" class="code"><code class="language-SQL">SELECT productLine, SUM(o.quantityOrdered) AS quantityOrdered FROM products p
+INNER JOIN orderdetails o ON p.productCode = o.productCode
+INNER JOIN orders os ON o.orderNumber = os.orderNumber
+WHERE os.status = &quot;Shipped&quot;
+GROUP BY productLine ORDER BY quantityOrdered DESC;</code></pre></div></div><ol type="1" id="19fd3011-3dd1-81b6-90de-d646b73221cd" class="numbered-list" start="4"><li>List the products (code and name) that have never been sold.<br/>For the purpose of the lab, <br/><mark class="highlight-red">use any types of SQL JOIN to solve the problem and No subquery is allowed for this question</mark>.</li></ol><div id="19fd3011-3dd1-81c9-ab8f-dd04ced1c431" class="column-list"><div id="19fd3011-3dd1-81a7-b45b-e0dc65ffd1de" style="width:18.75%" class="column"><p id="19fd3011-3dd1-8119-85d0-d20dddcc4e5d" class="">Expected 1 row, 2 columns.</p><figure id="19fd3011-3dd1-805b-bf07-cd684eba9e70" class="image"><a href="image%204.png"><img style="width:205px" src="image%204.png"/></a></figure></div><div id="19fd3011-3dd1-8190-9a7c-d4a7f481f806" style="width:81.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-8102-b192-d701c1469cc8" class="code"><code class="language-SQL">SELECT p.productCode, p.productName FROM products p 
+LEFT OUTER JOIN orderdetails o ON p.productCode = o.productCode
+WHERE o.orderNumber IS NULL;</code></pre></div></div><div id="19fd3011-3dd1-81ba-8d2f-ca4b17e36878" class="column-list"><div id="19fd3011-3dd1-8170-ab41-cec7f8d0629a" style="width:25%" class="column"><p id="19fd3011-3dd1-812c-8b29-e5c69b63b74f" class="">Expected 12 rows, 2 columns.</p><figure id="19fd3011-3dd1-80b1-bccb-f4f51d24027d" class="image"><a href="image%205.png"><img style="width:276.21875px" src="image%205.png"/></a></figure></div><div id="19fd3011-3dd1-81e7-bb25-d65a09de34d5" style="width:75%" class="column"><ol type="1" id="19fd3011-3dd1-81da-9381-d221f0cda2e7" class="numbered-list" start="5"><li>List the German customers who made the orders not more than 3 times in total.<br/>For the purpose of the lab, <br/><mark class="highlight-red">use any types of SQL JOIN to solve the problem and No subquery is allowed for this question</mark>.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-81a1-b093-ef15d758a785" class="code"><code class="language-SQL">SELECT customerName, COUNT(orderNumber) AS numOrders FROM customers c
+LEFT OUTER JOIN orders o ON c.customerNumber = o.customerNumber
+WHERE country = &quot;Germany&quot;
+GROUP BY customerName HAVING numOrders &lt;= 3
+ORDER BY customerName ASC;</code></pre></div></div><div id="19fd3011-3dd1-8081-b4a6-f3bb0b40d8ee" class="column-list"><div id="19fd3011-3dd1-806b-ae31-efb268fd2c15" style="width:81.25%" class="column"><p id="19fd3011-3dd1-8092-8a31-f22f47b3d92a" class="">For Q6-Q9: According to the diagram, find the missing information for a manager who want to analyze the list of products selling in two countries: J: Japan and S: Singapore</p><p id="19fd3011-3dd1-8082-8ee0-d3b4ef0d20e0" class="">Expected: 2 columns (productCode, productName)</p></div><div id="19fd3011-3dd1-80b4-a34b-cdd7e3e6d674" style="width:18.749999999999996%" class="column"><figure id="19fd3011-3dd1-8085-a395-d676175ffac3" class="image"><a href="60fe5909-2492-45f3-a2c0-50f7a3616e3c.png"><img style="width:563.921568627451px" src="60fe5909-2492-45f3-a2c0-50f7a3616e3c.png"/></a></figure></div></div><div id="19fd3011-3dd1-809c-8a81-e827ac23fdb4" class="column-list"><div id="19fd3011-3dd1-8043-8531-efb916e8ad45" style="width:50%" class="column"><ol type="1" id="19fd3011-3dd1-817e-bc33-e8d3a708ac89" class="numbered-list" start="6"><li>Find the list of products that are sold to customers in Japan only (Not to Singaporian Customers)</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-817c-b980-c501c5377054" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT p.productCode, p.productName FROM products p
+INNER JOIN orderdetails od ON p.productCode = od.productCode
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
+INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.country = &#x27;Japan&#x27; AND p.productCode NOT IN
+(SELECT p.productCode FROM products p
+INNER JOIN orderdetails od ON p.productCode = od.productCode
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
+INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.country = &#x27;Singapore&#x27;);</code></pre></div><div id="19fd3011-3dd1-80d0-b547-fc40024d10ff" style="width:50%" class="column"><ol type="1" id="19fd3011-3dd1-81f9-8b93-eb31d366f5aa" class="numbered-list" start="7"><li>Find the list of products that are sold to customers in Singapore only (Not to Japanese customers)</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-8178-989b-f3ca1e7663d6" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT p.productCode, p.productName FROM products p
+INNER JOIN orderdetails od ON p.productCode = od.productCode
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
+INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.country = &#x27;Singapore&#x27; AND p.productCode NOT IN
+(SELECT p.productCode FROM products p
+INNER JOIN orderdetails od ON p.productCode = od.productCode
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
+INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.country = &#x27;Japan&#x27;);</code></pre></div></div><ol type="1" id="19fd3011-3dd1-8083-a91f-c104a9e5533a" class="numbered-list" start="8"><li>Find the list of products that are sold to both customers in Japan and Singapore</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-8080-ae52-c7bbcd6bd547" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT p.productCode, p.productName FROM products p
+INNER JOIN orderdetails od ON p.productCode = od.productCode
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
+INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.country = &quot;Singapore&quot; AND p.productCode IN (
+	SELECT p2.productCode	FROM products p2
+	INNER JOIN orderdetails od2 ON p2.productCode = od2.productCode
+	INNER JOIN orders o2 ON od2.orderNumber = o2.orderNumber
+	INNER JOIN customers c2 ON o2.customerNumber = c2.customerNumber
+	WHERE c2.country = &quot;Japan&quot;
+);</code></pre><ol type="1" id="19fd3011-3dd1-8072-b2b6-e944b490d597" class="numbered-list" start="9"><li>How many of products in total that are sold to customers in Japan and Singapore? Expected: 2 columns (productCode, productName)</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-80e1-a182-e673b4ff0a3e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT p.productCode, p.productName, COUNT(p.productCode) AS totalSales FROM products p
+INNER JOIN orderdetails od ON p.productCode = od.productCode
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
+INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.country = &#x27;Japan&#x27;
+GROUP BY p.productCode
+UNION ALL
+SELECT p.productCode, p.productName, COUNT(p.productCode) AS totalSales FROM products p
+INNER JOIN orderdetails od ON p.productCode = od.productCode
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
+INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.country = &#x27;Singapore&#x27;
+GROUP BY p.productCode;</code></pre><div id="19fd3011-3dd1-80c8-9aaf-e998b944e948" class="column-list"><div id="19fd3011-3dd1-8038-8398-c4f09665318e" style="width:25%" class="column"><p id="19fd3011-3dd1-80ee-a46a-e33dde3c9e7e" class="">Expected 2 row, 145 columns.</p><figure id="19fd3011-3dd1-808e-a559-cee3adac49b4" class="image"><a href="image%206.png"><img style="width:552.46875px" src="image%206.png"/></a></figure><p id="19fd3011-3dd1-806d-a4e4-e502221bd7fe" class="">This is a partial result.</p></div><div id="19fd3011-3dd1-80b2-a45d-cc3f9ff873c9" style="width:75%" class="column"><ol type="1" id="19fd3011-3dd1-802e-96f4-fa67684a1822" class="numbered-list" start="10"><li>List all contact names and phone numbers of both customers and the employees in one result.<ul id="19fd3011-3dd1-8093-90f5-cc6ca73b57ba" class="bulleted-list"><li style="list-style-type:disc">Contact name of customers is derived from customers’ contact firstname and lastname</li></ul><ul id="19fd3011-3dd1-80ab-b7f7-e592f96ca150" class="bulleted-list"><li style="list-style-type:disc">Contact name of employees is derived from their first name and last name</li></ul><ul id="19fd3011-3dd1-8014-b546-fb5ee21e9434" class="bulleted-list"><li style="list-style-type:disc">Phone number of employees is combined from the office</li></ul></li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19fd3011-3dd1-80fc-838c-d37e9353e514" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT CONCAT(contactFirstName,&quot; &quot;,contactLastName) AS Contact Name, phone AS Phone Number FROM customers
+UNION ALL
+SELECT CONCAT(firstName,&quot; &quot;,lastName) AS Contact Name, CONCAT(phone,&quot;-&quot;,extension) AS Phone Number From employees e
+LEFT OUTER JOIN offices o ON e.officeCode = o.officeCode
+ORDER BY Contact Name ASC;</code></pre></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
