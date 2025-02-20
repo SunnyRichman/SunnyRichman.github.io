@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans">
+    <link rel="stylesheet" href="login.css">
+  </head>
+  <body>
+    <header><h1>Login</h1></header>
+    
+    <fieldset>
+    <form onsubmit="return validateLogin()">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br><br>
+
+        <button type="submit">Login</button>
+    </form>
+    </fieldset>
+
+  </body>
+  <footer>More info, see <a href ="https://sunnyict20.notion.site/About-Me-ec47ef8b2c9849979d50234728bc60b8">SunnyICT20 Notion Site</a></footer>
+    <script src="login.js"></script>
+</html>
