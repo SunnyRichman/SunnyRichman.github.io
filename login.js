@@ -8,6 +8,7 @@ function validateLogin() {
       return false;
   } else {
     alert("Incorrect information, try again.");
-      return true;
+    window.location.href = "https://sunnyrichman.github.io/login.html"; // Change to your actual page  
+      return false;
   }
 }
