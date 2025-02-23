@@ -1,0 +1,816 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 6 Structured Query Language – Data Query Language (DQL): JOIN and Set Operations</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="165d3011-3dd1-80e4-9bcf-c68bccddf898" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📖</span></div><h1 class="page-title">Lecture 6 Structured Query Language – Data Query Language (DQL): JOIN and Set Operations</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px;display:block"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><p id="1a3d3011-3dd1-809b-ad7d-dd62d909c98f" class=""><code><a href="https://sunnyrichman.github.io/itcs393/">🔙 Back to Table of Contents, Click here</a></code></p><h3 id="182d3011-3dd1-80e4-a9ac-ec29c091e280" class="">SQL JOIN Operators</h3><hr id="182d3011-3dd1-80ca-bd31-d1cd2dd634bb"/><div id="19dd3011-3dd1-803e-b266-f0c07b515dfb" class="column-list"><div id="19dd3011-3dd1-806e-a439-d611e00a41c3" style="width:56.25%" class="column"><p id="182d3011-3dd1-801f-b1e2-d470b74893b4" class=""><strong>SQL JOIN</strong></p><hr id="182d3011-3dd1-8079-8fce-e998910dda6f"/><ul id="182d3011-3dd1-80fc-a33a-fa0d97712d67" class="bulleted-list"><li style="list-style-type:disc">SQL join clause <mark class="highlight-blue">combines columns from one or more tables</mark> in a relational database</li></ul><ul id="182d3011-3dd1-80de-8888-f68204c78de2" class="bulleted-list"><li style="list-style-type:disc">Use when you want to have data from <mark class="highlight-blue">more than one</mark> tables</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-80c3-8143-e16f8020ae07"><div style="width:100%"><p id="19dd3011-3dd1-80f0-9506-ce52e9c8493a" class=""><strong>Types</strong></p><hr id="19dd3011-3dd1-8087-91fe-d4143c097211"/><ul id="182d3011-3dd1-80c8-b7fc-d54e588a0058" class="bulleted-list"><li style="list-style-type:disc"><code><strong>CROSS</strong></code>: cartesian product of 2 tables</li></ul><ul id="182d3011-3dd1-802d-b1d1-e0f2bb6407db" class="bulleted-list"><li style="list-style-type:disc"><code><strong>INNER</strong></code>: returns rows meet given criteria<ul id="182d3011-3dd1-80fa-aa87-f40376b3d391" class="bulleted-list"><li style="list-style-type:circle">Equality condition → Natural join / equijoin</li></ul><ul id="182d3011-3dd1-809a-b52e-fe39c9e5b69a" class="bulleted-list"><li style="list-style-type:circle">Inequality condition → Theta join</li></ul></li></ul><ul id="182d3011-3dd1-80ff-aa7c-fd27eb9108c9" class="bulleted-list"><li style="list-style-type:disc"><code><strong>OUTER</strong></code>: returns matching rows and unmatched attribute values for 1 or both tables to be joined.</li></ul></div></figure></div><div id="19dd3011-3dd1-80fa-8bde-ed2a834b9ef3" style="width:43.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="182d3011-3dd1-808c-933f-d1f86bd82ed9" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT [columns] FROM tablename t1
+[INNER|LEFT OUTER|RIGHT OUTER|FULL OUTER|CROSS]
+JOIN table2 t2 ON conditions_of_join
+[WHERE [conditions]] [GROUP BY [columns]]
+[HAVING [conditions]] [ORDER BY [columns] ASC|DESC]
+[LIMIT N];</code></pre><div id="19dd3011-3dd1-80bf-8518-fa4a33dc2cf2" class="column-list"><div id="19dd3011-3dd1-8088-b5e6-c1f9f99d14bb" style="width:100%" class="column"><figure id="19dd3011-3dd1-8008-a04a-c83aa4ba77a7" class="image"><a href="de7331bf-6b75-4f66-9fd6-68b4291b180d.png"><img style="width:84px" src="de7331bf-6b75-4f66-9fd6-68b4291b180d.png"/></a></figure></div><div id="19dd3011-3dd1-8037-93a1-fde91a68fc01" style="width:100%" class="column"><figure id="19dd3011-3dd1-80ee-b568-e7615583f8cd" class="image"><a href="ecd4dc24-0682-4683-88bd-e1e37a3719a6.png"><img style="width:84px" src="ecd4dc24-0682-4683-88bd-e1e37a3719a6.png"/></a></figure></div><div id="19dd3011-3dd1-80a1-8fa5-c6f3b3ae06b7" style="width:100%" class="column"><figure id="19dd3011-3dd1-8090-839f-ccd83fa317c0" class="image"><a href="7f69966a-0902-473e-bc3e-b451c19ab485.png"><img style="width:96px" src="7f69966a-0902-473e-bc3e-b451c19ab485.png"/></a></figure></div></div></div></div><div id="19dd3011-3dd1-80db-a749-e2816a871267" class="column-list"><div id="19dd3011-3dd1-80c6-97fa-f374a22d76df" style="width:50%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-80c6-a008-d8911e38235b"><div style="width:100%"><p id="19dd3011-3dd1-80a7-ab9e-f746128233a3" class=""><strong>SQL JOIN - </strong><code><strong>CROSS JOIN</strong></code></p><hr id="19dd3011-3dd1-8056-a4f9-dbe2c2a4d2ad"/><ul id="19dd3011-3dd1-800c-a2db-c6ea4bed0007" class="bulleted-list"><li style="list-style-type:disc">Produce a cartesian product between the two tables, i.e., return all possible combinations of all rows</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-80c9-a0fd-d96c59686c6f" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Employees CROSS JOIN Customers;</code></pre><p id="19dd3011-3dd1-80c9-b577-facf321dd3bf" class=""><code>Employees</code> (23 rows) <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo></mrow><annotation encoding="application/x-tex">\times</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">×</span></span></span></span></span><span>﻿</span></span> <code>Customers</code> (122 rows) = <code>Employees </code><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo></mrow><annotation encoding="application/x-tex">\times</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">×</span></span></span></span></span><span>﻿</span></span><code> Customers</code> (2806 rows)</p></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-80fa-a895-e8a02ec22e89"><div style="width:100%"><p id="19dd3011-3dd1-8076-a8dd-caaeea02fde0" class=""><strong>SQL JOIN - </strong><code><strong>Self Join</strong></code></p><hr id="19dd3011-3dd1-805c-a5f5-c17719e99f62"/><ul id="19dd3011-3dd1-807e-9716-d9f71be1d7ac" class="bulleted-list"><li style="list-style-type:disc">A self join is a regular join, but the table is joined with itself.</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-805f-9881-d70171699267" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT emp.employeeNumber,
+CONCAT(emp.firstName,&#x27; &#x27;, emp.lastName) AS Employee,
+CONCAT(boss.firstName,&#x27; &#x27;, boss.lastName) AS &#x27;Direct Report (Boss)&#x27;
+FROM Employees boss INNER JOIN Employees emp
+ON emp.reportsTo = boss.employeeNumber
+WHERE boss.firstName = &#x27;Mary&#x27; AND boss.lastName = &#x27;Patterson&#x27;</code></pre><div id="19dd3011-3dd1-80b3-8dda-c5062518fc17" class="column-list"><div id="19dd3011-3dd1-800b-949d-d15a8607510b" style="width:56.25%" class="column"><figure id="19dd3011-3dd1-8098-b4ca-c732efcde60c" class="image"><a href="image.png"><img style="width:159.65625px" src="image.png"/></a></figure></div><div id="19dd3011-3dd1-802a-9415-dc0b0d923a55" style="width:143.75%" class="column"><figure id="19dd3011-3dd1-804f-99f1-cd8e0ea38b5a" class="image"><a href="image%201.png"><img style="width:297.25px" src="image%201.png"/></a></figure></div></div></div></figure></div><div id="19dd3011-3dd1-8061-83cd-c941cb63a743" style="width:50%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-80aa-a029-d2fc5c17723d"><div style="width:100%"><p id="19dd3011-3dd1-80d7-897c-d1d59f043ebe" class=""><strong>SQL JOIN – </strong><code><strong>INNER JOIN</strong></code><strong> Shorter: </strong><code><strong>JOIN</strong></code></p><hr id="19dd3011-3dd1-8017-a851-f46a5f4a62d2"/><div id="19dd3011-3dd1-80e7-8c7b-eea542c45588" class="column-list"><div id="19dd3011-3dd1-807f-964c-d59071704b3c" style="width:118.75%" class="column"><ul id="19dd3011-3dd1-801b-ae1e-c417858f4c19" class="bulleted-list"><li style="list-style-type:disc">Return rows when there is at least one match on the given condition in both tables</li></ul></div><div id="19dd3011-3dd1-8068-841e-e8a75dcaf2f1" style="width:24.999999999999993%" class="column"><figure id="19dd3011-3dd1-80c0-8d31-f798ad515d55" class="image"><a href="image%202.png"><img style="width:92.875px" src="image%202.png"/></a></figure></div></div><p id="19dd3011-3dd1-8079-851e-c805f9b7df85" class=""><strong>Example</strong>: Show the list of the employee that are based in USA</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-80e0-8086-d08913e07d04" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT CONCAT(firstName,&#x27; &#x27;, lastName) AS Employee
+FROM Employees e INNER JOIN Offices o ON e.officeCode = o.officeCode
+WHERE country=&#x27;USA&#x27;;
+-- Note: Use table aliases to avoid the ambiguous column names</code></pre><div id="19dd3011-3dd1-8069-9282-c5d37ce73a5f" class="column-list"><div id="19dd3011-3dd1-8081-9629-cbe9d859a0f5" style="width:50%" class="column"><figure id="19dd3011-3dd1-802c-84c1-f7db71d15c21" class="image"><a href="image%203.png"><img style="width:128.640625px" src="image%203.png"/></a></figure></div><div id="19dd3011-3dd1-806e-8a3e-d80b884cc569" style="width:50%" class="column"><figure id="19dd3011-3dd1-80ce-aaa6-ee56db380d9b" class="image"><a href="image%204.png"><img style="width:72.984375px" src="image%204.png"/></a></figure></div></div></div></figure></div></div><div id="19dd3011-3dd1-8012-88d5-c7ca9e909944" class="column-list"><div id="19dd3011-3dd1-80d0-86c2-c660c84c4c98" style="width:50%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-806b-ad41-f8182c10a3dc"><div style="width:100%"><p id="19dd3011-3dd1-8045-91ca-f5fbd24d657a" class=""><strong>SQL JOIN – </strong><code><strong>LEFT OUTER JOIN</strong></code><strong> Shorter: </strong><code><strong>LEFT JOIN</strong></code></p><hr id="19dd3011-3dd1-8086-abd8-e8f34fb0ee77"/><div id="19dd3011-3dd1-8032-b2a1-faf3dfca36e9" class="column-list"><div id="19dd3011-3dd1-80f2-936f-f62ca55a4097" style="width:87.5%" class="column"><ul id="19dd3011-3dd1-80a6-a8d6-e7ab7f3dc127" class="bulleted-list"><li style="list-style-type:disc">Return all records from the left table (A), and the matched records from the right table (B)</li></ul></div><div id="19dd3011-3dd1-80e3-9ebc-d583a583aff2" style="width:12.500000000000005%" class="column"><figure id="19dd3011-3dd1-8072-93da-ffa76d59c656" class="image"><a href="2516e61f-24ff-4305-a849-a4dc8c63abf1.png"><img style="width:108px" src="2516e61f-24ff-4305-a849-a4dc8c63abf1.png"/></a></figure></div></div><p id="19dd3011-3dd1-809e-93ef-fd6d0bbe20c7" class=""><strong>Example</strong>: Show the list of the sales representatives and their customers including the ones with no customers</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-80f7-9dc7-f0157cb65812" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT *
+FROM Employees e LEFT OUTER JOIN Customers c
+ON e.employeeNumber = c.salesRepEmployeeNumber
+WHERE e.jobTitle = &#x27;Sales Rep&#x27;;
+-- Note: All employees are returned and the match and no match (NULL) customers</code></pre><figure id="19dd3011-3dd1-803c-adb3-fbe0be43ae66" class="image"><a href="image%205.png"><img style="width:1108.96875px" src="image%205.png"/></a></figure></div></figure><p id="19dd3011-3dd1-80c0-835a-e0bf60a48086" class="">
+</p></div><div id="19dd3011-3dd1-8027-93a6-f7884d685ccb" style="width:50%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-80d4-9d50-d49a880c52c8"><div style="width:100%"><p id="19dd3011-3dd1-80ee-8697-e7ade1376a93" class=""><strong>SQL JOIN – </strong><code><strong>RIGHT OUTER JOIN</strong></code><strong> Shorter: </strong><code><strong>RIGHT JOIN</strong></code></p><hr id="19dd3011-3dd1-80cf-8e7a-e1852b8c1f12"/><div id="19dd3011-3dd1-80e3-aec3-f390dd4c902c" class="column-list"><div id="19dd3011-3dd1-80ad-9fd3-cbe4cc09959f" style="width:87.5%" class="column"><ul id="19dd3011-3dd1-8092-9d98-fb28d8f97e89" class="bulleted-list"><li style="list-style-type:disc">Return all records from the right table (B), and<br/>the matched records from the left table (A)<br/></li></ul></div><div id="19dd3011-3dd1-8041-b092-c0f806d81dc1" style="width:12.500000000000005%" class="column"><figure id="19dd3011-3dd1-800b-8add-d306543d5e93" class="image"><a href="80b957d0-8543-41da-bf7e-683d551e7174.png"><img style="width:550.1754385964913px" src="80b957d0-8543-41da-bf7e-683d551e7174.png"/></a></figure></div></div><p id="19dd3011-3dd1-803a-8c7f-dbf119179a54" class=""><strong>Example</strong>: Show the list of the supervisors-supervisee if any</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-8001-aa38-f8c2ed31fbaf" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT CONCAT(e1.firstName,&#x27; &#x27;, e1.lastName) AS &#x27;Supervisor&#x27;,
+CONCAT(e2.firstName,&#x27; &#x27;, e2.lastName) AS &#x27;Supervisee&#x27;
+FROM Employees e1 RIGHT OUTER JOIN Employees e2
+ON e1.employeeNumber = e2.reportsTo;
+-- Note: All employees in e2 are returned and the match and no match (NULL) from e1</code></pre><div id="19dd3011-3dd1-8084-9651-e3629970588a" class="column-list"><div id="19dd3011-3dd1-8010-a478-f8665ad5f7ae" style="width:100%" class="column"><figure id="19dd3011-3dd1-8010-8e1b-d414b672f7c3" class="image"><a href="image%206.png"><img style="width:172.234375px" src="image%206.png"/></a></figure></div><div id="19dd3011-3dd1-8069-8fec-d79bdc657b26" style="width:100%" class="column"><figure id="19dd3011-3dd1-80f2-837a-c96315961645" class="image"><a href="image%207.png"><img style="width:172.25px" src="image%207.png"/></a></figure></div></div></div></figure></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-80ef-8255-ef8c0e77cddb"><div style="width:100%"><p id="19dd3011-3dd1-80d8-9356-def25c146dbb" class=""><strong>SQL JOIN – </strong><code><strong>FULL OUTER JOIN</strong></code></p><hr id="19dd3011-3dd1-8099-9c48-d27ce5dd3486"/><div id="19dd3011-3dd1-80e7-af0d-d6f315fd5a9f" class="column-list"><div id="19dd3011-3dd1-80c8-bccd-f717065f141c" style="width:62.5%" class="column"><ul id="19dd3011-3dd1-806c-9275-fd4eb45c9853" class="bulleted-list"><li style="list-style-type:disc">Return all records (matched and unmatched) from both tables, i.e., combines the results from <code>LEFT OUTER JOIN</code> and <code>RIGHT OUTER JOIN</code></li></ul><ul id="19dd3011-3dd1-80ae-86b6-eb2780367ea2" class="bulleted-list"><li style="list-style-type:disc">⚠️: there is no <code>FULL OUTER JOIN</code> function in MySQL</li></ul><p id="19dd3011-3dd1-8091-88e1-c311b9b93ded" class=""><strong>Example</strong>: Show the list of the employees and their customers (including the customers who do not have sales representatives and the employees who do not have customers)</p></div><div id="19dd3011-3dd1-805d-9ece-e7f37a5b75ed" style="width:37.49999999999999%" class="column"><figure id="19dd3011-3dd1-8063-8ffd-e18c92b6a038" class="image"><a href="7a4bcec0-f6de-4443-84e5-9171cf13c8b9.png"><img style="width:1153px" src="7a4bcec0-f6de-4443-84e5-9171cf13c8b9.png"/></a></figure></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-8028-98c8-d993169f4da2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Employees e LEFT OUTER JOIN Customers c ON e.employeeNumber = c.salesRepEmployeeNumber
+UNION ALL
+SELECT * FROM Employees e RIGHT OUTER JOIN Customers c ON e.employeeNumber = c.salesRepEmployeeNumber
+WHERE e.employeeNumber IS NULL;
+-- Note: Emulate the FULL OUTER JOIN with UNION ALL</code></pre><figure id="19dd3011-3dd1-8043-8e2a-dbaf55544de0" class="image"><a href="image%208.png"><img style="width:1108.890625px" src="image%208.png"/></a></figure><figure id="19dd3011-3dd1-80b3-9f69-fdd4a24361ec" class="image"><a href="image%209.png"><img style="width:1108.890625px" src="image%209.png"/></a></figure></div></figure><h3 id="19dd3011-3dd1-80c1-8c4d-c55624c71073" class="">SQL Set Operators</h3><hr id="19dd3011-3dd1-80af-a3fe-e7122f56ee6e"/><div id="19dd3011-3dd1-8093-bed9-fc6d3a16ac41" class="column-list"><div id="19dd3011-3dd1-8029-9046-d1ebabf075c6" style="width:50%" class="column"><ul id="19dd3011-3dd1-8035-849b-ccbded9da736" class="bulleted-list"><li style="list-style-type:disc">SQL SET operators combines the results of two (SELECT) queries</li></ul><ul id="19dd3011-3dd1-800d-9fbb-e35293b3f1a2" class="bulleted-list"><li style="list-style-type:disc">The number of columns needs to match between queries, and the data type of each column needs to be compatible.</li></ul><p id="19dd3011-3dd1-809d-a74a-d464cd9d1449" class="">Union-compatible</p></div><div id="19dd3011-3dd1-8059-9024-c173fe0a687c" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-804e-969a-de765e26e184" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT the_first_select_query
+SET_OPERATOR
+SELECT another_select_query;</code></pre></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19dd3011-3dd1-8073-9dae-ca7b9453634c"><div style="width:100%"><p id="19dd3011-3dd1-8049-9547-ca83b615f012" class=""><strong>Set Operators – </strong><code><strong>UNION</strong></code></p><hr id="19dd3011-3dd1-80b7-8c03-ca8df89e0bb4"/><div id="19ed3011-3dd1-8085-8663-f3441c156171" class="column-list"><div id="19ed3011-3dd1-808f-8f35-d57774190ee2" style="width:81.25%" class="column"><p id="19dd3011-3dd1-8077-b8cc-f89a7684c6c5" class=""><strong>UNION</strong>: Combines rows from two or more queries <mark class="highlight-blue">excluding</mark> duplicate rows</p><p id="19dd3011-3dd1-80cd-b12f-d97b631ea2a8" class=""><strong>Example</strong>: What are the list of the countries that have our customers or sales representative employees?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-80c6-90a5-dfdb3f182da7" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT country FROM Employees e
+INNER JOIN Offices o ON e.officeCode =
+o.officeCode
+WHERE e.jobTitle=&#x27;Sales Rep&#x27; -- return 5 countries
+UNION
+SELECT DISTINCT country FROM Customers -- return 27 countries
+ORDER BY country ASC;</code></pre></div><div id="19ed3011-3dd1-806c-b9f1-f6463e2782da" style="width:18.749999999999993%" class="column"><figure id="19ed3011-3dd1-802c-9472-f3bc30b7550b" class="image"><a href="image%2010.png"><img style="width:108px" src="image%2010.png"/></a></figure><p id="19ed3011-3dd1-8011-a1b0-ff267212bdfa" class="">Return 32 countries</p></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19ed3011-3dd1-8038-adfa-e8b064112c8e"><div style="width:100%"><p id="19ed3011-3dd1-80bb-8339-f29afd4ce19a" class=""><strong>Set Operators – </strong><code><strong>UNION ALL</strong></code></p><hr id="19ed3011-3dd1-8042-8bb8-db271c31bc0a"/><div id="19ed3011-3dd1-8018-99fc-c5d3e93f1b34" class="column-list"><div id="19ed3011-3dd1-80ca-a506-f568cdd8efda" style="width:81.25%" class="column"><p id="19ed3011-3dd1-8098-a0ce-fe6f9f1c2d60" class=""><strong>UNION ALL</strong>: Combines rows from two or more queries <mark class="highlight-blue">including</mark> duplicate rows</p><p id="19ed3011-3dd1-806e-b8f5-d39090e8f4f8" class=""><strong>Example</strong>: What are the list of the countries (with duplication) that have our customers or sales representative employees?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-80dc-8eca-d6015aced800" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT country FROM Employees e
+INNER JOIN Offices o ON e.officeCode = o.officeCode
+WHERE e.jobTitle=&#x27;Sales Rep&#x27; -- return 5 countries
+UNION
+SELECT DISTINCT country FROM Customers -- return 27 countries
+ORDER BY country ASC;</code></pre></div><div id="19ed3011-3dd1-80b7-85c2-f82c087d9608" style="width:18.749999999999993%" class="column"><figure id="19ed3011-3dd1-8035-863f-cbb75c06b3e8" class="image"><a href="0cf4395f-ef84-4f49-8883-e56fe51fa146.png"><img style="width:120px" src="0cf4395f-ef84-4f49-8883-e56fe51fa146.png"/></a></figure><p id="19ed3011-3dd1-8098-9375-df84d2ebe836" class="">Return 32 countries</p></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19ed3011-3dd1-806f-8d85-c62c3aa04482"><div style="width:100%"><p id="19ed3011-3dd1-8030-8817-d04586543b80" class=""><strong>Set Operators – </strong><code><strong>INTERSECT</strong></code></p><hr id="19ed3011-3dd1-80a3-82c4-e57c3324373c"/><div id="19ed3011-3dd1-80ad-951a-cbc976a40732" class="column-list"><div id="19ed3011-3dd1-80b5-87a1-fd82de2ef177" style="width:81.25%" class="column"><p id="19ed3011-3dd1-8037-bd3f-f9f1aa9ea3b9" class=""><strong>INTERSECT</strong>: Combines rows from two or more queries and return the rows that appear in both tables</p><p id="19ed3011-3dd1-80e0-8e7e-fbc05b99364c" class=""><strong>Example</strong>: What are the list of the countries that have both sales representatives employees and customers?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-80fa-bef1-f344e6e0a819" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT country FROM Employees e
+INNER JOIN Offices o ON e.officeCode = o.officeCode
+WHERE e.jobTitle=&#x27;Sales Rep&#x27; -- return 5 countries
+INTERSECT
+SELECT DISTINCT country FROM Customers -- return 27 countries
+ORDER BY country ASC;</code></pre></div><div id="19ed3011-3dd1-8044-bf1f-f588e0dcb6d4" style="width:18.749999999999993%" class="column"><figure id="19ed3011-3dd1-8029-8e8a-d4e2a1efe2e4" class="image"><a href="image%2011.png"><img style="width:154.296875px" src="image%2011.png"/></a></figure><p id="19ed3011-3dd1-809c-a726-d8b6fae9f8fd" class="">Return 5 countries</p></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19ed3011-3dd1-8080-ab8c-fa94aff15ba2"><div style="width:100%"><p id="19ed3011-3dd1-80b3-8cab-d688939aca55" class=""><strong>Set Operators – </strong><code><strong>MINUS</strong></code></p><hr id="19ed3011-3dd1-80da-aaca-f9fc0cd86312"/><div id="19ed3011-3dd1-805a-9285-cdd1f363d8c5" class="column-list"><div id="19ed3011-3dd1-80bf-bab5-f146061dd345" style="width:81.25%" class="column"><p id="19ed3011-3dd1-809f-81f2-f910922574ac" class=""><strong>MINUS</strong>: Returns the unique rows from the first table, which is not in the second table</p><p id="19ed3011-3dd1-8042-a548-eb81868f274a" class=""><strong>Example</strong>: What are the list of the countries that have customers but no sales representatives employees?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-802b-94f8-d20c02d2c607" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT country FROM Customers -- 27 countries
+MINUS
+SELECT DISTINCT country FROM Employees e 
+INNER JOIN Offices o ON e.officeCode = o.officeCode
+WHERE e.jobTitle=&#x27;Sales Rep&#x27; -- 5 countries
+ORDER BY country ASC;</code></pre><p id="19ed3011-3dd1-80a4-80ee-fd18adf7b6b3" class=""><strong>Note</strong>: There is no &quot;MINUS&quot; operators in MySQL; emulate with the subquery</p></div><div id="19ed3011-3dd1-8019-8633-fb8ca8969ee0" style="width:18.749999999999993%" class="column"><figure id="19ed3011-3dd1-8021-b8be-ed8fc2619dd3" class="image"><a href="image%2012.png"><img style="width:154.296875px" src="image%2012.png"/></a></figure><p id="19ed3011-3dd1-80c3-bd2a-f87f3db94049" class="">Return 22 countries</p></div></div></div></figure><p id="19ed3011-3dd1-80a5-9db9-e7a575699bbf" class=""><strong>Set Operator Emulations</strong></p><hr id="19ed3011-3dd1-8045-910a-dec4107e2fd9"/><ul id="19ed3011-3dd1-8040-95d9-d99bd5d97d4d" class="bulleted-list"><li style="list-style-type:disc">Some DBMS do not support INTERSECT and MINUS operators</li></ul><ul id="19ed3011-3dd1-80af-8256-cfe5bf262948" class="bulleted-list"><li style="list-style-type:disc">Methods for Emulations<div id="19ed3011-3dd1-80fc-a04e-c8338152a091" class="column-list"><div id="19ed3011-3dd1-807c-97cc-ef3c74a919d0" style="width:50%" class="column"><ul id="19ed3011-3dd1-809b-aa76-dfe3dbe1d26d" class="bulleted-list"><li style="list-style-type:circle"><code>INTERSECT</code> Operator using <code>IN</code> Operator</li></ul><ul id="19ed3011-3dd1-80a9-9e0f-dade7b599e71" class="bulleted-list"><li style="list-style-type:disc"><code>INTERSECT</code> Operator using <code>DISTINCT</code> and <code>INNER JOIN</code> Clause</li></ul></div><div id="19ed3011-3dd1-80d3-a388-cf6f947d66f3" style="width:50%" class="column"><ul id="19ed3011-3dd1-8086-949d-f6eed3721cb3" class="bulleted-list"><li style="list-style-type:circle"><code>MINUS</code> Operator using <code>NOT IN</code> Operator</li></ul><ul id="19ed3011-3dd1-80b9-963e-c9ffa3f66ba7" class="bulleted-list"><li style="list-style-type:disc"><code>MINUS</code> Operator using <code>LEFT OUTER JOIN</code> Clause</li></ul></div></div></li></ul><p id="19ed3011-3dd1-80a4-ba73-c66a1bbb2c38" class=""><strong>RECAP: </strong><code><strong>IN</strong></code><strong> Operator</strong></p><hr id="19ed3011-3dd1-8002-bb5f-e13765f7a2e1"/><p id="19ed3011-3dd1-80d7-b8e6-e52ddfef2adf" class=""><code>IN</code>: Match multiple values in a WHERE clause (i.e., multiple <code>OR</code> conditions)</p><p id="19ed3011-3dd1-80ed-817b-cfc678286922" class="">Example:</p><div id="19ed3011-3dd1-8094-8151-f41e9a3ed044" class="column-list"><div id="19ed3011-3dd1-80e9-8ec2-c0a1225e96df" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-80dd-9ca6-e20d2ac35d65" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT city, state FROM Customers
+WHERE state NOT IN (&#x27;PA&#x27;, &#x27;CA&#x27;, &#x27;NY&#x27;) AND country = &#x27;USA&#x27;;</code></pre><p id="19ed3011-3dd1-80eb-b1cc-ff0b9e40b01b" class="">Match the <mark class="highlight-blue_background">values of the column</mark> with the multiple values</p></div><div id="19ed3011-3dd1-8072-b6c4-c384cc8deeba" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-80e4-bfdb-cf898df656cc" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT city, state, country FROM Customers
+WHERE (city, state, country) IN(
+	SELECT DISTINCT city, state, country FROM Offices
+	WHERE state IS NOT NULL);</code></pre><p id="19ed3011-3dd1-805b-984b-cbdcba8b714a" class="">Match the <mark class="highlight-blue_background">set of the columns</mark> (using parenthesis to group the columns) with<br/>the multiple records from another queries.<br/></p></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19ed3011-3dd1-8084-ab92-f5f447d04c5e"><div style="width:100%"><p id="19ed3011-3dd1-80a6-882b-cc1b688e9208" class=""><code><strong>INTERSECTION</strong></code><strong> with </strong><code><strong>IN</strong></code></p><hr id="19ed3011-3dd1-8032-8461-fec8e23abb42"/><div id="19ed3011-3dd1-806f-b807-cb7d3e59e114" class="column-list"><div id="19ed3011-3dd1-8011-ba6e-c65c5cd11720" style="width:31.25%" class="column"><p id="19ed3011-3dd1-80fd-bbc6-e55624d95f15" class="">Using <code>IN</code> to check the values in another table</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-8041-a396-c119c78205cf" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT attr FROM table1
+WHERE table1.attr IN (
+	SELECT DISTINCT attr
+	FROM table2);</code></pre></div><div id="19ed3011-3dd1-8084-a9b4-ff54b4da5f76" style="width:68.75%" class="column"><p id="19ed3011-3dd1-804b-a82b-cf0b4c0da54d" class=""><strong>Example</strong>: What are the list of the countries that have both sales representatives employees and customers?</p><div id="19ed3011-3dd1-809a-96ea-f627add4909b" class="column-list"><div id="19ed3011-3dd1-8054-9c7e-c602820dc683" style="width:112.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-80ed-aea8-d0e065953687" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT o.country FROM Employees e 
+INNER JOIN Offices o ON e.officeCode = o.officeCode -- table1
+WHERE e.jobTitle=&#x27;Sales Rep&#x27; AND o.country IN
+(SELECT DISTINCT country FROM Customers) -- table2
+ORDER BY country ASC;</code></pre></div><div id="19ed3011-3dd1-80a9-a70d-dc866b07ac2f" style="width:31.25000000000001%" class="column"><figure id="19ed3011-3dd1-8065-947d-d530ae6fe685" class="image"><a href="image%2013.png"><img style="width:123.75px" src="image%2013.png"/></a></figure></div></div></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19ed3011-3dd1-8038-a3a8-c9217c133af4"><div style="width:100%"><p id="19ed3011-3dd1-80c7-8eb6-e4f52aef47c4" class=""><code><strong>MINUS</strong></code> <strong>with </strong><code><strong>NOT IN</strong></code></p><hr id="19ed3011-3dd1-8083-8646-f6f512b5e2db"/><div id="19ed3011-3dd1-8007-94a0-e4c6bfdd19e4" class="column-list"><div id="19ed3011-3dd1-8030-adc6-f4a87774546a" style="width:81.25%" class="column"><p id="19ed3011-3dd1-807f-9a28-f4ec1871a7d3" class="">Using <code>NOT IN</code> to exclude the values from another table.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-804e-8148-ca1835bacf3a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT attr FROM table1
+WHERE table1.attr NOT IN (
+	SELECT DISTINCT attr
+	FROM table2);</code></pre><p id="19ed3011-3dd1-808c-bd69-d9badc2c1580" class=""><strong>Example</strong>: What are the list of the countries that have customers but no sales representatives employees?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-8036-bf7b-dae6fe9b21bb" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT country FROM Customers
+WHERE country NOT IN (
+	SELECT DISTINCT country FROM Employees e INNER JOIN Offices o
+	ON e.officeCode = o.officeCode WHERE e.jobTitle=&#x27;Sales Rep&#x27;)
+ORDER BY country ASC;</code></pre></div><div id="19ed3011-3dd1-8035-ae7b-cfb0aea30c2a" style="width:18.75%" class="column"><figure id="19ed3011-3dd1-80ce-8a20-e8f9499c2232" class="image"><a href="image%2014.png"><img style="width:144px" src="image%2014.png"/></a></figure></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="19ed3011-3dd1-80a0-9885-d30d97531b32"><div style="width:100%"><p id="19ed3011-3dd1-8033-a108-dc2a9edb5b6b" class=""><code><strong>MINUS</strong></code> <strong>with </strong><code><strong>LEFT OUTER JOIN</strong></code></p><hr id="19ed3011-3dd1-8094-b344-cde9dc7c2dd2"/><div id="19ed3011-3dd1-803d-a3f2-de8ebdfd1fc8" class="column-list"><div id="19ed3011-3dd1-8006-954e-e29917cd6dfc" style="width:81.25%" class="column"><p id="19ed3011-3dd1-8038-9b17-d4ae8c0304c3" class="">Using <code>LEFT OUTER JOIN</code> with the matched attribute condition and <code>IS NULL</code></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-8037-9499-dda8d60a5b67" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT attr FROM table1 LEFT OUTER JOIN table2
+ON table1.attr = table2.attr WHERE table2.ID IS NULL;</code></pre><p id="19ed3011-3dd1-80d2-b681-e465c781051f" class=""><strong>Example</strong>: What are the list of the countries that have customers but no sales representatives employees?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19ed3011-3dd1-80b6-aa8e-f29a06fb58ef" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT c.country FROM Customers c 
+LEFT OUTER JOIN (SELECT o.country FROM Employees e
+	INNER JOIN Offices o ON e.officeCode = o.officeCode
+	WHERE e.jobTitle=&#x27;Sales Rep&#x27;) em
+ON c.country = em.country WHERE em.country IS NULL ORDER BY c.country ASC;</code></pre></div><div id="19ed3011-3dd1-8098-99fb-df251211442c" style="width:18.75%" class="column"><figure id="19ed3011-3dd1-8068-a377-e8745fa3bd9b" class="image"><a href="image%2014.png"><img style="width:144px" src="image%2014.png"/></a></figure></div></div></div></figure><div id="1a3d3011-3dd1-80db-b903-f6ebb16afddb" class="column-list"><div id="1a3d3011-3dd1-8077-b878-ca949a11abad" style="width:50%" class="column"><h3 id="1a3d3011-3dd1-8083-b56e-cad2c0cff41e" class="">Individual Query Blocks vs Entire Result</h3><hr id="1a3d3011-3dd1-8048-85e6-d245a4ae4112"/><ul id="1a3d3011-3dd1-80de-8e52-ec4a5d86448c" class="bulleted-list"><li style="list-style-type:disc">Apply ( ) to create an individual query block used as part of a union, intersection, or other set operation.</li></ul><ul id="1a3d3011-3dd1-8075-b22f-e6a9b903e7de" class="bulleted-list"><li style="list-style-type:disc">When applying ORDER BY or LIMIT, parenthesize the query block make differences</li></ul></div><div id="1a3d3011-3dd1-8062-909f-fffa89fd5507" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80ec-8bd5-f6cf7eea1e5e" class="code"><code class="language-SQL">(SELECT Query Block 1)
+Set_Operator
+(SELECT Query Block 2)
+[ORDER BY] -- Sort the entire results
+[LIMIT N] ; -- Top N of the entire resul</code></pre></div></div><h3 id="1a3d3011-3dd1-8014-823a-d843b81e6d8f" class="">Example: Individual Query Blocks</h3><hr id="1a3d3011-3dd1-8066-9681-ef9961b3107e"/><div id="1a3d3011-3dd1-800e-8aa1-f3f7f6dcd4db" class="column-list"><div id="1a3d3011-3dd1-808f-bb21-c1942b526087" style="width:20%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80e2-8f64-f581de012c73" class="code"><code class="language-SQL">SELECT attr FROM t1
+UNION ALL
+SELECT attr FROM t2
+ORDER BY attr
+LIMIT N;</code></pre></div><div id="1a3d3011-3dd1-8060-a937-c2ee28c9f186" style="width:20%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80bd-91b2-d93d01093abb" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT attr FROM t1)
+UNION ALL
+(SELECT attr FROM t2)
+ORDER BY attr
+LIMIT N;</code></pre></div><div id="1a3d3011-3dd1-80f5-aa18-e56654a5110e" style="width:20%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8040-83f8-eb4791c3805f" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT attr FROM t1)
+UNION ALL
+(SELECT attr FROM t2
+ORDER BY attr)
+LIMIT N;</code></pre></div><div id="1a3d3011-3dd1-801e-98b0-e1a544246f4a" style="width:20%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80ff-bcb6-eedf783162a7" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT attr FROM t1
+ORDER BY attr
+LIMIT N)
+UNION ALL
+(SELECT attr FROM t2
+ORDER BY attr
+LIMIT N);</code></pre></div><div id="1a3d3011-3dd1-8023-b7d2-eb2de545ed0b" style="width:20%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80f5-8923-d0612a074af0" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT attr FROM t1
+UNION ALL
+SELECT attr FROM t2
+ORDER BY attr
+LIMIT N;</code></pre></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1a3d3011-3dd1-80e4-b48d-d4ffa9fc4656"><div style="width:100%"><p id="1a3d3011-3dd1-80f0-a275-e4b32afb1e88" class="">Example: <code><strong>UNION ALL</strong></code></p><hr id="1a3d3011-3dd1-80d2-89e2-c4aa623467a3"/><div id="1a3d3011-3dd1-80b3-bf49-e2928b295c58" class="column-list"><div id="1a3d3011-3dd1-806b-9614-c4cd203e288e" style="width:20.833333333333332%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8038-82d4-ccb024e3579f" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT attr FROM t1
+UNION ALL
+SELECT attr FROM t2
+ORDER BY attr
+LIMIT N;</code></pre></div><div id="1a3d3011-3dd1-8061-a3ab-c7022bd31045" style="width:54.166666666666664%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8023-b729-ff3d3e02bb49" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT contactFirstname, contactLastname FROM Customers -- 1)
+UNION ALL -- 2)
+SELECT firstName, lastName FROM Employees -- 1)
+ORDER BY contactFirstName ASC -- 3)
+LIMIT 5; -- 4)</code></pre></div><div id="1a3d3011-3dd1-80ca-95a8-f6ed963f679c" style="width:25.00000000000001%" class="column"><figure id="1a3d3011-3dd1-8063-a6c3-d86f24484691" class="image"><a href="image%2015.png"><img style="width:94.96875px" src="image%2015.png"/></a></figure></div></div><div id="1a3d3011-3dd1-80d5-b5ad-c2d8a0767909" class="column-list"><div id="1a3d3011-3dd1-806d-a740-c6521d0eb8fc" style="width:20.833333333333332%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80dc-8ae4-d1fec6648c50" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT attr FROM t1)
+UNION ALL
+(SELECT attr FROM t2)
+ORDER BY attr
+LIMIT N;</code></pre></div><div id="1a3d3011-3dd1-8089-9a8a-f69437b3d55b" style="width:54.166666666666664%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-801d-88da-f1a7b7780961" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT contactFirstname, contactLastname FROM Customers) -- 1)
+UNION ALL -- 2)
+(SELECT firstName, lastName FROM Employees )-- 1)
+ORDER BY contactFirstName ASC -- 3)
+LIMIT 5; -- 4)</code></pre></div><div id="1a3d3011-3dd1-80f9-bc9a-e1671f83c986" style="width:25.00000000000001%" class="column"><figure id="1a3d3011-3dd1-8055-addf-e18f4f9a7a2f" class="image"><a href="image%2016.png"><img style="width:94.96875px" src="image%2016.png"/></a></figure></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1a3d3011-3dd1-8009-bf5f-d6dc4f948131"><div style="width:100%"><p id="1a3d3011-3dd1-8002-8ee0-cf1ba5624b56" class="">Example: <code><strong>UNION ALL</strong></code></p><hr id="1a3d3011-3dd1-804c-b43f-f38d11b20f71"/><div id="1a3d3011-3dd1-803d-8fcf-f6d0a0db6dcc" class="column-list"><div id="1a3d3011-3dd1-80a5-bf65-c545a0ab8fe7" style="width:20.833333333333332%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80ec-b02e-d740884f96af" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT attr FROM t1)
+UNION ALL
+(SELECT attr FROM t2
+ORDER BY attr)
+LIMIT N;</code></pre></div><div id="1a3d3011-3dd1-807b-b091-e0ea09dd8b6a" style="width:54.166666666666664%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8016-b130-ee6e530350ab" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT contactFirstname, contactLastname FROM Customers) -- 1)
+UNION ALL -- 2)
+(SELECT firstName, lastName FROM Employees
+ORDER BY firstName ASC) -- 1)
+LIMIT 5; -- 3)</code></pre></div><div id="1a3d3011-3dd1-80ec-934a-fac95c16d617" style="width:25.00000000000001%" class="column"><figure id="1a3d3011-3dd1-8009-a38c-f825b020fc86" class="image"><a href="image%2017.png"><img style="width:94.96875px" src="image%2017.png"/></a></figure></div></div><div id="1a3d3011-3dd1-80ed-84a2-f4840aee90fe" class="column-list"><div id="1a3d3011-3dd1-80fc-9a95-d364cba95c46" style="width:20.833333333333332%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80e1-9dd0-e8147e106f73" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT attr FROM t1
+ORDER BY attr
+LIMIT N)
+UNION ALL
+(SELECT attr FROM t2
+ORDER BY attr
+LIMIT N);</code></pre></div><div id="1a3d3011-3dd1-80ca-84bc-c42641620f0a" style="width:54.166666666666664%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8048-8988-e8e809c077df" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">(SELECT contactFirstname, contactLastname FROM Customers
+ORDER BY contactFirstname ASC LIMIT 5)
+UNION ALL
+(SELECT firstName, lastName FROM Employees ORDER BY firstName ASC
+LIMIT 5);</code></pre></div><div id="1a3d3011-3dd1-80e9-b03c-ca85f9141fb9" style="width:24.999999999999996%" class="column"><figure id="1a3d3011-3dd1-8086-8587-fc99c311fe0d" class="image"><a href="image%2018.png"><img style="width:94.96875px" src="image%2018.png"/></a></figure></div></div></div></figure></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
