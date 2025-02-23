@@ -1,0 +1,724 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 7 Structured Query Language – Data Query Language (DQL) Nested Query</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="165d3011-3dd1-80bf-b65d-e35283643f04" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📖</span></div><h1 class="page-title">Lecture 7 Structured Query Language – Data Query Language (DQL) Nested Query</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px;display:block"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><p id="1a3d3011-3dd1-805b-b8e7-d79d1fcd4ee5" class=""><code><a href="https://sunnyrichman.github.io/itcs393/">🔙 Back to Table of Contents, Click here</a></code></p><h3 id="19dd3011-3dd1-80d2-ae9b-d9eb4f0e159a" class="">Subquery (or Nested Query)</h3><hr id="19dd3011-3dd1-8015-a051-eba83959a117"/><div id="19dd3011-3dd1-804f-968b-f77c0d0755e2" class="column-list"><div id="19dd3011-3dd1-8065-bf6a-f8aa44a6775a" style="width:18.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-8062-b5c4-d97cadc80766" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">-- Outer Query
+SELECT ... FROM ...
+	-- Inner Query
+	SELECT ... FROM ...</code></pre></div><div id="19dd3011-3dd1-8094-9114-f9d0eb1f4282" style="width:81.25%" class="column"><ul id="19dd3011-3dd1-8008-a6bb-d7ffe92ba984" class="bulleted-list"><li style="list-style-type:disc">Subquery: a query inside another query by using parentheses to create an outer and an inner query<ul id="19dd3011-3dd1-80eb-ad98-ed4424930a3d" class="bulleted-list"><li style="list-style-type:circle">The inner query is executed first.</li></ul><ul id="19dd3011-3dd1-8001-ab73-eb37f27ba7e1" class="bulleted-list"><li style="list-style-type:circle">The output of an inner query is used as the input for the outer query.</li></ul></li></ul><ul id="19dd3011-3dd1-80f1-81ee-e0a330ad039f" class="bulleted-list"><li style="list-style-type:disc">Subqueries can return <mark class="highlight-blue">single values</mark> or <mark class="highlight-blue">tables</mark> (with one or many rows and columns).</li></ul></div></div><h3 id="19dd3011-3dd1-80b3-a816-d1651b4dc21a" class="">Self-contained Subquery</h3><hr id="19dd3011-3dd1-800e-8aeb-dab47c761622"/><div id="19dd3011-3dd1-8043-b4d3-c7465bca9af9" class="column-list"><div id="19dd3011-3dd1-8080-b353-ec1575f3f76d" style="width:50%" class="column"><ul id="19dd3011-3dd1-803f-8e78-d35e5c1ecb4a" class="bulleted-list"><li style="list-style-type:disc">The subquery which is <mark class="highlight-blue"><mark class="highlight-default_background">completely independent and do not require any input from outer query</mark></mark>.</li></ul><ul id="19dd3011-3dd1-80ba-905c-f58dd0576b8b" class="bulleted-list"><li style="list-style-type:disc">Self-Contained subquery is evaluated once for the outer query and its result is used with all records produced by outer query.</li></ul></div><div id="19dd3011-3dd1-8074-ba68-c61af6ecf95e" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-8080-aa1f-f6791ebeafae" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, checkNumber, amount FROM Customers c 
+INNER JOIN Payments p ON c.customerNumber = p.customerNumber
+WHERE amount=(SELECT MAX(amount) FROM Payments);</code></pre></div></div><h3 id="19dd3011-3dd1-80e6-b552-eca44ab6c045" class="">Correlated Subquery</h3><hr id="19dd3011-3dd1-800b-8442-cba8579f5419"/><div id="19dd3011-3dd1-80e2-bd57-f7e9c3846f2f" class="column-list"><div id="19dd3011-3dd1-80bd-9aa0-ebaad329ce06" style="width:50%" class="column"><ul id="19dd3011-3dd1-8030-b56d-e89cb9bb23db" class="bulleted-list"><li style="list-style-type:disc">Fully <mark class="highlight-blue">dependent on the outer</mark> query</li></ul><ul id="19dd3011-3dd1-8054-970c-d022c166df87" class="bulleted-list"><li style="list-style-type:disc">Require an input from its outer query.</li></ul><ul id="19dd3011-3dd1-8032-98b1-fd4f38ca443d" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">Cannot be executed without required attributes from outer query</mark>.</li></ul><ul id="19dd3011-3dd1-808b-aca0-fe508a540699" class="bulleted-list"><li style="list-style-type:disc">This behavior increases the cost of the execution of the subquery as it needs to be executed for each of row of outer query.</li></ul></div><div id="19dd3011-3dd1-8091-8150-fbf44cb7a8a6" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-804f-947f-dbea9caf0d28" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Employees e
+WHERE NOT EXISTS (SELECT employeeNumber FROM Employees b 
+WHERE b.employeeNumber = e.reportsTo)</code></pre></div></div><h3 id="19dd3011-3dd1-8015-a8e2-dac4065bc719" class="">Example of Subquery</h3><hr id="19dd3011-3dd1-80c7-a1a4-d8fde8d18fcc"/><p id="19dd3011-3dd1-8036-b462-edc1fd0516b0" class="">You can include a subquery in</p><div id="19dd3011-3dd1-8059-9607-ee435edc8fc3" class="column-list"><div id="19dd3011-3dd1-80b1-be78-f7fbadc3bcf8" style="width:50%" class="column"><ul id="19dd3011-3dd1-80c7-9985-ead3541c46c1" class="bulleted-list"><li style="list-style-type:disc">the <code>SELECT</code> clause, to specify a certain column.</li></ul><ul id="19dd3011-3dd1-805e-9f2c-ce7aac900dce" class="bulleted-list"><li style="list-style-type:disc">the <code>FROM</code> clause, to specify a new table</li></ul></div><div id="19dd3011-3dd1-80e0-98d8-c22a53699c94" style="width:50%" class="column"><ul id="19dd3011-3dd1-8088-8d9f-d67867d52762" class="bulleted-list"><li style="list-style-type:disc">the <code>WHERE</code> clause, to filter data.</li></ul><ul id="19dd3011-3dd1-8066-8d06-c14936c994b9" class="bulleted-list"><li style="list-style-type:disc">the <code>HAVING</code> clause, as a group selector</li></ul></div></div><h3 id="19dd3011-3dd1-803b-a550-f11ee0757bbe" class="">Subquery in <code>SELECT</code></h3><hr id="19dd3011-3dd1-80ae-b507-d56f95556304"/><p id="19dd3011-3dd1-8064-98bd-f9e907f5b43e" class="">Ex 1. Show the payment information and its maximum payment amount by the day of week (Sun, Mon, … , Sat).</p><p id="19dd3011-3dd1-80b8-bd76-f63d1a1d5b56" class=""><mark class="highlight-blue">Task:</mark></p><ul id="19dd3011-3dd1-8080-91b1-e6928fee0413" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T1: Calculate the maximum amount of perment per the weekday</mark></li></ul><ul id="19dd3011-3dd1-80a7-a2ee-e340039f2177" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T2: Show payment info + the maximum amount per the weekday</mark></li></ul><div id="19dd3011-3dd1-80bf-8bbf-f220ce882b8c" class="column-list"><div id="19dd3011-3dd1-8077-b7af-cd5e6060ab80" style="width:31.25%" class="column"><figure id="19dd3011-3dd1-80eb-bfa7-c5d09950340b" class="image"><a href="a6dd947c-ae28-42d3-8542-8db89703cebb.png"><img style="width:192px" src="a6dd947c-ae28-42d3-8542-8db89703cebb.png"/></a></figure></div><div id="19dd3011-3dd1-8003-a6bc-ca15a5c4aba4" style="width:112.5%" class="column"><figure id="19dd3011-3dd1-8086-94e7-c5f6e764111a" class="image"><a href="image.png"><img style="width:480px" src="image.png"/></a></figure></div></div><div id="19dd3011-3dd1-80b8-acd2-cabbaad7add0" class="column-list"><div id="19dd3011-3dd1-807f-a523-e3a4db26bb92" style="width:50%" class="column"><ul id="19dd3011-3dd1-802c-9f33-c4d64aa51a49" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">Task – T1: Calculate the maximum amount of payment per the weekday</mark></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-807d-936d-d71b7b4e23ef" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DAYNAME(t1.paymentDate), MAX(amount) FROM Payments t1
+GROUP BY 1;</code></pre><p id="19dd3011-3dd1-8092-b52d-eebcb928980f" class=""><strong>Note</strong>: this is the temporary result that is need to be related with T2</p><p id="19dd3011-3dd1-8035-8aed-f106d238de17" class="">What is the condition to related them? <mark class="highlight-yellow_background">DAYNAME(t2.paymentDate) = DAYNAME(t1.paymentDate)</mark></p></div><div id="19dd3011-3dd1-80ac-96e2-fa1857e0e74d" style="width:50%" class="column"><ul id="19dd3011-3dd1-8033-9166-f6591fd4654c" class="block-color-blue bulleted-list"><li style="list-style-type:disc">Task – T2: Show payment info + the maximum amount per the weekday</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-80da-9405-cf1b2e1b9b76" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT *, DAYNAME(t2.paymentDate) AS dayofWeek, (SELECT MAX(amount)
+FROM Payments t1
+WHERE DAYNAME(t1.paymentDate)= DAYNAME(t2.paymentDate)
+GROUP BY DAYNAME(t1.paymentDate) ) AS maxOftheDay
+FROM Payments t2;</code></pre><p id="19dd3011-3dd1-803b-bace-c95902a5bef5" class=""><strong>Note</strong>: The payment date’s day of week from the outer query (t2) must determine the inner query (t1) to identify which <code>maxOfTheDay</code> to be displayed.</p></div></div><figure id="19dd3011-3dd1-80c3-b0aa-fc91b85fa3ea" class="image"><a href="image%201.png"><img style="width:432px" src="image%201.png"/></a></figure><h3 id="19dd3011-3dd1-8034-a6df-c02a33c533f4" class="">Subquery in <code>FROM</code></h3><hr id="19dd3011-3dd1-80c2-9d8c-dd6167364763"/><p id="19dd3011-3dd1-8076-962f-fb76a68047d5" class="">EX2: What is the average of the total number of orders per months?</p><p id="19dd3011-3dd1-8002-9a94-dd65812fe041" class="">Task</p><div id="19dd3011-3dd1-80e8-9ed4-e9bddb472437" class="column-list"><div id="19dd3011-3dd1-80f1-a574-db93b46dfdc5" style="width:50%" class="column"><ul id="19dd3011-3dd1-807f-9be9-f988ee5dce86" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T1: Calculate the total number of orders per month (COUNT)</mark></li></ul><div id="19dd3011-3dd1-80de-bf48-f00236ca4ce4" class="column-list"><div id="19dd3011-3dd1-8055-910b-de4aaead83e3" style="width:106.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-80cb-a61d-d329196206e3" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT MONTHNAME(orderDate) AS Month, COUNT(orderNumber) AS orNum
+FROM Orders GROUP BY 1;</code></pre></div><div id="19dd3011-3dd1-8012-8b83-c42c632d2450" style="width:31.25000000000001%" class="column"><figure id="19dd3011-3dd1-8030-a0a1-d0506628dc87" class="image"><a href="image%202.png"><img style="width:105.5px" src="image%202.png"/></a></figure></div></div></div><div id="19dd3011-3dd1-8004-b918-d8b82a77a958" style="width:50%" class="column"><ul id="19dd3011-3dd1-8066-a759-c8abf3685c0c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T2: Find the average of those counts</mark></li></ul><div id="19dd3011-3dd1-8085-a659-d442d3f0147a" class="column-list"><div id="19dd3011-3dd1-803c-ade4-c50d1fd337f8" style="width:162.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19dd3011-3dd1-80d8-9995-c2d1a20542bb" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT AVG(o.orNum) AS avg. 
+FROM ( SELECT MONTHNAME(orderDate) AS Month, COUNT(orderNumber) AS orNum FROM Orders GROUP BY 1) o;</code></pre></div><div id="19dd3011-3dd1-8050-82bf-cf5df273e564" style="width:37.500000000000014%" class="column"><figure id="19dd3011-3dd1-800a-9c27-fdc7ba8fe5cc" class="image"><a href="image%203.png"><img style="width:51.234375px" src="image%203.png"/></a></figure></div></div><p id="19dd3011-3dd1-80f7-8906-f2f54ece1c50" class=""><strong>Note</strong>: When creating a subquery as table, DBMS requires <mark class="highlight-blue">an alias</mark> of the table name</p></div></div><h3 id="1a3d3011-3dd1-80bd-a3d0-ccbe70b91599" class="">Subquery in <code>WHERE</code></h3><hr id="1a3d3011-3dd1-8085-aae9-c3924b14fa55"/><p id="1a3d3011-3dd1-804d-a98e-cad8b9638f2b" class="">EX3: What is the customer name who paid the highest amounts of check?</p><p id="1a3d3011-3dd1-8057-85c8-e56c582ab1c7" class="">Task</p><div id="1a3d3011-3dd1-8098-9813-dcf0a8255fee" class="column-list"><div id="1a3d3011-3dd1-8063-92f3-d35c41f51279" style="width:43.75%" class="column"><ul id="1a3d3011-3dd1-800e-bf72-d0e7f7a94b66" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T1: Calculate the highest amount of check</mark></li></ul><div id="1a3d3011-3dd1-8030-9e8e-c4c7deccfa34" class="column-list"><div id="1a3d3011-3dd1-80a9-8351-d2c17d6d9570" style="width:106.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80f8-8cd1-f6cf3dfc7e7d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT MAX(amount) FROM Payments;</code></pre></div><div id="1a3d3011-3dd1-803e-bc53-dadbe4771475" style="width:24.999999999999993%" class="column"><figure id="1a3d3011-3dd1-80a0-9ba4-cf02624c0fb0" class="image"><a href="image%204.png"><img style="width:70.140625px" src="image%204.png"/></a></figure></div></div></div><div id="1a3d3011-3dd1-80ce-a838-ca0bc3804bcf" style="width:56.25%" class="column"><ul id="1a3d3011-3dd1-8028-af78-d5b70b9c6ae8" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T2: Retrieve the customer name</mark></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8016-bb8c-d055f1f24b54" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, checkNumber, amount FROM Customers c 
+INNER JOIN Payments p ON c.customerNumber = p.customerNumber
+WHERE amount = (SELECT MAX(amount) FROM Payments);</code></pre><figure id="1a3d3011-3dd1-807a-af49-ddde891f1f0d" class="image"><a href="image%205.png"><img style="width:288px" src="image%205.png"/></a></figure></div></div><p id="1a3d3011-3dd1-8074-9139-e6d3008982ef" class="">EX4: List customer name who are not located in the same country as any offices</p><p id="1a3d3011-3dd1-800c-a7e3-f0e074f67c41" class="">Task</p><div id="1a3d3011-3dd1-8053-adc7-db4c0a88ebb4" class="column-list"><div id="1a3d3011-3dd1-8052-9743-cc0762261a8f" style="width:43.75%" class="column"><ul id="1a3d3011-3dd1-8033-ab48-e0ae7f6e045e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T1: Retrieve country lists of the offices</mark></li></ul><div id="1a3d3011-3dd1-8096-bd63-c499e05f3aa5" class="column-list"><div id="1a3d3011-3dd1-80ac-b753-f7e83aa0db61" style="width:106.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8073-90f5-c77439fbf894" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT(country) FROM Offices;</code></pre></div><div id="1a3d3011-3dd1-80da-9686-db064b76d9e2" style="width:24.999999999999993%" class="column"><figure id="1a3d3011-3dd1-80ba-a433-cd6fe635ede3" class="image"><a href="image%206.png"><img style="width:54.921875px" src="image%206.png"/></a></figure></div></div></div><div id="1a3d3011-3dd1-80e1-81e3-d75c53518180" style="width:56.25%" class="column"><ul id="1a3d3011-3dd1-800b-929f-cf5cd979a28e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T2: Retrieve the customer name who are not in the T1 country list</mark></li></ul><div id="1a3d3011-3dd1-8000-af00-d36ceae2137c" class="column-list"><div id="1a3d3011-3dd1-80fc-a601-e0a556e50074" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8010-b917-e287c6d54b55" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, city, country FROM Customers c
+WHERE country NOT IN (SELECT DISTINCT(country) FROM Offices);</code></pre></div><div id="1a3d3011-3dd1-80a1-afda-f908b689283a" style="width:100%" class="column"><figure id="1a3d3011-3dd1-80ef-9ef0-f3b54faf5726" class="image"><a href="image%207.png"><img style="width:287.75px" src="image%207.png"/></a></figure></div></div></div></div><h3 id="1a3d3011-3dd1-80ce-b854-e52161a58683" class="">Subquery in <code>HAVING</code></h3><hr id="1a3d3011-3dd1-8040-94ea-ce6145c6785a"/><p id="1a3d3011-3dd1-8013-8ee8-c176885b12ad" class="">EX5: List the month in the year 2005 that has the average amount of payment greater than the average amount of all payments in the year 2004</p><p id="1a3d3011-3dd1-805c-a8df-d72a3cf6a8b7" class="">Task</p><div id="1a3d3011-3dd1-8054-b89f-fc6768338483" class="column-list"><div id="1a3d3011-3dd1-80f0-a462-f348ef3e686e" style="width:43.75%" class="column"><ul id="1a3d3011-3dd1-8090-84c8-e31f03aa2417" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T1: Calculate the average payment amount in the year 2004</mark></li></ul><div id="1a3d3011-3dd1-805d-9003-ed277808e3b0" class="column-list"><div id="1a3d3011-3dd1-8023-a33e-f2310f14f498" style="width:106.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8009-98ce-e7329cdb68c8" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT AVG(amount) FROM Payments
+WHERE YEAR(paymentDate) = 2004</code></pre></div><div id="1a3d3011-3dd1-80eb-9fe4-eca76205ec2c" style="width:24.999999999999993%" class="column"><figure id="1a3d3011-3dd1-8088-a2f6-f6672abf43c0" class="image"><a href="image%208.png"><img style="width:87.46875px" src="image%208.png"/></a></figure></div></div></div><div id="1a3d3011-3dd1-80a3-91f0-c2caa799be61" style="width:56.25%" class="column"><ul id="1a3d3011-3dd1-8038-ae35-f2f4507eebc2" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">T2: Compare the monthly average payment of year 2005 with the avg amount from T1</mark></li></ul><div id="1a3d3011-3dd1-80a9-95dd-f5d928e33ccc" class="column-list"><div id="1a3d3011-3dd1-80e8-81cb-dc0a80a28760" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-801a-a4be-ea6ce149e650" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT MONTHNAME(paymentDate) AS `Month`, AVG(amount) FROM Payments
+WHERE YEAR(paymentDate) = 2005
+GROUP BY 1 -- Group by the first column
+HAVING AVG(amount) &gt; (SELECT AVG(amount) FROM Payments
+WHERE YEAR(paymentDate) = 2004);</code></pre></div><div id="1a3d3011-3dd1-8014-aecf-c84fddaf0f59" style="width:31.250000000000007%" class="column"><figure id="1a3d3011-3dd1-80ec-9b11-d35c5a715135" class="image"><a href="image%209.png"><img style="width:109.59375px" src="image%209.png"/></a></figure></div></div></div></div><div id="1a3d3011-3dd1-80dc-ac9c-fb003f070091" class="column-list"><div id="1a3d3011-3dd1-807f-8aef-e496dc2d1eb4" style="width:50%" class="column"><h3 id="1a3d3011-3dd1-8094-ac28-ce0faae33c19" class=""><code>EXISTS</code></h3><hr id="1a3d3011-3dd1-80ae-97dc-d1f8410cc991"/><ul id="1a3d3011-3dd1-80e0-8036-d9180158af49" class="bulleted-list"><li style="list-style-type:disc">The <code>EXISTS</code> operator is used to test for the existence of any record in a subquery.</li></ul><ul id="1a3d3011-3dd1-803b-b884-f892b49d37e6" class="bulleted-list"><li style="list-style-type:disc">Return <code>TRUE</code> if the <code>subquery</code> returns one or more records</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80d6-8519-deb661239d96" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT column_name(s) FROM table_name
+WHERE EXISTS -- Use with the subquery only
+(SELECT column_name FROM table_name WHERE condition);</code></pre><p id="1a3d3011-3dd1-8097-b448-d792b27005f1" class="">EX6: Find the customer name who are in the same city at the offices.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8078-b424-eb76458fa898" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, city, country FROM Customers c
+WHERE EXISTS
+(SELECT DISTINCT city, country FROM Offices o
+WHERE c.country=o.country AND c.city = o.city);</code></pre><figure id="1a3d3011-3dd1-80f2-aa18-f293ed2e0303" class="image"><a href="image%2010.png"><img style="width:233.984375px" src="image%2010.png"/></a></figure></div><div id="1a3d3011-3dd1-802f-872e-e5b6bbc3e92d" style="width:50%" class="column"><h3 id="1a3d3011-3dd1-80e1-ae3e-e38457a1763c" class=""><code>EXISTS</code> vs <code>IN</code></h3><hr id="1a3d3011-3dd1-807c-a29f-c1ddb553a8ca"/><ul id="1a3d3011-3dd1-80fb-a320-e3bea2381868" class="bulleted-list"><li style="list-style-type:disc"><code>IN</code> operator will scan all records fetched from the inner query.</li></ul><ul id="1a3d3011-3dd1-8040-ba07-c731e1fc2d39" class="bulleted-list"><li style="list-style-type:disc"><code>EXISTS</code> operators will stop the scanning process as soon as it found a match</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80c5-8d6d-c6af063465c9" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, city, country FROM Customers c
+WHERE EXISTS ( SELECT DISTINCT city, country FROM Offices o
+WHERE c.country = o.country AND c.city = o.city);</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-80f9-9110-c361da7a90b6" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT customerName, city, country FROM Customers c
+WHERE (city,country) IN (SELECT DISTINCT city, country FROM Offices o);</code></pre><ul id="1a3d3011-3dd1-8088-aad9-f075e020694b" class="bulleted-list"><li style="list-style-type:disc">For the small queries, <code>EXISTS</code> and <code>IN</code> are not different in performance. However, the <code>EXISTS</code> clause is much faster than <code>IN</code> when the subquery results is very large.</li></ul><h3 id="1a3d3011-3dd1-801d-bf32-d8dfe2fe766e" class="">Subquery with DML</h3><hr id="1a3d3011-3dd1-80ac-864f-f0f8584ff44c"/><ul id="1a3d3011-3dd1-80e6-85f7-e0ddcb59d3f8" class="bulleted-list"><li style="list-style-type:disc">Subqueries can also be used with the following statements along with (the operators like =, &lt;, &gt;, &gt;=, &lt;=, IN, BETWEEN)<div id="1a3d3011-3dd1-8062-9ea6-fe37c2a4821b" class="column-list"><div id="1a3d3011-3dd1-80cd-85b2-f195261d0419" style="width:100%" class="column"><ul id="1a3d3011-3dd1-807f-ae19-cebdb6e9e2e0" class="bulleted-list"><li style="list-style-type:circle">INSERT</li></ul></div><div id="1a3d3011-3dd1-808e-bb5f-ca772ab78ed7" style="width:100%" class="column"><ul id="1a3d3011-3dd1-8032-b24e-d7378bdb2329" class="bulleted-list"><li style="list-style-type:circle">UPDATE</li></ul></div><div id="1a3d3011-3dd1-80f4-98f9-d550eec6b06f" style="width:100%" class="column"><ul id="1a3d3011-3dd1-80a6-baad-c63e3e8b561e" class="bulleted-list"><li style="list-style-type:circle">DELETE</li></ul></div></div></li></ul></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1a3d3011-3dd1-8047-8d02-d8cd823f6b26"><div style="width:100%"><p id="1a3d3011-3dd1-80d9-aca0-cdcf64e6eb96" class=""><strong>Subquery with </strong><code><strong>INSERT</strong></code><strong> </strong></p><hr id="1a3d3011-3dd1-8016-9a66-d8d245b7683a"/><div id="1a3d3011-3dd1-8036-a05d-c453ae84da1f" class="column-list"><div id="1a3d3011-3dd1-80b5-ae15-d48d42faa321" style="width:81.25%" class="column"><p id="1a3d3011-3dd1-80cc-9d41-e4a79b80873d" class=""><code>INSERT</code> clause with <code>SELECT</code> allows to add the result of the query into a table</p><p id="1a3d3011-3dd1-80a4-800b-d847a579bfb7" class=""><strong>Example: </strong>Suppose we have created the table Locations for storing city, state, and country. The following code inserts a new data from the given query/subquery.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8057-815d-ffd6d086b325" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO Locations(city, state, country)
+SELECT DISTINCT city, state, country FROM Customers
+WHERE (city, state, country) NOT IN
+(SELECT DISTINCT city, state, country FROM Offices) ;</code></pre></div><div id="1a3d3011-3dd1-806b-b0be-cfff67a74af2" style="width:18.75%" class="column"><figure id="1a3d3011-3dd1-80b3-8275-dcb15b3c7c0f" class="image"><a href="image%2011.png"><img style="width:276.25px" src="image%2011.png"/></a></figure><figure id="1a3d3011-3dd1-80fb-a7c8-cfd091ac46e5" class="image"><a href="image%2012.png"><img style="width:207.15625px" src="image%2012.png"/></a></figure></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1a3d3011-3dd1-803d-9647-d781168252c6"><div style="width:100%"><p id="1a3d3011-3dd1-80f1-9a61-dcf54999f6e6" class=""><strong>Subquery with </strong><code><strong>UPDATE</strong></code></p><hr id="1a3d3011-3dd1-809e-b12e-e1085df794ac"/><div id="1a3d3011-3dd1-80b6-91af-cf89f9223e3c" class="column-list"><div id="1a3d3011-3dd1-807d-adc9-f17544db7bbb" style="width:75%" class="column"><p id="1a3d3011-3dd1-8009-b1d8-efcf6de61437" class=""><strong>Example</strong>: Update the state to have the same values as the city for the country without states.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8017-9063-e54ec6d52653" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE Locations L1
+SET state =
+(SELECT DISTINCT L2.city FROM Customers L2
+WHERE L1.city=L2.city AND L1.country=L2.country)
+WHERE state IS NULL;</code></pre></div><div id="1a3d3011-3dd1-8057-bb52-e1aacd5a7d5b" style="width:25%" class="column"><figure id="1a3d3011-3dd1-801e-b229-cb743c7a7782" class="image"><a href="image%2013.png"><img style="width:265.734375px" src="image%2013.png"/></a></figure></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1a3d3011-3dd1-80ed-b59a-e1a7931948b5"><div style="width:100%"><p id="1a3d3011-3dd1-80ad-86d0-d1753102cb6e" class=""><strong>Subquery with </strong><code><strong>DELETE</strong></code></p><hr id="1a3d3011-3dd1-80fa-9990-c00b0d0b932d"/><div id="1a3d3011-3dd1-8068-b7ba-d802bda0dad3" class="column-list"><div id="1a3d3011-3dd1-8049-a26b-c0aee2e619f9" style="width:75%" class="column"><p id="1a3d3011-3dd1-806d-81c6-f737258b054c" class=""><strong>Example</strong>: Remove the locations that are outside the countryhaving the offices</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a3d3011-3dd1-8024-ace2-cdfce292bbe1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">DELETE From Locations
+WHERE (country) NOT IN (SELECT DISTINCT country FROM Offices);</code></pre></div><div id="1a3d3011-3dd1-80a8-a4a6-f20c0a7a58b7" style="width:25%" class="column"><figure id="1a3d3011-3dd1-80f0-a0a3-d1b63a4815ef" class="image"><a href="image%2014.png"><img style="width:265.734375px" src="image%2014.png"/></a></figure></div></div></div></figure><p id="1a3d3011-3dd1-8031-ac69-c8ef6d7bf954" class="">
+</p><p id="1a3d3011-3dd1-8036-b867-f8ecd0ed20eb" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
