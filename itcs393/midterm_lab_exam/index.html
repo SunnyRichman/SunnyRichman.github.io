@@ -1,0 +1,747 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Midterm_LabExam</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1a4d3011-3dd1-8032-bde7-ee6d5bdeb2a1" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📝</span></div><h1 class="page-title">Midterm_LabExam</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px;display:block"/></span>Type</th><td><span class="selected-value select-value-color-default">Exam</span></td></tr></tbody></table></header><div class="page-body"><p id="1afd3011-3dd1-8059-b14f-c8e000ed8e0d" class=""><code><a href="https://sunnyrichman.github.io/itcs393">🔙 Back to Table of Contents, Click here</a></code></p><ul id="1afd3011-3dd1-8021-9d74-eee7aa8cbd7c" class="toggle"><li><details open=""><summary><strong>Multiple Choice</strong></summary><hr id="1afd3011-3dd1-80ea-9435-d4a4e5f61491"/><ol type="1" id="1afd3011-3dd1-8056-ae5d-e2ad524128f4" class="numbered-list" start="1"><li>Given the following CREATE statement, which of the following statement is <strong>TRUE</strong> about the collation “utf8mb4_0900_ai_ci”<hr id="1b0d3011-3dd1-80b1-a4bc-ff9419a50d8a"/><div id="1b0d3011-3dd1-801d-8564-e331929e3b49" class="column-list"><div id="1b0d3011-3dd1-80ea-a299-fe1ff5b3b08f" style="width:37.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b0d3011-3dd1-8089-bc51-eb27e69880fb" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE DATABASE IF NOT EXISTS itcs393db
+	DEFAULT CHARACTER SET utf8mb4
+	DEFAULT COLLATE utf8mb4_0900_ai_ci</code></pre></div><div id="1b0d3011-3dd1-80ea-89b3-cea75185a045" style="width:62.5%" class="column"><ol type="a" id="1b0d3011-3dd1-808d-8522-fd024fab11a2" class="numbered-list" start="1"><li>Ensure accent-sensitive and case-sensitive comparisons for Unicode characters.</li></ol><ol type="a" id="1b0d3011-3dd1-803e-86eb-ceb16053329c" class="numbered-list" start="2"><li><strong>Ensure accent-insensitive and case-insensitive comparisons for Unicode characters.</strong></li></ol><ol type="a" id="1b0d3011-3dd1-8070-9f32-e675770d9318" class="numbered-list" start="3"><li>Ensure accent-sensitive but case-insensitive comparisons for Unicode characters.</li></ol><ol type="a" id="1b0d3011-3dd1-8095-ad20-f4421f2baa10" class="numbered-list" start="4"><li>Ensure accent-insensitive but case-sensitive comparisons for Unicode characters.</li></ol></div></div></li></ol><ol type="1" id="1b0d3011-3dd1-80ca-a5d4-e2c9fa213fd1" class="numbered-list" start="2"><li>Given the following CREATE statement, which of the following statements is correct to add a new column named <code>position</code> with data type VARCHAR(50) after the column <code>lastName</code>?<hr id="1b0d3011-3dd1-80c9-a0a4-c9df593e9067"/><div id="1b0d3011-3dd1-80f5-b6d6-c791ee54e3cb" class="column-list"><div id="1b0d3011-3dd1-8035-b177-efb49667c2f2" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b0d3011-3dd1-80d9-8120-f71b4fc04e91" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE Instructor(
+	instructorID VARCHAR(5) NOT NULL,
+	firstName VARCHAR(50),
+	lastName VARCHAR(50),
+	email VARCHAR(50),
+	phone VARCHAR(50),
+	PRIMARY KEY (instructorID)
+);</code></pre></div><div id="1b0d3011-3dd1-80c4-ae54-fcaaef8a1730" style="width:50%" class="column"><ol type="a" id="1b0d3011-3dd1-80ac-ba88-fca25ad0901e" class="numbered-list" start="1"><li><code>ALTER TABLE Instructor<br/>CHANGE COLUMN lastName position VARCHAR(50);<br/></code></li></ol><ol type="a" id="1b0d3011-3dd1-80be-9b32-d5b43816a132" class="numbered-list" start="2"><li><code><strong>ALTER TABLE Instructor<br/>ADD COLUMN position VARCHAR(50) AFTER lastName;<br/></strong></code></li></ol><ol type="a" id="1b0d3011-3dd1-8054-bc28-c6cfbe4de632" class="numbered-list" start="3"><li><code>MODIFY TABLE Instructor<br/>ADD COLUMN position VARCHAR(50) AFTER lastName;<br/></code></li></ol><ol type="a" id="1b0d3011-3dd1-80de-9db3-fcc020d1241e" class="numbered-list" start="4"><li><code>MODIFY TABLE Instructor<br/>ADD COLUMN position VARCHAR(50) AFTER lastName;<br/></code></li></ol></div></div></li></ol><ol type="1" id="1b0d3011-3dd1-8070-8050-e27666172790" class="numbered-list" start="3"><li>Given the following CREATE statement, which of the following statement is correct to be put in Line (A) to make the <code>firstName</code> and <code>lastName</code> <strong>composite PRIMARY KEY</strong> of the Student table?<hr id="1b0d3011-3dd1-8012-91d7-e41cecaf697d"/><div id="1b0d3011-3dd1-8047-8918-f3590ab423fc" class="column-list"><div id="1b0d3011-3dd1-80b1-a6f1-d9a84bc2182d" style="width:37.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b0d3011-3dd1-80fa-aad9-cda30ae64e24" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE Student(
+	studentID VARCHAR(8) NOT NULL,
+	firstName VARCHAR(50),
+	lastName VARCHAR(50),
+	birthdate DATE,
+	phone VARCHAR(50),
+	&lt;-- (Line A) --&gt;
+);</code></pre></div><div id="1b0d3011-3dd1-80c4-9c8e-fd23ceb9b52b" style="width:62.5%" class="column"><ol type="a" id="1b0d3011-3dd1-80ec-a95f-c1000e1d46fc" class="numbered-list" start="1"><li><code><strong>CONSTRAINT pk_stu PRIMARY KEY (firstName, lastName)</strong></code></li></ol><ol type="a" id="1b0d3011-3dd1-80b0-807e-ede6e5db1551" class="numbered-list" start="2"><li><code>CONSTRAINT pk_stu COMPOSITE KEY (firstName, lastName)</code></li></ol><ol type="a" id="1b0d3011-3dd1-8050-8292-ce3c22169b57" class="numbered-list" start="3"><li><code>CONSTRAINT pk_stu COMPOSITE KEY (firstName), COMPOSITE KEY (lastName)</code></li></ol><ol type="a" id="1b0d3011-3dd1-8090-830b-d5200cdb2f1c" class="numbered-list" start="4"><li><code>CONSTRAINT pk_stu PRIMARY KEY (firstName), PRIMARY KEY (lastName)</code></li></ol></div></div></li></ol><ol type="1" id="1b0d3011-3dd1-8042-9245-f8f6e9cbe5f9" class="numbered-list" start="4"><li>Given the following CREATE statement, which of the following statements is correct to <strong>remove a column</strong> named <code>phone</code>?<hr id="1b0d3011-3dd1-80f0-b8c9-c68b3551e1d0"/><div id="1b0d3011-3dd1-80f1-83b6-c81a8619ef43" class="column-list"><div id="1b0d3011-3dd1-8035-859c-d76235a9c7d2" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b0d3011-3dd1-80ae-9e77-d29562b8887e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE Instructor(
+	instructorID VARCHAR(5) NOT NULL,
+	firstName VARCHAR(50),
+	lastName VARCHAR(50),
+	email VARCHAR(50),
+	phone VARCHAR(50),
+	PRIMARY KEY (instructorID)
+);</code></pre></div><div id="1b0d3011-3dd1-80c8-a883-ff8a3263bec5" style="width:50%" class="column"><ol type="a" id="1b0d3011-3dd1-8041-bf10-dea14599c413" class="numbered-list" start="1"><li><code>DROP COLUMN Instructor IF EXISTS;</code></li></ol><ol type="a" id="1b0d3011-3dd1-80fc-b5c3-f11054cf6c5c" class="numbered-list" start="2"><li><code>DROP TABLE Instructor IF EXISTS;</code></li></ol><ol type="a" id="1b0d3011-3dd1-8034-94d2-e4357c87306e" class="numbered-list" start="3"><li><code><strong>MODIFY TABLE Instructor<br/>DROP COLUMN phone;<br/></strong></code></li></ol><ol type="a" id="1b0d3011-3dd1-80eb-886e-c6fc9ab23f25" class="numbered-list" start="4"><li><code>MODIFY TABLE Instructor<br/><br/></code><code><strong>DROP CONSTRAINT phone</strong></code><code>;</code></li></ol></div></div></li></ol><ol type="1" id="1b0d3011-3dd1-80ab-a886-f810ea228da0" class="numbered-list" start="5"><li>Given the following CREATE statement, which of the following statement is correct to <strong>rename the column </strong><code>phone</code> to <code>contact</code>?<hr id="1b0d3011-3dd1-80d9-850e-c30db58e5088"/><div id="1b0d3011-3dd1-80c2-990a-e66b9962f04e" class="column-list"><div id="1b0d3011-3dd1-8049-a6b6-fd5edb1d868e" style="width:37.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b0d3011-3dd1-8083-93f0-fd534b728916" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE Instructor(
+	instructorID VARCHAR(5) NOT NULL,
+	firstName VARCHAR(50),
+	lastName VARCHAR(50),
+	email VARCHAR(50),
+	phone VARCHAR(50),
+	PRIMARY KEY (instructorID)
+);</code></pre></div><div id="1b0d3011-3dd1-808b-b352-d38a28f6738e" style="width:62.5%" class="column"><ol type="a" id="1b0d3011-3dd1-805d-ba96-d9ba466ace9a" class="numbered-list" start="1"><li><code>MODIFY TABLE Instructor<br/>CHANGE COLUMN phone AS contact;<br/></code></li></ol><ol type="a" id="1b0d3011-3dd1-8065-afdd-fc26a7a902de" class="numbered-list" start="2"><li><code><strong>ALTER TABLE Instructor<br/>ADD COLUMN phone contact VARCHAR(50);<br/></strong></code></li></ol><ol type="a" id="1b0d3011-3dd1-8059-9dd7-c60a46debeb0" class="numbered-list" start="3"><li><code>MODIFY TABLE Instructor<br/>ADD COLUMN position VARCHAR(50) AFTER lastName;<br/></code></li></ol><ol type="a" id="1b0d3011-3dd1-809e-90b4-e21797b6eeb8" class="numbered-list" start="4"><li><code>MODIFY TABLE Instructor<br/>ADD COLUMN position VARCHAR(50) AFTER lastName;<br/></code></li></ol></div></div></li></ol><ol type="1" id="1b0d3011-3dd1-800e-9493-f3a4b2210ce7" class="numbered-list" start="6"><li>Given the <span style="border-bottom:0.05em solid">empty</span> <code>Courses</code> table with the following definition, which of the following INSERT statements is valid to add the new course `ITCS393 DB Lab` into the table?<hr id="1b0d3011-3dd1-804a-8808-ee49b93aabee"/><div id="1b0d3011-3dd1-8067-a9f5-f46b6aeebdef" class="column-list"><div id="1b0d3011-3dd1-80d5-89ad-d623276eb4f3" style="width:31.25%" class="column"><figure id="1b0d3011-3dd1-80e1-ae5d-cbd34b52e927" class="image"><a href="image.png"><img style="width:304px" src="image.png"/></a></figure></div><div id="1b0d3011-3dd1-8072-914b-db6af166343d" style="width:68.75%" class="column"><ol type="a" id="1b0d3011-3dd1-8071-86d3-c2da7b6924de" class="numbered-list" start="1"><li><code>INSERT INTO Courses(program_code, course_code, course_name, semester)<br/>VALUES (&quot;BSc. in ICT&quot;, &quot;ITCS393&quot;, &quot;DB Lab&quot;, NULL);<br/></code></li></ol><ol type="a" id="1b0d3011-3dd1-80fa-9f01-f98d805dec31" class="numbered-list" start="2"><li><code>INSERT INTO Courses<br/>VALUES (&quot;ITCS393&quot;, &quot;BSc. in ICT&quot;, &quot;ITCS393&quot;, &quot;DB Lab&quot;, 2);<br/></code></li></ol><ol type="a" id="1b0d3011-3dd1-80a4-a00d-fd8376c80e6d" class="numbered-list" start="3"><li><code><strong>INSERT INTO Courses<br/>VALUES (&quot;ITCS393&quot;, &quot;BSc. in ICT&quot;, &quot;DB Lab&quot;, &quot;2&quot;, &quot;C006&quot;, NULL);<br/></strong></code></li></ol><ol type="a" id="1b0d3011-3dd1-809c-8c8d-ca49133a020b" class="numbered-list" start="4"><li><code>INSERT INTO Courses(course_code, program_code, course_name, semester)<br/>VALUES (&quot;ITCS393&quot;, NULL, &quot;DB Lab&quot;, NULL);<br/></code></li></ol></div></div></li></ol><ol type="1" id="1b0d3011-3dd1-8081-a31d-d10f6ac32d42" class="numbered-list" start="7"><li>Given the table <code>Programs</code> with existing data records, <div id="1b0d3011-3dd1-8005-81a6-df58af2141e3" class="column-list"><div id="1b0d3011-3dd1-8039-97e1-d18a7499fbc9" style="width:50%" class="column"><figure id="1b0d3011-3dd1-8022-b666-e11c89072e6e" class="image"><a href="image%201.png"><img style="width:480px" src="image%201.png"/></a></figure></div><div id="1b0d3011-3dd1-8029-a5f3-fcdf4e2d7ed7" style="width:50%" class="column"><p id="1b0d3011-3dd1-80d0-8814-ee4fe5e03e72" class="">What will happen when executing the following UPDATE statement?</p><p id="1b0d3011-3dd1-80b7-891b-d8a36b58182e" class=""><code>UPDATE Program<br/>SET degree=&quot;Bachelor of Doctor of Medicine Program&quot;<br/>WHERE program_code=&quot;SI&quot;;<br/></code></p></div></div><hr id="1b0d3011-3dd1-801f-a41e-d80f0cb69c57"/><ol type="a" id="1b0d3011-3dd1-802e-b4be-e0ebff3fe492" class="numbered-list" start="1"><li>The UPDATE statement is an error and cannot produce any updated value (0 row updated)</li></ol><ol type="a" id="1b0d3011-3dd1-802c-bc32-df20faddf215" class="numbered-list" start="2"><li>The value of <code>program_code</code> at the record with the Bachelor of Doctor of Medicine Program <code>degree</code> was updated to &quot;SI&quot; (1 row updated)</li></ol><ol type="a" id="1b0d3011-3dd1-80c7-aed4-f5b740c9753e" class="numbered-list" start="3"><li>The value of <code>degree</code> at the records with <code>NULL</code> were updated to &quot;Bachelor of Doctor of Medicine Program&quot; (2 rows updated)</li></ol><ol type="a" id="1b0d3011-3dd1-80bb-a7f8-dd241cb170af" class="numbered-list" start="4"><li><strong>The value of </strong><code><strong>degree</strong></code><strong> at the record with </strong><code><strong>program_code</strong></code><strong> SI was updated to &quot;Bachelor of Doctor of Medicine Program&quot; (1 row updated)</strong></li></ol></li></ol><ol type="1" id="1b0d3011-3dd1-80b9-95c6-f86e850b43fd" class="numbered-list" start="8"><li>Given the table <code>Programs</code> with existing data records,<div id="1b0d3011-3dd1-80aa-a77d-eb37457d0825" class="column-list"><div id="1b0d3011-3dd1-80a6-bb20-eb5e797666ed" style="width:50%" class="column"><figure id="1b0d3011-3dd1-800c-83a7-f83d1f4e1cbe" class="image"><a href="image%202.png"><img style="width:524.4375px" src="image%202.png"/></a></figure></div><div id="1b0d3011-3dd1-805c-903a-cb8b99d6f8cd" style="width:50%" class="column"><p id="1b0d3011-3dd1-804d-ae2d-fb7c5bc2f78b" class="">What will happen when executing the following DELETE statement, assuming that the Safe update mode is turned off?</p><p id="1b0d3011-3dd1-8046-b460-e9b791ed0d44" class=""><code>DELETE FROM Program WHERE major IS NULL;</code></p></div></div><hr id="1b0d3011-3dd1-807a-a91d-f960e2200b75"/><ol type="a" id="1b0d3011-3dd1-8040-8943-d029471a1607" class="numbered-list" start="1"><li>The last row with the empty values of <code>major</code>, i.e.,  program_code=&quot;SI&quot;,  is deleted.</li></ol><ol type="a" id="1b0d3011-3dd1-8007-bc5b-fa570b0b274b" class="numbered-list" start="2"><li>The DELETE statement contains a syntax error and cannot be executed (0 rows deleted)</li></ol><ol type="a" id="1b0d3011-3dd1-80bb-a714-e68708986c52" class="numbered-list" start="3"><li><strong>Two rows with the empty values of </strong><code><strong>major</strong></code><strong> are deleted.</strong></li></ol><ol type="a" id="1b0d3011-3dd1-800d-a544-e73fa8c73591" class="numbered-list" start="4"><li>The first row with the empty values of <code>major</code>, i.e., program_code=&quot;MU&quot;,  is deleted.</li></ol></li></ol><ol type="1" id="1b0d3011-3dd1-80ab-8d5f-ca6af40361fe" class="numbered-list" start="9"><li>Given the following ALTER statement which creates a foreign key constraint to the <code>Staff</code> table,<p id="1b0d3011-3dd1-80b3-8098-e7e29cdf85a9" class=""><code>ALTER TABLE Staff<br/>ADD CONSTRAINT fk_staffdept FOREIGN KEY (s_deptID) REFERENCES Department(departmentID)<br/>  ON DELETE CASCADE<br/>  ON UPDATE CASCADE;<br/></code></p><p id="1b0d3011-3dd1-80c7-a584-eb4b2c563eba" class="">Which of the following statement is <strong>TRUE</strong> when one department, e.g., departmentID=1, is deleted from the <code>Department</code> table?</p><hr id="1b0d3011-3dd1-8069-b943-d3cfc0e3b104"/><ol type="a" id="1b0d3011-3dd1-80ed-9056-d98383d8abb5" class="numbered-list" start="1"><li><strong>All data records in the `staff` table that has `s_deptID` equal to 1 will be deleted</strong></li></ol><ol type="a" id="1b0d3011-3dd1-80b7-bcf1-d272b65e9fd6" class="numbered-list" start="2"><li>All data records in the `staff` table will be set to deleted</li></ol><ol type="a" id="1b0d3011-3dd1-8087-9b61-cee71b6f85c8" class="numbered-list" start="3"><li>The DBMS will reject the delete operation for the `Department` table since there is a referenced `s_deptID` in the `staff` table.</li></ol><ol type="a" id="1b0d3011-3dd1-80b4-9cd0-f7826ec95591" class="numbered-list" start="4"><li>All data records in the `staff` table that has `s_deptID` equal to 1 will be set to `NULL`</li></ol></li></ol><ol type="1" id="1b0d3011-3dd1-8089-a1e5-f8839fcc4009" class="numbered-list" start="10"><li>Given the table <code>Programs</code> with existing data records, <figure id="1b0d3011-3dd1-80bf-bc57-dd1c9ef2a7dc" class="image"><a href="image%203.png"><img style="width:1122.921875px" src="image%203.png"/></a></figure><p id="1b0d3011-3dd1-8073-af57-e4216607689c" class="">It seems that after executing the UPDATE command, the <code>Department</code> table is automatically updated to the new value, i.e, managerID=111.  Which of the following referential options were set to the <code>Department</code> table?</p><hr id="1b0d3011-3dd1-80c2-b3df-c05551190332"/><div id="1b0d3011-3dd1-801d-ac3d-edd2dd80eb00" class="column-list"><div id="1b0d3011-3dd1-80ce-9c84-fc2217be4327" style="width:25%" class="column"><ol type="a" id="1b0d3011-3dd1-8088-8cae-c6751e36ee48" class="numbered-list" start="1"><li><code>ON UPDATE SET NULL</code></li></ol></div><div id="1b0d3011-3dd1-80dc-99b8-eff17d5f9241" style="width:25%" class="column"><p id="1b0d3011-3dd1-8080-89bc-ca4da66b71ad" class="">b. <code>ON UPDATE RESTRICT</code> </p></div><div id="1b0d3011-3dd1-808d-b7d8-c30487663bd6" style="width:25%" class="column"><p id="1b0d3011-3dd1-8037-9591-e20eea1ee4d8" class="">c. <code>ON UPDATE NO ACTION</code> </p></div><div id="1b0d3011-3dd1-8083-9222-e8bb8f347d56" style="width:25%" class="column"><p id="1b0d3011-3dd1-8005-8f69-f19fae4feefc" class=""><strong>d. </strong><code><strong>ON UPDATE CASCADE</strong></code></p></div></div></li></ol></details></li></ul><ul id="1afd3011-3dd1-800d-953a-d8306c9e52a0" class="toggle"><li><details open=""><summary><strong>Coding Part</strong></summary><hr id="1afd3011-3dd1-803e-bf65-d243f4bb05fa"/><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b0d3011-3dd1-8058-bc60-e60c233be437"><div style="width:100%"><p id="1b0d3011-3dd1-8047-bd69-f214c2580797" class=""><strong>The Entity Relationship Diagram for Curriculum101 Database</strong></p><hr id="1b0d3011-3dd1-80d1-ab19-ca41910eec4d"/><div id="1b0d3011-3dd1-80c0-8f0c-e1dae279a970" class="column-list"><div id="1b0d3011-3dd1-80ae-8946-dca30108271a" style="width:50%" class="column"><figure id="1b0d3011-3dd1-80b2-8435-ee99e5a291ad" class="image"><a href="image%204.png"><img style="width:576px" src="image%204.png"/></a></figure></div><div id="1b0d3011-3dd1-80cc-8735-fa01c4bda016" style="width:50%" class="column"><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="1b0d3011-3dd1-8003-987c-d7ecb0397feb"><div style="width:100%"><p id="1b0d3011-3dd1-80fb-a33e-ec8162f15f45" class=""><strong>Programs</strong>: stores program of study, such as, “B.Sc. in ICT”, “MSc in CS” etc.</p><figure id="1b0d3011-3dd1-80a4-b8a3-c60e1bffb3a2" class="image"><a href="image%205.png"><img style="width:475.375px" src="image%205.png"/></a></figure></div></figure><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b0d3011-3dd1-80b6-9c73-feb8f854906c"><div style="width:100%"><p id="1b0d3011-3dd1-800b-b154-ed8c76918b69" class=""><strong>Courses</strong>: stores information about courses, for example, ITCS393 Database Lab</p><figure id="1b0d3011-3dd1-8055-a81f-cb4958a163bf" class="image"><a href="image%206.png"><img style="width:475.359375px" src="image%206.png"/></a></figure></div></figure><p id="1b0d3011-3dd1-8033-a150-d8a3a3028da8" class="">
+</p></div></div><div id="1b0d3011-3dd1-80f5-a940-c6d395b0f725" class="column-list"><div id="1b0d3011-3dd1-8032-b74f-f7e2a5df82d4" style="width:50%" class="column"><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="1b0d3011-3dd1-80ca-858a-ee24148d46aa"><div style="width:100%"><p id="1b0d3011-3dd1-8030-ba01-ccf66d6338b5" class=""><strong>Areas</strong>: stores the area of the course, for examples, “General Education”, “Database” etc.</p><figure id="1b0d3011-3dd1-80dd-b184-c620651c6b04" class="image"><a href="image%207.png"><img style="width:201px" src="image%207.png"/></a></figure></div></figure><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b0d3011-3dd1-80d3-8d6e-d99ce1ac0bc4"><div style="width:100%"><p id="1b0d3011-3dd1-80cc-85f4-c8aad9901787" class=""><strong>CourseTypes</strong>: stores types of courses, for examples, “Elective Courses”, “Required Courses” etc.</p><figure id="1b0d3011-3dd1-80a0-8929-f612e0789071" class="image"><a href="image%208.png"><img style="width:195px" src="image%208.png"/></a></figure></div></figure></div><div id="1b0d3011-3dd1-8020-9ced-e84fcc765731" style="width:50%" class="column"><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="1b0d3011-3dd1-80ff-8a4f-feb1e4eaa8da"><div style="width:100%"><p id="1b0d3011-3dd1-8091-9295-ef2bd82cb695" class=""><strong>Instructors</strong>: stores instructor information, such as, &quot;Dr. Patricia Rakepick”</p><figure id="1b0d3011-3dd1-8089-9b7b-fa715e867506" class="image"><a href="image%209.png"><img style="width:352px" src="image%209.png"/></a></figure></div></figure><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b0d3011-3dd1-80d4-9bb0-d68838f673f5"><div style="width:100%"><p id="1b0d3011-3dd1-8088-a1a9-f639ae47c337" class=""><strong>Assignments</strong>: stores instructor teaching workload, i.e., number of lecture and lab hours, for example, Dr. Patricia (instructorID=12) teach ITCS393 for 30 lab hours</p><figure id="1b0d3011-3dd1-806d-88bf-d687ba48ee73" class="image"><a href="image%2010.png"><img style="width:373px" src="image%2010.png"/></a></figure></div></figure></div></div></div></figure><p id="1afd3011-3dd1-80cd-bb54-e9b078472eca" class=""><code><a href="https://github.com/SunnyRichman/SunnyRichman.github.io/blob/296bd2d398b485a0121d58c1d12815d3a86c6848/itcs393/midterm_lab_exam/curriculum101.sql">📁</a></code><code><strong><a href="https://github.com/SunnyRichman/SunnyRichman.github.io/blob/296bd2d398b485a0121d58c1d12815d3a86c6848/itcs393/midterm_lab_exam/curriculum101.sql"> </a></strong></code><code><a href="https://github.com/SunnyRichman/SunnyRichman.github.io/blob/296bd2d398b485a0121d58c1d12815d3a86c6848/itcs393/midterm_lab_exam/curriculum101.sql">Download</a></code><code><strong><a href="https://github.com/SunnyRichman/SunnyRichman.github.io/blob/296bd2d398b485a0121d58c1d12815d3a86c6848/itcs393/midterm_lab_exam/curriculum101.sql"> &#x27;</a></strong></code><code><a href="https://github.com/SunnyRichman/SunnyRichman.github.io/blob/296bd2d398b485a0121d58c1d12815d3a86c6848/itcs393/midterm_lab_exam/curriculum101.sql?raw=true">Curriculum101.sql&#x27; Click here</a></code></p><ul id="1afd3011-3dd1-8092-8c18-fa7e435380c8" class="toggle"><li><details open=""><summary><strong>1. List all information about the courses (Expected: all 6 columns of the </strong><code><strong>Courses</strong></code><strong> table, 157 rows)</strong></summary><hr id="1afd3011-3dd1-80ba-9329-c93a78da4cd5"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8007-9da6-eba7debb9e2d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM courses;</code></pre></details></li></ul><ul id="1afd3011-3dd1-8052-a375-e34ff8db2612" class="toggle"><li><details open=""><summary><strong>2. List all courses (code and name) (Expected: 2 columns, 157 rows)</strong></summary><hr id="1afd3011-3dd1-8007-b56b-fd40967a24e9"/><div id="1b0d3011-3dd1-80b7-822b-e934be5b8fc7" class="column-list"><div id="1b0d3011-3dd1-8056-a9ec-d660f938dbcd" style="width:68.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-801e-812c-c860466b91a2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT course_code, course_name FROM courses;</code></pre></div><div id="1b0d3011-3dd1-80e1-af17-dcc00f4068e1" style="width:31.249999999999993%" class="column"><p id="1b0d3011-3dd1-80c1-9a9f-d9aec1e486fe" class=""><em>Partial results provided</em></p><figure id="1b0d3011-3dd1-80a2-8e4a-d850406d5902" class="image"><a href="image%2011.png"><img style="width:327.78125px" src="image%2011.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-80af-8cad-f7a893d1db43" class="toggle"><li><details open=""><summary><strong>3. Show all unique instructor’s titles (Expected: 1 column, 5 rows)</strong></summary><hr id="1afd3011-3dd1-8028-ac4b-f31210d4ea70"/><div id="1b0d3011-3dd1-8072-b657-d12132e2e5f6" class="column-list"><div id="1b0d3011-3dd1-8056-860d-dea0329f1b6f" style="width:87.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8079-9332-ea2ec83824f3" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT DISTINCT(title) FROM instructors;</code></pre></div><div id="1b0d3011-3dd1-809c-b75a-dbea5ac6eb7a" style="width:12.500000000000005%" class="column"><figure id="1b0d3011-3dd1-8024-95ee-ee7483938f59" class="image"><a href="image%2012.png"><img style="width:96px" src="image%2012.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-8004-bfd9-ec63a3d8d6aa" class="toggle"><li><details open=""><summary><strong>4. List all information on the top 3 programs (Expected: all 5 columns of the </strong><code><strong>Programs</strong></code><strong> table, 3 rows)</strong></summary><hr id="1afd3011-3dd1-804e-a3a2-e3b995c826db"/><div id="1b0d3011-3dd1-808a-897f-fe4cf52da715" class="column-list"><div id="1b0d3011-3dd1-803b-bf25-e8af4695beaf" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8035-be2c-cf7588565b34" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM programs LIMIT 3;</code></pre></div><div id="1b0d3011-3dd1-80dd-a6f3-ed3c39806f1f" style="width:50%" class="column"><figure id="1b0d3011-3dd1-8020-a372-e5eecd95e712" class="image"><a href="image%2013.png"><img style="width:524.46875px" src="image%2013.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-8089-a52a-dcd2c59f4c83" class="toggle"><li><details open=""><summary><strong>5. Show all teaching assignment information including course code, section, instructor ID, instructor’s first name and last name, the number of hours in lecture and lab, and its teaching hour in total. </strong><em><strong><span style="border-bottom:0.05em solid">Sort </span></strong></em><strong>the result by course code and section respectively<br/>Note: teaching hour in total = <br/></strong><em><code><strong>hour_lect</strong></code></em><strong> + </strong><em><code><strong>hour_lab</strong></code></em><strong><br/>(Expected: 6 columns, 259 rows)<br/></strong></summary><hr id="1afd3011-3dd1-80dc-95e0-f5d7bc9d7d37"/><div id="1b0d3011-3dd1-8033-abcb-f4c2ec0187fb" class="column-list"><div id="1b0d3011-3dd1-80c4-9828-ebd228f96d1c" style="width:62.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8032-98fe-d779d4dd236a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT course_code, sec, a.instructorID, i.firstName, i.lastName, hour_lect, hour_lab, (hour_lect+hour_lab) AS teaching_hour FROM assignments a
+INNER JOIN instructors i ON a.instructorID = i.instructorID ORDER BY course_code ASC, sec ASC;</code></pre></div><div id="1b0d3011-3dd1-8082-89f1-d38407a51200" style="width:37.5%" class="column"><p id="1b0d3011-3dd1-8063-9ab6-d3c047dfd5bc" class="">Partial results provided</p><figure id="1b0d3011-3dd1-80fb-9593-ffef75bcd6af" class="image"><a href="image%2014.png"><img style="width:524.4375px" src="image%2014.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-8002-a6e4-d727df1bd0be" class="toggle"><li><details open=""><summary><strong>6. List all information about the courses beginning with “Special Topic” (Expected: all 6 columns of the </strong><code><strong>courses</strong></code><strong> table, 5 rows)</strong></summary><hr id="1afd3011-3dd1-80f0-9ed9-c22b0e3e7ffb"/><div id="1b0d3011-3dd1-808d-a9e7-f197da0393e8" class="column-list"><div id="1b0d3011-3dd1-806b-aedd-c3c9f33d3d6a" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-80f0-b128-d3ce75289226" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT program_code, course_code, course_name, semester, course_area, type_code FROM courses
+WHERE course_name LIKE &quot;Special Topics%&quot;;</code></pre><p id="1b0d3011-3dd1-80e6-8c01-ef769b03b41e" class="">
+</p></div><div id="1b0d3011-3dd1-80d4-8160-ff603331eaa7" style="width:50%" class="column"><figure id="1b0d3011-3dd1-8008-b792-c2683a05cc2a" class="image"><a href="image%2015.png"><img style="width:524.40625px" src="image%2015.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-80da-a731-c63f411722c7" class="toggle"><li><details open=""><summary><strong>7. List all information about the program without the degree abbreviation (i.e., </strong><em><code><strong>degree_abbr</strong></code></em><em><strong> </strong></em><strong>is empty) (Expected: all 5 columns of the </strong><code><strong>Programs</strong></code><strong> table, 2 rows)</strong></summary><hr id="1afd3011-3dd1-803f-bb54-c0958c88c475"/><div id="1b0d3011-3dd1-8098-833f-efcb271e78e2" class="column-list"><div id="1b0d3011-3dd1-803c-93fd-e8582a43ddca" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8019-a4cf-e72f5225bf4a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM programs WHERE degree_abbr IS NULL;</code></pre></div><div id="1b0d3011-3dd1-800e-9246-f6fa16612568" style="width:50%" class="column"><figure id="1b0d3011-3dd1-8085-8b39-f1357f600212" class="image"><a href="image%2016.png"><img style="width:524.421875px" src="image%2016.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-806a-ac12-dcfcbfff0215" class="toggle"><li><details open=""><summary><strong>8. Count the number of instructors per instructor’s title, sorted by the highest to lowest number (Expected: 2 columns, 5 rows)</strong></summary><hr id="1afd3011-3dd1-80de-8b59-e920d7b2e8cc"/><div id="1b0d3011-3dd1-8069-b817-feff1f4ef2b1" class="column-list"><div id="1b0d3011-3dd1-8068-b60a-f9371e38cf13" style="width:81.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-80a4-b130-eca2fa3b9238" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT title, COUNT(title) AS numOfInstructors FROM instructors
+GROUP BY title ORDER BY numOfInstructors DESC;</code></pre><p id="1b0d3011-3dd1-8092-954a-fecf7ccf1eba" class="">
+</p></div><div id="1b0d3011-3dd1-803b-8701-fe00671e4dc1" style="width:18.75%" class="column"><figure id="1b0d3011-3dd1-8065-8ecf-d3dd4a654586" class="image"><a href="image%2017.png"><img style="width:192px" src="image%2017.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-80f8-b607-ef72c065920e" class="toggle"><li><details open=""><summary><strong>9. List </strong><code><strong>course_code</strong></code><strong>, </strong><code><strong>course_name</strong></code><strong>, </strong><code><strong>program_code</strong></code><strong>, and </strong><code><strong>degree</strong></code><strong> for the courses names containing the word “Database”. Sort the result by </strong><code><strong>program_code</strong></code><strong> ascendingly (Expected: 4 columns, 7 rows)</strong></summary><hr id="1afd3011-3dd1-80ed-95cc-e01f2e124c1c"/><div id="1b0d3011-3dd1-808c-beda-f7b3b328b68f" class="column-list"><div id="1b0d3011-3dd1-80e2-b90c-d5b52b80cd90" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-80c4-a83b-c276a757205a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT course_code, course_name, c.program_code, p.degree FROM courses c
+INNER JOIN programs p ON c.program_code = p.program_code
+WHERE course_name LIKE &quot;Database%&quot; ORDER BY p.program_code ASC;</code></pre></div><div id="1b0d3011-3dd1-803b-8f2d-c51858bfa93e" style="width:50%" class="column"><figure id="1b0d3011-3dd1-80c4-83a0-df7c87d3e4d0" class="image"><a href="image%2018.png"><img style="width:524.4375px" src="image%2018.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-80af-b74d-f50a7ff588e3" class="toggle"><li><details open=""><summary><strong>10. List </strong><code><strong>course_code</strong></code><strong>, </strong><code><strong>course_name</strong></code><strong>, </strong><code><strong>area_description</strong></code><strong> for all “Free Elective” course types. Sort the result by </strong><code><strong>course_code</strong></code><strong> ascendingly (Expected: 3 columns, 4 rows)</strong></summary><hr id="1afd3011-3dd1-80af-8dd8-d8135ef0a352"/><div id="1b0d3011-3dd1-8061-9e4e-f0d8077fa2de" class="column-list"><div id="1b0d3011-3dd1-8044-a02c-fb8d68fe87f3" style="width:56.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-80ca-a6b0-d522ce489c52" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT course_code, course_name, a.area_description FROM courses c
+INNER JOIN areas a ON c.course_area = a.course_area
+INNER JOIN coursetypes t ON c.type_code = t.type_code
+WHERE course_type = &quot;Free Elective&quot; ORDER BY course_code ASC;</code></pre></div><div id="1b0d3011-3dd1-8032-8f9d-e167ceda5868" style="width:43.75%" class="column"><figure id="1b0d3011-3dd1-80fd-8c56-f14777997eb8" class="image"><a href="image%2019.png"><img style="width:458.890625px" src="image%2019.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-8015-9f4d-f05d71486331" class="toggle"><li><details open=""><summary><strong>11. List all information about </strong><code><strong>Areas</strong></code><strong> that have the number of courses in that area more than 12 courses. Sort the result from the highest number of course to the lowest one. (Expected: 3 columns, 4 rows)</strong></summary><hr id="1afd3011-3dd1-80a0-96aa-c00b1736c194"/><div id="1b0d3011-3dd1-80da-b60f-ff0fbcca34f0" class="column-list"><div id="1b0d3011-3dd1-805b-952f-d9fd4fc624e1" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-80ab-8545-d4d174f6e3df" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT c.course_area, a.area_description, COUNT(program_code) AS numOfCourses FROM courses c
+INNER JOIN areas a ON c.course_area = a.course_area
+GROUP BY c.course_area HAVING numOfCourses &gt; 12 
+ORDER BY numOfCourses DESC;</code></pre></div><div id="1b0d3011-3dd1-809c-b90d-ef2e6777724d" style="width:50%" class="column"><figure id="1b0d3011-3dd1-809b-b20c-f1503f814e33" class="image"><a href="image%2020.png"><img style="width:524.484375px" src="image%2020.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-808d-8687-ebedeb0e31c5" class="toggle"><li><details open=""><summary><strong>12. List the instructors who do not have the teaching assignment, i.e., no course to teach (Expected: 3 columns, 2 rows)</strong></summary><hr id="1afd3011-3dd1-80f9-bc13-fc587e67026c"/><div id="1b0d3011-3dd1-8070-9a55-eb41e3e51d57" class="column-list"><div id="1b0d3011-3dd1-808f-b63e-e58bbb12a6cf" style="width:62.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-80ee-9569-c270ba69ce99" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT firstName, lastName, COUNT(course_code) AS numcourse FROM instructors i
+LEFT OUTER JOIN assignments a ON i.instructorID = a.instructorID
+GROUP BY firstName,lastname HAVING numcourse = 0;</code></pre><p id="1b0d3011-3dd1-8093-aedc-e32fff986ef8" class="">
+</p></div><div id="1b0d3011-3dd1-80e0-a210-ed9e459ca2b8" style="width:37.49999999999999%" class="column"><figure id="1b0d3011-3dd1-8087-9615-ed56d954fa02" class="image"><a href="image%2021.png"><img style="width:330px" src="image%2021.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-80bc-bcb2-ee2353f1f539" class="toggle"><li><details open=""><summary><strong>13. Find the total number of courses </strong><strong><span style="border-bottom:0.05em solid">per</span></strong><strong> course type of all programs at the graduate level in the Semester 2 (Expected: 3 columns, 2 rows)</strong></summary><hr id="1afd3011-3dd1-8078-9059-f55791c909a3"/><div id="1b0d3011-3dd1-8092-a8ea-ef90e6c56c04" class="column-list"><div id="1b0d3011-3dd1-804e-8aa8-c1d884072e69" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8035-a9ce-e2c52b801152" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT c.type_code, t.course_type, COUNT(course_code) AS numOfCourses FROM courses c
+INNER JOIN coursetypes t ON c.type_code = t.type_code
+INNER JOIN programs p ON c.program_code = p.program_code
+WHERE prog_level = &quot;graduate&quot; AND c.semester = 2
+GROUP BY c.type_code;</code></pre></div><div id="1b0d3011-3dd1-8030-b354-d1beba021430" style="width:50%" class="column"><figure id="1b0d3011-3dd1-8027-94a3-d470d53ff81f" class="image"><a href="image%2022.png"><img style="width:461px" src="image%2022.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-802f-bb25-cf2edde5aecb" class="toggle"><li><details open=""><summary><strong>14. List </strong><code><strong>course_name</strong></code><strong> that are provided at the undergraduate level but not at the graduate level (Expected: 1 column, 107 rows)</strong></summary><hr id="1afd3011-3dd1-80d7-9a0c-e0310fb9d683"/><div id="1b0d3011-3dd1-803e-b528-d4172a006e9d" class="column-list"><div id="1b0d3011-3dd1-8075-abd0-c9f00af1a832" style="width:75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8007-a0b6-e128af6f3d7a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT course_name FROM courses c
+INNER JOIN programs p ON c.program_code = p.program_code
+WHERE p.program_code NOT IN
+(SELECT program_code FROM programs WHERE prog_level = &quot;graduate&quot;)
+ORDER BY course_name ASC;</code></pre></div><div id="1b0d3011-3dd1-80c3-b7de-db99126eedf1" style="width:25%" class="column"><p id="1b0d3011-3dd1-804a-b291-c1dbf48c1f0f" class=""><em>Partial results provided</em></p><figure id="1b0d3011-3dd1-8070-91d0-dd2130d626f3" class="image"><a href="image%2023.png"><img style="width:192px" src="image%2023.png"/></a></figure></div></div></details></li></ul><ul id="1afd3011-3dd1-8029-b093-d125539c65c3" class="toggle"><li><details open=""><summary><strong>15. List the instructors who teach more than average total number of teaching hours. Show the instructor’s title, first name, last name, and the number of teaching hours from the highest to lowest. (Expected: 4 columns, 21 rows)</strong></summary><hr id="1afd3011-3dd1-8077-bedb-dd316bf3820f"/><div id="1b0d3011-3dd1-806b-9a8f-c72022ec35da" class="column-list"><div id="1b0d3011-3dd1-8016-874c-d7a3936fd947" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1afd3011-3dd1-8052-a743-c61e18149aca" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT title, firstName, lastName, SUM(hour_lect+hour_lab) AS totalTeachingHours FROM instructors i
+INNER JOIN assignments a ON i.instructorID = a.instructorID
+GROUP BY title,firstName,lastname HAVING totalTeachingHours &gt;
+(SELECT AVG(t.total) FROM
+	(SELECT SUM(hour_lect+hour_lab) AS total FROM assignments
+		GROUP BY instructorID
+	) t
+) ORDER BY totalTeachingHours DESC;</code></pre><p id="1b0d3011-3dd1-8082-9b98-e747a5e01d38" class="">
+</p></div><div id="1b0d3011-3dd1-8050-b5f1-f0bf39e4025b" style="width:50%" class="column"><p id="1b0d3011-3dd1-806a-bc09-dfa8cdfd6b87" class=""><em>Partial results provided</em></p><figure id="1b0d3011-3dd1-800e-8a9d-f36273caf04a" class="image"><a href="image%2024.png"><img style="width:480px" src="image%2024.png"/></a></figure></div></div></details></li></ul></details></li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
