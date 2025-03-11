@@ -1,0 +1,764 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 8 Structured Query Language – Database Views and Indexes</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1b0d3011-3dd1-80f6-b5f5-fbd9e9e8d4d5" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📖</span></div><h1 class="page-title">Lecture 8 Structured Query Language – Database Views and Indexes</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px;display:block"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><p id="1b0d3011-3dd1-8151-9636-d1c01d88b698" class=""><code><a href="https://sunnyrichman.github.io/itcs393/">🔙 Back to Table of Contents, Click here</a></code></p><h1 id="1b0d3011-3dd1-8044-a50f-cee4fcf39695" class="">Views</h1><hr id="1b0d3011-3dd1-80b1-9a40-ef98fcff0eba"/><h2 id="1b0d3011-3dd1-80e2-a69b-d7388fc7c20c" class="">Introduction to Database Views</h2><hr id="1b1d3011-3dd1-800e-a659-c9d2c9dcd2b9"/><div id="1b1d3011-3dd1-805e-88d4-eb95da426a76" class="column-list"><div id="1b1d3011-3dd1-8025-af85-c3477abb9ade" style="width:50%" class="column"><p id="1b1d3011-3dd1-8034-af02-e8c4fb199561" class=""><mark class="highlight-blue"><strong>View</strong></mark> is a searchable object, or a <em><mark class="highlight-red">virtual</mark></em> table defined by a SELECT query</p><ul id="1b1d3011-3dd1-8091-be2a-fc67c133557a" class="bulleted-list"><li style="list-style-type:disc">One or more source tables make up a view,</li></ul><ul id="1b1d3011-3dd1-80fa-b6c8-e940533eaefe" class="bulleted-list"><li style="list-style-type:disc">Does not store data,</li></ul><ul id="1b1d3011-3dd1-8076-947e-e8200f9cd766" class="bulleted-list"><li style="list-style-type:disc">Generally, read-only.</li></ul><figure id="1b1d3011-3dd1-8021-9c9f-c47bd002250a" class="image"><a href="image.png"><img style="width:552.484375px" src="image.png"/></a></figure></div><div id="1b1d3011-3dd1-80cb-a203-e846c59e8089" style="width:50%" class="column"><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-8071-a032-f54e9a9b303b"><div style="width:100%"><p id="1b1d3011-3dd1-80d9-979c-f70a31d30e32" class=""><strong>Advantage</strong></p><hr id="1b1d3011-3dd1-80bc-b305-c9ad47ce45ba"/><ul id="1b1d3011-3dd1-804d-8d4a-ede778698f80" class="bulleted-list"><li style="list-style-type:disc">Hide complicated query</li></ul><ul id="1b1d3011-3dd1-805d-9c0b-dceaa967afba" class="bulleted-list"><li style="list-style-type:disc">Provide extra security layer to restrict access to certain column to specific users</li></ul><ul id="1b1d3011-3dd1-806d-abe5-fa3eb03374e6" class="bulleted-list"><li style="list-style-type:disc">Enable query reuse across different parts of an application or among multiple users.</li></ul></div></figure><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-8049-a9fd-d93965e708b4"><div style="width:100%"><p id="1b1d3011-3dd1-8062-94b0-c8c26e71a662" class=""><strong>Disadvantage</strong></p><hr id="1b1d3011-3dd1-8095-bf19-dc6dcb31bc36"/><ul id="1b1d3011-3dd1-804d-bdb1-d42e66a6bd94" class="bulleted-list"><li style="list-style-type:disc">Limited Updateability</li></ul><ul id="1b1d3011-3dd1-807c-9db6-e4edb238392e" class="bulleted-list"><li style="list-style-type:disc">Data Redundancy</li></ul><ul id="1b1d3011-3dd1-80d7-a6cb-faae340b2e7f" class="bulleted-list"><li style="list-style-type:disc">Cannot be associated with trigger</li></ul></div></figure></div></div><div id="1b1d3011-3dd1-80c4-a2dc-d9882ce6fafe" class="column-list"><div id="1b1d3011-3dd1-80c7-ae4a-e6de41bc9ccb" style="width:33.33333333333333%" class="column"><p id="1b1d3011-3dd1-801c-bbd2-e6c800947ee7" class=""><strong>CREATE</strong></p><hr id="1b1d3011-3dd1-80f5-8467-cbb760b9fd75"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80d0-a5d8-f2f455fece4d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE VIEW view_name
+AS
+SELECT col1, col2, ... FROM table_name
+WHERE condition;</code></pre></div><div id="1b1d3011-3dd1-8049-a85b-c27bf5fc7d6e" style="width:33.33333333333333%" class="column"><p id="1b1d3011-3dd1-80fd-b56f-f633ad879d69" class=""><strong>ALTER</strong></p><hr id="1b1d3011-3dd1-802f-8bf4-faa718776f7c"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-806a-b601-e28460de1b42" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">ALTER VIEW view_name
+AS
+SELECT col1, col2, ... FROM table_name
+WHERE new_condition;</code></pre></div><div id="1b1d3011-3dd1-80f7-be3a-dc7462ba08c4" style="width:33.33333333333333%" class="column"><p id="1b1d3011-3dd1-80d6-af06-d36c37e7a9b2" class=""><strong>DROP</strong></p><hr id="1b1d3011-3dd1-80a7-959b-df6708c65688"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8025-a5f5-c97b0a23cae1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">DROP VIEW view_name;</code></pre><p id="1b1d3011-3dd1-80c8-ad4d-fddf72982095" class=""><strong>Get Info</strong></p><hr id="1b1d3011-3dd1-8008-ae86-ee1685d22739"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80bd-9596-c832383f9b1f" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SHOW CREATE VIEW view_name;</code></pre></div></div><h2 id="1b1d3011-3dd1-8077-b955-e36f96f64f6c" class="">Creating and Dropping Views</h2><hr id="1b1d3011-3dd1-80ff-84fd-f0a95a52a969"/><div id="1b1d3011-3dd1-800e-a77c-cdb77361e247" class="column-list"><div id="1b1d3011-3dd1-802f-adfe-d07c1ab2fa47" style="width:50%" class="column"><ul id="1b1d3011-3dd1-800b-8ac9-c9f474359c0d" class="bulleted-list"><li style="list-style-type:disc">Create <em><mark class="highlight-blue">PremierProduct</mark></em> database by execute <code><a href="https://github.com/SunnyRichman/SunnyRichman.github.io/blob/f356e985154cb4d007b6ac05e3bce5077b8e4d08/itcs393/Lec8/PremierProducts.sql?raw=true">📁 PremierProduct.sql</a></code></li></ul></div><div id="1b1d3011-3dd1-8025-a5ed-c1c14b88a293" style="width:50%" class="column"><ul id="1b1d3011-3dd1-8071-aadf-f5ddab50f544" class="bulleted-list"><li style="list-style-type:disc">Execute <code><a href="https://github.com/SunnyRichman/SunnyRichman.github.io/blob/72f949f54c899c7e7bb1493680c7f361531b2940/itcs393/Lec8/Data_PremierProducts.sql?raw=true">📁 Data_PremierProducts.sql</a></code> to load data into the database.</li></ul></div></div><p id="1b1d3011-3dd1-8096-a140-f0b1c9858ed4" class=""><strong>Create and Drop View</strong></p><hr id="1b1d3011-3dd1-803f-b9a9-dcffd7cd671e"/><div id="1b1d3011-3dd1-80e5-a948-f249787a81fb" class="column-list"><div id="1b1d3011-3dd1-80c8-b55e-ffd61e5d35b8" style="width:43.75%" class="column"><div id="1b1d3011-3dd1-80eb-917b-e98c208075fc" class="column-list"><div id="1b1d3011-3dd1-80ff-a02d-dfb44400ceb8" style="width:62.5%" class="column"><figure id="1b1d3011-3dd1-807c-8f32-fec8c36eba4a" class="image"><a href="image%201.png"><img style="width:168.8125px" src="image%201.png"/></a></figure></div><div id="1b1d3011-3dd1-800e-bae1-cda1cc100b15" style="width:87.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80db-b439-f8b7eb504366" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE VIEW Housewares AS
+SELECT PartNum, Description, OnHand, Price
+FROM Part
+WHERE Class = &#x27;HW&#x27;;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-805f-89b4-e98fe8d432ef" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">DROP VIEW Housewares;</code></pre></div></div></div><div id="1b1d3011-3dd1-80d6-8f01-dbfed9c32248" style="width:56.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8087-9f69-deadad287014" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE VIEW SalesRepCust (SNum, SLast, SFirst, CNum) AS
+SELECT Rep.RepNum, LastName, FirstName, CustomerNum
+FROM Rep, Customer
+WHERE Rep.RepNum = Customer.RepNum;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80ea-95cf-fb970717766a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE VIEW RepCountAvgBalance AS
+SELECT RepNum, COUNT(*) AS NumCustomers, AVG(Balance) AS AvgBalance
+FROM Customer
+GROUP BY RepNum;</code></pre></div></div><h2 id="1b1d3011-3dd1-804a-890c-d5baeff11e82" class="">Selecting and Updating Data via Views</h2><hr id="1b1d3011-3dd1-8002-b906-ce6a4b3b9537"/><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-805e-b1c8-f672caaacc23"><div style="width:100%"><p id="1b1d3011-3dd1-8039-95c7-fe413d31e2c1" class=""><strong>SELECT data using view VS. Table</strong></p><hr id="1b1d3011-3dd1-803b-a40f-e813fc9a3db2"/><div id="1b1d3011-3dd1-80ec-a5f4-fe7e98a95c7a" class="column-list"><div id="1b1d3011-3dd1-8098-8a37-d42ee3ce484a" style="width:50%" class="column"><figure id="1b1d3011-3dd1-8020-8cd4-e2018b597d83" class="image"><a href="image%202.png"><img style="width:271.484375px" src="image%202.png"/></a></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8013-a102-e4cd9558071c" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Housewares;</code></pre><p id="1b1d3011-3dd1-80fc-9cdd-ec1f7ac03269" class="">
+</p></div><div id="1b1d3011-3dd1-80fa-863f-e550e36d4e41" style="width:50%" class="column"><figure id="1b1d3011-3dd1-801c-830b-e53c5e8d1fe1" class="image"><a href="image%203.png"><img style="width:240px" src="image%203.png"/></a></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-806f-a00c-f939b576935a" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT PartNum, Description, OnHand, Price FROM Part
+WHERE Class = &#x27;HW’;</code></pre></div></div><div id="1b1d3011-3dd1-8034-a0e7-e8f9d67d18d9" class="column-list"><div id="1b1d3011-3dd1-8039-b1c4-c17fdf551e9b" style="width:50%" class="column"><figure id="1b1d3011-3dd1-80cd-b890-d69b25d91c47" class="image"><a href="image%204.png"><img style="width:189.46875px" src="image%204.png"/></a></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80d3-b270-ee708edeee92" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Housewares 
+WHERE OnHand &lt; 25;</code></pre></div><div id="1b1d3011-3dd1-802d-95f7-e54cf7a13d81" style="width:50%" class="column"><p id="1b1d3011-3dd1-80c8-a723-d4e45b9763ad" class="">Can you write another query which does not use view?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80f7-b6c1-f5359a098835" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT PartNum, Description, OnHand, Price
+FROM Part 
+WHERE Class = &#x27;HW&#x27; AND OnHand &lt; 25;</code></pre></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-8016-847b-c566369dc004"><div style="width:100%"><p id="1b1d3011-3dd1-8085-be20-db0b0bba67e2" class=""><strong>UPDATE data using view VS. Table</strong></p><hr id="1b1d3011-3dd1-80d7-b217-d7c901cddeb3"/><div id="1b1d3011-3dd1-80ea-86bc-cdeb994146ff" class="column-list"><div id="1b1d3011-3dd1-80ac-9dd0-c5c53c236968" style="width:33.33333333333333%" class="column"><figure id="1b1d3011-3dd1-8096-825e-e2d028415ce0" class="image"><a href="image%205.png"><img style="width:326px" src="image%205.png"/></a></figure></div><div id="1b1d3011-3dd1-806e-9543-d8e51aa1a43b" style="width:25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8049-ba80-c38e7df01fa7" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE Housewares
+SET Price = 229.90
+WHERE PartNum = &#x27;DL71&#x27;;</code></pre></div><div id="1b1d3011-3dd1-801d-9880-cb311fdd4e00" style="width:41.666666666666664%" class="column"><p id="1b1d3011-3dd1-8045-81ec-fb2f800cf0a0" class="">Can you write another query which does not use view?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8012-878f-de0f6906fa72" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE Part
+SET Price = 229.90
+WHERE PartNum = &#x27;DL71&#x27;</code></pre></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-8019-8877-c1354dcbbf4d"><div style="width:100%"><p id="1b1d3011-3dd1-80c5-9b46-fb471d73f399" class=""><strong>Create another view from multiple tables</strong></p><hr id="1b1d3011-3dd1-80ca-a327-d82ae9800b50"/><div id="1b1d3011-3dd1-80af-a646-d41033cce9f6" class="column-list"><div id="1b1d3011-3dd1-80f6-8b53-ed3936fce20e" style="width:87.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-807f-af11-f9447da73634" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT RepNum, LastName, FirstName
+FROM Rep;</code></pre><figure id="1b1d3011-3dd1-806e-80f7-e11595398d1b" class="image"><a href="image%206.png"><img style="width:112.734375px" src="image%206.png"/></a></figure></div><div id="1b1d3011-3dd1-8083-9d3b-e93f084ec971" style="width:70.83333333333333%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8017-bcd1-ec82c2001b02" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT CustomerNum, RepNum
+FROM Customer;</code></pre><figure id="1b1d3011-3dd1-80b7-8847-fa21e51940dd" class="image"><a href="image%207.png"><img style="width:136.25px" src="image%207.png"/></a></figure></div><div id="1b1d3011-3dd1-80cb-8767-f1f96aea14f6" style="width:120.83333333333334%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8070-ad62-dc7b0b1b9212" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT Rep.RepNum , LastName, FirstName, CustomerNum
+FROM Rep, Customer
+WHERE Rep.RepNum = Customer.RepNum;</code></pre><figure id="1b1d3011-3dd1-80f3-8e2a-e312c7a265d2" class="image"><a href="image%208.png"><img style="width:240px" src="image%208.png"/></a></figure></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-802a-9b60-cda039252b83"><div style="width:100%"><p id="1b1d3011-3dd1-806f-a312-d92b37657af8" class=""><strong>Create another view from multiple tables with alias name</strong></p><hr id="1b1d3011-3dd1-8055-9aa6-d7fe38798084"/><div id="1b1d3011-3dd1-8027-9b2a-c8166610976f" class="column-list"><div id="1b1d3011-3dd1-807e-afc4-f2bf0892b216" style="width:87.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8012-8d28-d082cc1d126b" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE VIEW SalesCust (SNum, SLast, SFirst, CNum) AS
+SELECT Rep.RepNum, LastName, FirstName, CustomerNum
+FROM Rep, Customer
+WHERE Rep.RepNum = Customer.RepNum;</code></pre><figure id="1b1d3011-3dd1-80f1-b2cd-d733f09ec648" class="image"><a href="image%209.png"><img style="width:192px" src="image%209.png"/></a></figure></div><div id="1b1d3011-3dd1-8016-8d38-f3cd3090be60" style="width:112.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80b0-b498-fa4c0fba2043" class="code"><code class="language-SQL">SELECT SNum, SLast, SFirst
+FROM SalesCust
+WHERE CNum = &#x27;282&#x27;;</code></pre><figure id="1b1d3011-3dd1-8036-9fd6-f0e6ae306183" class="image"><a href="image%2010.png"><img style="width:289.53125px" src="image%2010.png"/></a></figure><p id="1b1d3011-3dd1-808b-a2d1-f9d428ac4102" class="">Can you write another query which does not use view?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-803e-aa56-c0265a9a236a" class="code"><code class="language-SQL">SELECT Rep.RepNum AS SNum, LastName AS SLast, FirstName AS SFirst
+FROM Rep, Customer
+WHERE Rep.RepNum = Customer.RepNum AND CustomerNum = &#x27;282&#x27;</code></pre></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-801d-9ea0-c48cb5a3a4f7"><div style="width:100%"><p id="1b1d3011-3dd1-802c-b8dd-e4eea8e96c9e" class=""><strong>UPDATE data via view – checking referential integrity</strong></p><hr id="1b1d3011-3dd1-8075-9afb-e04b0b167cf1"/><div id="1b1d3011-3dd1-808d-ad0b-e56a8a980444" class="column-list"><div id="1b1d3011-3dd1-8097-b9f3-ef8c57669404" style="width:37.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8018-9555-d45299f0f553" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE SalesCust
+SET SLast = &#x27;AAA&#x27;
+WHERE CNum = &#x27;282&#x27;;</code></pre><figure id="1b1d3011-3dd1-80b0-a6aa-c554e9bab43d" class="image"><a href="image%2011.png"><img style="width:192px" src="image%2011.png"/></a></figure></div><div id="1b1d3011-3dd1-8068-9909-e260e9090168" style="width:162.5%" class="column"><div id="1b1d3011-3dd1-8030-8b0d-ec416649a76d" class="column-list"><div id="1b1d3011-3dd1-80b1-8509-cb014f1a157e" style="width:75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8098-aa61-e9b6de353dc2" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">UPDATE SalesCust
+SET SNum = &#x27;70&#x27;
+WHERE CNum = &#x27;282&#x27;;</code></pre><blockquote id="1b1d3011-3dd1-80e5-aef6-f8422486e03e" class=""><strong>Why Error?</strong><p id="1b1d3011-3dd1-80f9-808b-f2b0cc352d6d" class=""><strong>SNum</strong> in the View represents <strong>RepNum</strong> in Rep Table. Since, there is NO RepNum with value 70 in the Rep Table, you cannot set SNum = ’70’ <strong>[Violate referential integrity]</strong></p></blockquote></div><div id="1b1d3011-3dd1-80fc-afb6-d0ec32b4672c" style="width:125%" class="column"><p id="1b1d3011-3dd1-80da-84f4-d0c4e0dfafbc" class="">Error Code: 1451. Cannot delete or update a parent row: a foreign key constraint fails <code>premierproducts</code>.<code>customer</code>, CONSTRAINT <code>customer_ibfk_1</code> FOREIGN KEY (<code>RepNum</code>) REFERENCES <code>rep</code><br/>(<br/><code>RepNum</code>))</p><figure id="1b1d3011-3dd1-80df-a6eb-eedd9ed817f9" class="image"><a href="image%2012.png"><img style="width:131.1875px" src="image%2012.png"/></a></figure></div></div></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b1d3011-3dd1-8025-8930-f3564fa67b43"><div style="width:100%"><p id="1b1d3011-3dd1-8050-a73d-f4cf2ff52209" class=""><strong>CREATE, SELECT, and UPDATE view with derived field</strong></p><hr id="1b1d3011-3dd1-8013-b27d-fbc881bd6847"/><div id="1b1d3011-3dd1-80d4-b86b-e4fd58668110" class="column-list"><div id="1b1d3011-3dd1-8058-9693-c10a2578f8d2" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-800b-967c-dce7a535b137" class="code"><code class="language-SQL">CREATE VIEW CustCountPerRep AS
+SELECT RepNum, COUNT(*) AS NumCustomers
+FROM Customer
+GROUP BY RepNum;</code></pre></div><div id="1b1d3011-3dd1-8050-a15a-f13d45798d11" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-80e5-aad2-c6477b5f96ca" class="code"><code class="language-SQL">SELECT * FROM CustCountPerRep;</code></pre><figure id="1b2d3011-3dd1-8062-8c86-e36827b9d835" class="image"><a href="image%2013.png"><img style="width:192px" src="image%2013.png"/></a></figure></div><div id="1b1d3011-3dd1-80d3-93ea-f45a00bd14ca" style="width:100%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b1d3011-3dd1-8015-b92c-cc42ffdb270e" class="code"><code class="language-SQL">UPDATE CustCountPerRep SET RepNum = 10;</code></pre><p id="1b1d3011-3dd1-80f1-9472-c07b9192efbc" class="">Cannot update the view or function &#x27;CustCountPerRep&#x27; because it contains aggregates, or a DISTINCT or GROUP BY clause, or PIVOT or UNPIVOT operator.</p></div></div></div></figure><h2 id="1b1d3011-3dd1-80a0-a679-da601d62ee48" class="">Managing Views</h2><hr id="1b1d3011-3dd1-8022-a3f9-dafa5b50c3d6"/><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b2d3011-3dd1-80f7-b278-cabea3e45aba"><div style="width:100%"><p id="1b2d3011-3dd1-8049-b162-fe83ad6e66b1" class=""><strong>Alter View</strong></p><hr id="1b2d3011-3dd1-802a-90fa-df6610f5d4ce"/><div id="1b2d3011-3dd1-8018-99c9-ec0f8ccaa29c" class="column-list"><div id="1b2d3011-3dd1-8088-bba3-e221b3a083fa" style="width:33.33333333333333%" class="column"><p id="1b2d3011-3dd1-8072-83da-d37bc4c54d2f" class="">Assume that the Housewares view was created from the following query.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b2d3011-3dd1-8081-bea6-fed431c6d027" class="code"><code class="language-SQL"> CREATE VIEW Housewares AS
+ SELECT PartNum, Description, OnHand, Price
+ FROM Part
+ WHERE Class = &#x27;HW&#x27;;</code></pre></div><div id="1b2d3011-3dd1-806b-b7ac-dedcc27f78a1" style="width:33.33333333333333%" class="column"><p id="1b2d3011-3dd1-8034-b6aa-e38560a40a1a" class=""><code>SELECT * FROM Housewares;</code></p><figure id="1b2d3011-3dd1-8082-b447-dce0d093ac1b" class="image"><a href="image%2014.png"><img style="width:416.9375px" src="image%2014.png"/></a></figure></div><div id="1b2d3011-3dd1-80ae-ad1a-de292d97cded" style="width:33.33333333333333%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b2d3011-3dd1-801a-8ad2-d6fd6c517611" class="code"><code class="language-SQL">ALTER VIEW Housewares AS
+SELECT PartNum, Description, OnHand, Price
+FROM Part
+WHERE Class = &#x27;HW&#x27; AND OnHand &lt; 25;</code></pre><figure id="1b2d3011-3dd1-800a-bc73-c3eb0793dd93" class="image"><a href="image%2015.png"><img style="width:338.953125px" src="image%2015.png"/></a></figure></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b2d3011-3dd1-80eb-8c04-f3f8960a0f0f"><div style="width:100%"><p id="1b2d3011-3dd1-8045-9eda-f02081c8f078" class=""><strong>Auditing View</strong></p><hr id="1b2d3011-3dd1-80ab-a271-edeab0d5db46"/><div id="1b2d3011-3dd1-80d2-b9a6-d28501d38cb7" class="column-list"><div id="1b2d3011-3dd1-801f-8f10-f837c3821a77" style="width:49.99999999999999%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b2d3011-3dd1-809f-8fc4-ed6ec980d857" class="code"><code class="language-SQL">SHOW CREATE TABLE Housewares;
+SHOW CREATE TABLE SalesCust;
+SHOW CREATE TABLE CustCountPerRep;</code></pre></div><div id="1b2d3011-3dd1-803a-b056-e9f2d01136ab" style="width:49.99999999999999%" class="column"><figure id="1b2d3011-3dd1-8024-a265-e6e62669bbc8" class="image"><a href="image%2016.png"><img style="width:648.421875px" src="image%2016.png"/></a></figure></div></div></div></figure><h1 id="1b0d3011-3dd1-80d1-8a59-df1226809d5d" class="">Indexes</h1><hr id="1b0d3011-3dd1-805f-81f8-d63a97c80ce9"/><h2 id="1b2d3011-3dd1-8000-b901-fa127666112c" class="">Introduction to Database Index</h2><hr id="1b2d3011-3dd1-8033-ba97-eaa0593da637"/><ul id="1b2d3011-3dd1-80e9-bd4b-c721a7d4136e" class="bulleted-list"><li style="list-style-type:disc">An <mark class="highlight-blue"><strong>index</strong></mark> is a data structure that is used to speed up queries by allowing fast access to rows in a table that match a certain condition.</li></ul><ul id="1b2d3011-3dd1-8089-8aaa-e727d95a7941" class="bulleted-list"><li style="list-style-type:disc"><strong>Indexes</strong> are used to find rows with specific column values quickly.</li></ul><ul id="1b2d3011-3dd1-80d1-a4de-e47187baf811" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red"><strong>Without an index</strong></mark>, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs.</li></ul><ul id="1b2d3011-3dd1-8049-b8ac-e448283bf124" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><strong>If the table has an index for the columns in question</strong></mark>, MySQL can quickly determine the position to seek to in the middle of the data file without having to look at all the data. This is much faster than reading every row sequentially.</li></ul><div id="1b3d3011-3dd1-808d-8e48-e13aa0e72581" class="column-list"><div id="1b3d3011-3dd1-8024-8398-c17435009bc9" style="width:50%" class="column"><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8097-846a-e41d578eb379"><div style="width:100%"><p id="1b3d3011-3dd1-80cb-bf8e-cf64886ed146" class=""><strong>Without index</strong></p><hr id="1b3d3011-3dd1-80d6-b8c0-eb6a5a5d60ef"/><figure id="1b3d3011-3dd1-8051-b8ec-ddc34a331d2f" class="image"><a href="image%2017.png"><img style="width:510.46875px" src="image%2017.png"/></a></figure></div></figure></div><div id="1b3d3011-3dd1-80f7-aa91-d653b4982873" style="width:50%" class="column"><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-801e-8d1f-f4ed68e3b52a"><div style="width:100%"><p id="1b3d3011-3dd1-80c3-bc8c-cca0bdd86cce" class=""><strong>With index</strong></p><hr id="1b3d3011-3dd1-80ab-bb0e-e7bd6e2e1a7f"/><figure id="1b3d3011-3dd1-80d5-90f1-fd3097b3f403" class="image"><a href="image%2018.png"><img style="width:510.46875px" src="image%2018.png"/></a></figure></div></figure></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8037-9251-eeebea4e167b"><div style="width:100%"><p id="1b3d3011-3dd1-809e-bfcc-ff8674658761" class=""><strong>Create the following table</strong></p><hr id="1b3d3011-3dd1-8065-b101-e32659e560d9"/><div id="1b3d3011-3dd1-8040-a3bc-d99bbbff83c7" class="column-list"><div id="1b3d3011-3dd1-8053-a6a2-f41a970bffaf" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-809f-a4c0-d9cac83f1fd8" class="code"><code class="language-SQL">CREATE TABLE DataStore (
+Run INT AUTO_INCREMENT NOT NULL,
+KeyID INT NOT NULL,
+AccountDesc NVARCHAR(50),
+AccountType NVARCHAR(50),
+CodeAltKey INT,
+PRIMARY KEY (Run)
+);</code></pre></div><div id="1b3d3011-3dd1-80f4-8999-fecceb302470" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-8064-a611-cf48c690e301" class="code"><code class="language-SQL">CREATE TABLE DataStore_IDX (
+Run INT AUTO_INCREMENT NOT NULL,
+KeyID INT NOT NULL,
+AccountDesc NVARCHAR(50),
+AccountType NVARCHAR(50),
+CodeAltKey INT,
+PRIMARY KEY (Run)
+);</code></pre></div></div></div></figure><div id="1b3d3011-3dd1-808c-889e-d5c79b35b4ee" class="column-list"><div id="1b3d3011-3dd1-80ee-b0a7-dc47a04f5151" style="width:56.25%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8030-89fb-cf42ec8bdddb"><div style="width:100%"><p id="1b3d3011-3dd1-80bb-941e-dc69a8c6f88c" class=""><strong>Prepare Large Tables</strong></p><hr id="1b3d3011-3dd1-80c1-9e91-ce8d06130890"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-80f6-960e-cb302447b569" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">-- Generate data and insert into the DataStore and DataStore_IDX table
+INSERT INTO `Datastore` (`KeyID`, `AccountDesc`,`AccountType`,`CodeAltKey`)
+SELECT FLOOR(RAND() * 10000000), 
+			CONCAT(&#x27;accountdesc&#x27;, CAST(FLOOR(RAND() * 10000000) AS CHAR)),
+			CONCAT(&#x27;AccountType&#x27;, CAST(FLOOR(RAND() * 10000000) AS CHAR)),
+			FLOOR(RAND() * 10000000)
+FROM `information_schema`.`tables` AS t1
+CROSS JOIN `information_schema`.`tables` AS t2
+LIMIT 2700000
+
+INSERT INTO `Datastore_IDX` (`KeyID`, `AccountDesc`,`AccountType`,`CodeAltKey`)
+SELECT `KeyID`, `AccountDesc`,`AccountType`,`CodeAltKey` FROM `DataStore`;</code></pre></div></figure></div><div id="1b3d3011-3dd1-80bb-873b-de8b160c4ab6" style="width:43.75000000000001%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-808f-8a0e-f1db31a96254"><div style="width:100%"><p id="1b3d3011-3dd1-806a-80dc-c4ebfda4fb8e" class=""><strong>How data can be accessed in SQL Server</strong></p><hr id="1b3d3011-3dd1-80b9-90ac-d958db46d4c5"/><p id="1b3d3011-3dd1-80ed-9263-ed8c3b27f88e" class="">Using <em><mark class="highlight-red"><strong>a table scan</strong></mark></em><strong>: </strong>Look through every row to determine if any records meet the conditions.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-801a-912c-d13c1cc742f5" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM Datastore
+WHERE AccountType = &quot;AccountType6591660&quot;;</code></pre><figure id="1b3d3011-3dd1-80dc-9b68-e09eb08b628e" class="image"><a href="image%2019.png"><img style="width:162.734375px" src="image%2019.png"/></a></figure></div></figure></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8014-8e14-f095c76d4cee"><div style="width:100%"><div id="1b3d3011-3dd1-805c-97ac-cde08fb5d8f4" class="column-list"><div id="1b3d3011-3dd1-8058-b941-d94a4b3b49ed" style="width:50%" class="column"><p id="1b3d3011-3dd1-80c2-ac96-d8ab0d4bd3dd" class="">Let try to create single column index:</p><p id="1b3d3011-3dd1-80c4-a8fd-fca8324765b5" class=""><code>ALTER TABLE datastore_idx ADD INDEX (AccountType)</code></p><p id="1b3d3011-3dd1-8097-abea-cad0a0456923" class=""><code>SELECT * FROM datastore_idx WHERE AccountType = &quot;AccountType6591660&quot;;</code></p></div><div id="1b3d3011-3dd1-80f4-a568-ecc19c4084b4" style="width:50%" class="column"><figure id="1b3d3011-3dd1-80f3-886b-c1c6779f1309" class="image"><a href="image%2020.png"><img style="width:144px" src="image%2020.png"/></a></figure></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8035-913a-de7be139c517"><div style="width:100%"><p id="1b3d3011-3dd1-804c-b71d-d098b66884c3" class="">Like many relational database engines, MySQL allows you to create indexes that are composed of multiple columns:</p><p id="1b3d3011-3dd1-8036-89de-d3ef56ec6f6a" class=""><code>ALTER TABLE datastore_idx ADD INDEX (AccountType, AccountDesc)</code></p><div id="1b3d3011-3dd1-80d6-b258-def3f5a62e84" class="column-list"><div id="1b3d3011-3dd1-8084-8b35-e4194c967db9" style="width:50%" class="column"><div id="1b3d3011-3dd1-802d-851f-e952f3db3217" class="column-list"><div id="1b3d3011-3dd1-8027-8983-e79b2d293929" style="width:112.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-80da-a324-c3e505f81c73" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM datastore
+WHERE AccountDesc = &#x27;accountdesc8804227&#x27;
+AND AccountType = &#x27;AccountType8909795&#x27;;</code></pre></div><div id="1b3d3011-3dd1-8021-82bc-f21542e76b09" style="width:37.500000000000014%" class="column"><figure id="1b3d3011-3dd1-80d4-bf16-d3c0d9c635c8" class="image"><a href="image%2021.png"><img style="width:132.390625px" src="image%2021.png"/></a></figure></div></div></div><div id="1b3d3011-3dd1-8032-b708-e350ecf9f34d" style="width:50%" class="column"><div id="1b3d3011-3dd1-802b-b72b-e9be940becdc" class="column-list"><div id="1b3d3011-3dd1-80a3-be10-f73e6375d3af" style="width:106.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-8051-95bc-c4f45f2a0b31" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT * FROM datastore_idx
+WHERE AccountDesc = &#x27;accountdesc8804227&#x27; 
+AND AccountType = &#x27;AccountType8909795&#x27;;</code></pre></div><div id="1b3d3011-3dd1-809e-9522-ea1b8386d28e" style="width:37.500000000000014%" class="column"><figure id="1b3d3011-3dd1-80d5-a392-d64ccfea769e" class="image"><a href="image%2022.png"><img style="width:132.390625px" src="image%2022.png"/></a></figure></div></div></div></div></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-80a7-8c9d-cdf244f44433"><div style="width:100%"><p id="1b3d3011-3dd1-8048-b8a0-d40a728226bf" class=""><strong>Guideline for indexing</strong></p><hr id="1b3d3011-3dd1-80e1-bdeb-decf3e1ac8ac"/><div id="1b3d3011-3dd1-805a-8bc3-e874c75e30e3" class="column-list"><div id="1b3d3011-3dd1-8080-8521-cf1c17b99248" style="width:50%" class="column"><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8081-875e-c6cd19f2d89f"><div style="width:100%"><ul id="1b3d3011-3dd1-8092-9632-eb89fdc75b10" class="bulleted-list"><li style="list-style-type:disc">Tables that <mark class="highlight-teal"><strong>should have</strong></mark> index:<ul id="1b3d3011-3dd1-80fe-aa49-ce56c7caf9f6" class="bulleted-list"><li style="list-style-type:circle">Large tables</li></ul><ul id="1b3d3011-3dd1-8049-8b96-d7ceb912ad33" class="bulleted-list"><li style="list-style-type:circle">Tables that are frequently retrieved for a set of queries.</li></ul></li></ul><ul id="1b3d3011-3dd1-8025-b336-de1ace7ee490" class="bulleted-list"><li style="list-style-type:disc">Attributes that should be indexed:<ul id="1b3d3011-3dd1-8080-8f18-c6afab00b43e" class="bulleted-list"><li style="list-style-type:circle">Attributes used for joining (JOIN conditions)</li></ul><ul id="1b3d3011-3dd1-8099-8ecd-c93b1bc1301c" class="bulleted-list"><li style="list-style-type:circle">Attributes used for sorting (in ORDER BY clause)</li></ul><ul id="1b3d3011-3dd1-80ae-a24e-fe5bc683cf34" class="bulleted-list"><li style="list-style-type:circle">Attributes used for grouping (in GROUP BY clause)</li></ul><ul id="1b3d3011-3dd1-803c-81da-eaec26f9eb39" class="bulleted-list"><li style="list-style-type:circle">Attributes used in aggregation functions</li></ul><ul id="1b3d3011-3dd1-8019-a564-e8f19bd9dc69" class="bulleted-list"><li style="list-style-type:circle">Attributes used in a WHERE clause</li></ul><ul id="1b3d3011-3dd1-8095-8acf-cbb9cc33b1db" class="bulleted-list"><li style="list-style-type:circle">Attributes used as a foreign key</li></ul></li></ul></div></figure></div><div id="1b3d3011-3dd1-800c-a379-e4dcfb0cfb16" style="width:50%" class="column"><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8003-80ab-e7a2af234eb1"><div style="width:100%"><ul id="1b3d3011-3dd1-804f-ac58-ca949073c39b" class="bulleted-list"><li style="list-style-type:disc">Tables that <mark class="highlight-red"><strong>should NOT have</strong></mark> index:<ul id="1b3d3011-3dd1-8000-955d-d13e90b841cb" class="bulleted-list"><li style="list-style-type:circle">Small tables</li></ul><ul id="1b3d3011-3dd1-80ec-b681-ec3a25611b99" class="bulleted-list"><li style="list-style-type:circle">Tables that are frequently manipulated for a set of queries.</li></ul></li></ul><ul id="1b3d3011-3dd1-8057-836d-d30ed7e0c9bb" class="bulleted-list"><li style="list-style-type:disc">Attributes that should NOT be indexed<ul id="1b3d3011-3dd1-804f-80b2-df64065d517b" class="bulleted-list"><li style="list-style-type:circle">Attributes with type image, bit and text</li></ul><ul id="1b3d3011-3dd1-8015-82a2-eb8a1920fdca" class="bulleted-list"><li style="list-style-type:circle">Attributes with small domain (e.g., gender)</li></ul><ul id="1b3d3011-3dd1-80e1-a5c2-c4c6168f9f5c" class="bulleted-list"><li style="list-style-type:circle">Attributes with large size (e.g., char(100))</li></ul><ul id="1b3d3011-3dd1-80f3-9ad8-f926d8dbe1c6" class="bulleted-list"><li style="list-style-type:circle">Attributes that are rarely used in any query</li></ul></li></ul></div></figure></div></div></div></figure></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
