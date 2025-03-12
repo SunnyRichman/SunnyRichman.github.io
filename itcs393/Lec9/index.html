@@ -1,0 +1,720 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lecture 9 Structured Query Language – DataType and Pre-defined Functions</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1b3d3011-3dd1-8009-bddf-fc0d18eea1fa" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📖</span></div><h1 class="page-title">Lecture 9 Structured Query Language – DataType and Pre-defined Functions</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-status"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesStatus"><path d="M8.75488 1.02344C8.75488 0.613281 8.41309 0.264648 8.00293 0.264648C7.59277 0.264648 7.25098 0.613281 7.25098 1.02344V3.11523C7.25098 3.51855 7.59277 3.86719 8.00293 3.86719C8.41309 3.86719 8.75488 3.51855 8.75488 3.11523V1.02344ZM3.91504 5.0293C4.20215 5.31641 4.69434 5.32324 4.97461 5.03613C5.26855 4.74902 5.26855 4.25684 4.98145 3.96973L3.53906 2.52051C3.25195 2.2334 2.7666 2.21973 2.47949 2.50684C2.19238 2.79395 2.18555 3.28613 2.47266 3.57324L3.91504 5.0293ZM10.9629 4.01758C10.6826 4.30469 10.6826 4.79688 10.9697 5.08398C11.2568 5.37109 11.749 5.36426 12.0361 5.07715L13.4854 3.62793C13.7725 3.34082 13.7725 2.84863 13.4785 2.55469C13.1982 2.27441 12.7061 2.27441 12.4189 2.56152L10.9629 4.01758ZM15.0234 8.78906C15.4336 8.78906 15.7822 8.44727 15.7822 8.03711C15.7822 7.62695 15.4336 7.28516 15.0234 7.28516H12.9385C12.5283 7.28516 12.1797 7.62695 12.1797 8.03711C12.1797 8.44727 12.5283 8.78906 12.9385 8.78906H15.0234ZM0.975586 7.28516C0.56543 7.28516 0.223633 7.62695 0.223633 8.03711C0.223633 8.44727 0.56543 8.78906 0.975586 8.78906H3.07422C3.48438 8.78906 3.83301 8.44727 3.83301 8.03711C3.83301 7.62695 3.48438 7.28516 3.07422 7.28516H0.975586ZM12.0361 10.9902C11.749 10.71 11.2568 10.71 10.9629 10.9971C10.6826 11.2842 10.6826 11.7764 10.9697 12.0635L12.4258 13.5127C12.7129 13.7998 13.2051 13.793 13.4922 13.5059C13.7793 13.2256 13.7725 12.7266 13.4854 12.4395L12.0361 10.9902ZM2.52051 12.4395C2.22656 12.7266 2.22656 13.2188 2.50684 13.5059C2.79395 13.793 3.28613 13.7998 3.57324 13.5127L5.02246 12.0703C5.31641 11.7832 5.31641 11.291 5.03613 11.0039C4.74902 10.7168 4.25684 10.71 3.96973 10.9971L2.52051 12.4395ZM8.75488 12.9658C8.75488 12.5557 8.41309 12.207 8.00293 12.207C7.59277 12.207 7.25098 12.5557 7.25098 12.9658V15.0576C7.25098 15.4609 7.59277 15.8096 8.00293 15.8096C8.41309 15.8096 8.75488 15.4609 8.75488 15.0576V12.9658Z"></path></svg></span>Status</th><td><span class="status-value select-value-color-green"><div class="status-dot status-dot-color-green"></div>Complete</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/kind_gray.svg" style="width:14px;height:14px;display:block"/></span>Type</th><td><span class="selected-value select-value-color-purple">Lesson</span></td></tr></tbody></table></header><div class="page-body"><p id="1b3d3011-3dd1-8171-b50c-fc82b8f77aff" class=""><code><a href="https://sunnyrichman.github.io/itcs393/">🔙 Back to Table of Contents, Click here</a></code></p><h1 id="1b3d3011-3dd1-8083-8b06-e4a598083363" class="">Data Types</h1><hr id="1b3d3011-3dd1-80d4-a49d-cb1b070f204a"/><h2 id="1b3d3011-3dd1-8076-ab53-edc83103bc38" class="">Definition of Data Types</h2><hr id="1b3d3011-3dd1-80d4-952b-f1495d3b853d"/><ul id="1b3d3011-3dd1-808f-a32b-d71f5c73dbb7" class="bulleted-list"><li style="list-style-type:disc">A <strong>data type</strong> is a classification that determines the type of value a variable or column can hold.</li></ul><ul id="1b3d3011-3dd1-80b8-ab4f-f8d8841f31f7" class="bulleted-list"><li style="list-style-type:disc">Data types help ensure <mark class="highlight-teal">data integrity</mark> and improve query performance.</li></ul><ul id="1b3d3011-3dd1-8088-b35e-d90cec78f2b8" class="bulleted-list"><li style="list-style-type:disc">In databases, data types are essential for accurately storing and processing data.</li></ul><ul id="1b3d3011-3dd1-8023-87c5-e7b7633af167" class="bulleted-list"><li style="list-style-type:disc">MySQL has a wide range of data types.<div id="1b3d3011-3dd1-8048-aa2b-e9e923265a5f" class="column-list"><div id="1b3d3011-3dd1-8068-9300-d2470da46257" style="width:25%" class="column"><p id="1b3d3011-3dd1-8042-84d4-ff39ef373907" class=""><strong>Numeric</strong></p><hr id="1b3d3011-3dd1-8090-90f7-d62536534d58"/><p id="1b3d3011-3dd1-80cb-8752-e9f21312e7b7" class="">used for storing numbers.</p><ul id="1b3d3011-3dd1-80e6-b334-f993b64ce9e5" class="bulleted-list"><li style="list-style-type:disc">INTEGER/INT(size)</li></ul><ul id="1b3d3011-3dd1-8019-9d84-c78aa62b13d7" class="bulleted-list"><li style="list-style-type:disc">TINYINT(size)</li></ul><ul id="1b3d3011-3dd1-8083-86d2-c81afcc8a994" class="bulleted-list"><li style="list-style-type:disc">SMALLINT(size)</li></ul><ul id="1b3d3011-3dd1-804c-960c-f2baba86bbe4" class="bulleted-list"><li style="list-style-type:disc">MEDIUMINT(size)</li></ul><ul id="1b3d3011-3dd1-80ba-b92d-ca4b49072fe1" class="bulleted-list"><li style="list-style-type:disc">BIGINT(size)</li></ul><ul id="1b3d3011-3dd1-806f-9ac0-d631be6286fc" class="bulleted-list"><li style="list-style-type:disc">FLOAT(size, d)</li></ul><ul id="1b3d3011-3dd1-80cd-a38d-d4d9a8e75682" class="bulleted-list"><li style="list-style-type:disc">DOUBLE(size, d)</li></ul><ul id="1b3d3011-3dd1-80bc-a502-dc79d6d2ac2f" class="bulleted-list"><li style="list-style-type:disc">DECIMAL(size, d)/DEC(size, d)</li></ul></div><div id="1b3d3011-3dd1-8049-a49e-c4521dc4e86d" style="width:25%" class="column"><p id="1b3d3011-3dd1-808e-9440-cbbd1d01f585" class=""><strong>String</strong></p><hr id="1b3d3011-3dd1-8034-b7f4-f2109af05b51"/><p id="1b3d3011-3dd1-80c5-90c3-f42a4e2dd90f" class="">for storing text data.</p><ul id="1b3d3011-3dd1-80d0-8bad-d65fb2203175" class="bulleted-list"><li style="list-style-type:disc">CHAR(size)</li></ul><ul id="1b3d3011-3dd1-8028-922b-daf5b003d199" class="bulleted-list"><li style="list-style-type:disc">VARCHAR(size)</li></ul><ul id="1b3d3011-3dd1-808e-8232-da22352438c2" class="bulleted-list"><li style="list-style-type:disc">TINYTEXT</li></ul><ul id="1b3d3011-3dd1-8023-91b8-e029062082b2" class="bulleted-list"><li style="list-style-type:disc">TEXT</li></ul><ul id="1b3d3011-3dd1-8092-ba48-e880a7555497" class="bulleted-list"><li style="list-style-type:disc">MEDIUMTEXT</li></ul><ul id="1b3d3011-3dd1-8039-88a7-e52d69e6fc9d" class="bulleted-list"><li style="list-style-type:disc">LONGTEXT</li></ul></div><div id="1b3d3011-3dd1-80f3-ae1d-daa860cf8170" style="width:25%" class="column"><p id="1b3d3011-3dd1-80cc-8900-ea804b1943ba" class=""><strong>Date and time</strong></p><hr id="1b3d3011-3dd1-802d-a0df-ff2dbe98473f"/><p id="1b3d3011-3dd1-800e-9b7d-f0ac2bf80a7e" class="">for storing dates and times.</p><ul id="1b3d3011-3dd1-80c3-8ea3-e0f7d2278be4" class="bulleted-list"><li style="list-style-type:disc">DATE</li></ul><ul id="1b3d3011-3dd1-80d3-8cb9-f03edc15bff0" class="bulleted-list"><li style="list-style-type:disc">DATETIME</li></ul><ul id="1b3d3011-3dd1-807b-8452-ecae0affb5d2" class="bulleted-list"><li style="list-style-type:disc">TIMESTAMP</li></ul><ul id="1b3d3011-3dd1-806f-b8ce-dda4b017dc39" class="bulleted-list"><li style="list-style-type:disc">TIME</li></ul><ul id="1b3d3011-3dd1-80fa-9157-e4393d63977e" class="bulleted-list"><li style="list-style-type:disc">YEAR</li></ul></div><div id="1b3d3011-3dd1-80de-8265-e164e3c2aadd" style="width:25%" class="column"><p id="1b3d3011-3dd1-8068-a828-ef52064d155b" class=""><strong>Miscellaneous</strong></p><hr id="1b3d3011-3dd1-80f8-a15b-e5bc75ad4195"/><p id="1b3d3011-3dd1-8062-88dc-dd260076af28" class="">other then above e.g., flag data</p><ul id="1b3d3011-3dd1-80d4-986b-e04e7447f4a9" class="bulleted-list"><li style="list-style-type:disc">BOOLEAN/BOOL</li></ul><ul id="1b3d3011-3dd1-8008-9d4a-e578d94ec0ef" class="bulleted-list"><li style="list-style-type:disc">ENUM</li></ul><ul id="1b3d3011-3dd1-8060-a9ae-e935664e7b68" class="bulleted-list"><li style="list-style-type:disc">SET</li></ul></div></div></li></ul><h2 id="1b3d3011-3dd1-80ae-b697-d7205291f763" class="">Numeric Data Types</h2><hr id="1b3d3011-3dd1-80b2-b2a7-eca5043fbe55"/><h3 id="1b3d3011-3dd1-8091-aaee-c61200cadb21" class="">Numeric - Integer Types (Exact Value)</h3><hr id="1b3d3011-3dd1-8064-8ce2-c66896da2a9f"/><div id="1b3d3011-3dd1-8029-b28c-ef461a644f17" class="column-list"><div id="1b3d3011-3dd1-8033-a2f7-dd175c6aa753" style="width:62.5%" class="column"><table id="1b3d3011-3dd1-805b-908f-fb95b43aa35d" class="simple-table"><thead class="simple-table-header"><tr id="1b3d3011-3dd1-8044-a4ac-cfdb029a6ad1"><th id="iNff" class="simple-table-header-color simple-table-header" style="width:100px">Data Type</th><th id="oLI]" class="simple-table-header-color simple-table-header" style="width:467px">Range</th><th id="emFO" class="simple-table-header-color simple-table-header" style="width:76px">Storage</th></tr></thead><tbody><tr id="1b3d3011-3dd1-8023-809d-dd0d3a83e603"><td id="iNff" class="" style="width:100px">TINYINT</td><td id="oLI]" class="" style="width:467px">Signed: -128 to 127<br/>Unsigned: 0 to 255<br/></td><td id="emFO" class="" style="width:76px">1 byte</td></tr><tr id="1b3d3011-3dd1-8091-a0f6-c65de4045f8a"><td id="iNff" class="" style="width:100px">SMALLINT</td><td id="oLI]" class="" style="width:467px">Signed: -32768 to 32767<br/>Unsigned: 0 to 65535<br/></td><td id="emFO" class="" style="width:76px">2 bytes</td></tr><tr id="1b3d3011-3dd1-8031-8694-d8dfc6e5ae15"><td id="iNff" class="" style="width:100px">MEDIUMINT</td><td id="oLI]" class="" style="width:467px">Signed: -8388608 to 8388607<br/>Unsigned: 0 to 16777215<br/></td><td id="emFO" class="" style="width:76px">3 bytes</td></tr><tr id="1b3d3011-3dd1-8058-8e50-cf469d50c77d"><td id="iNff" class="" style="width:100px">INT</td><td id="oLI]" class="" style="width:467px">Signed: -2147483648 to 2147483647<br/>Unsigned: 0 to 4294967295<br/></td><td id="emFO" class="" style="width:76px">4 bytes</td></tr><tr id="1b3d3011-3dd1-8028-9498-fe3d54cb26c4"><td id="iNff" class="" style="width:100px">BIGINT</td><td id="oLI]" class="" style="width:467px">Signed: -9223372036854775808 (-2<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow></mrow><mn>63</mn></msup></mrow><annotation encoding="application/x-tex">^{63}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">63</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>) to 9223372036854775807 (2<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow></mrow><mn>63</mn></msup></mrow><annotation encoding="application/x-tex">^{63}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">63</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>-1)<br/>Unsigned: 0 to 18446744073709551615 (2<br/><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow></mrow><mn>64</mn></msup></mrow><annotation encoding="application/x-tex">^{64}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">64</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>-1)</td><td id="emFO" class="" style="width:76px">8 bytes</td></tr></tbody></table></div><div id="1b3d3011-3dd1-802d-b343-c1cdbb66fbe9" style="width:37.50000000000001%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-8032-a297-c2a75e64fdb2"><div style="font-size:1.5em"><span class="icon">❓</span></div><div style="width:100%"><p id="1b3d3011-3dd1-8090-abae-e525fd45beaa" class=""><strong>Questions</strong></p><ul id="1b3d3011-3dd1-8063-af77-ef994da1b0bd" class="bulleted-list"><li style="list-style-type:disc">If you want to store weight of a person, which data type would be sufficient?</li></ul><ul id="1b3d3011-3dd1-80fe-a87f-cb0305922153" class="bulleted-list"><li style="list-style-type:disc">How about keeping distance value in km between earth to other planets? (note distance between earth and Neptune is 4.6218 billion km)</li></ul><ul id="1b3d3011-3dd1-80b5-a85c-edc3897dbb00" class="bulleted-list"><li style="list-style-type:disc">What will happen if you try to keep value outside its range? (e.g., SELECT 9223372036854775807 + 1;)</li></ul></div></figure></div></div><h3 id="1b3d3011-3dd1-8018-b417-cc8f04a69c7a" class="">Exact Numeric (fixed precision)</h3><hr id="1b3d3011-3dd1-8002-a040-f51e34a4abd0"/><p id="1b3d3011-3dd1-80af-bf42-ca6fd5e4ead3" class="">a data type for storing exact values and performing precise and safe calculations. It is commonly used in monetary or financial systems such as prices, salary, account balances and so on. In MySQL, The DECIMAL (also NUMERIC) types is used to represent exact numeric.</p><div id="1b3d3011-3dd1-80ea-a386-f2563dd73f67" class="column-list"><div id="1b3d3011-3dd1-8019-bda3-e1e16f0c551e" style="width:50%" class="column"><ul id="1b3d3011-3dd1-80e0-911d-d64b0abfebe6" class="bulleted-list"><li style="list-style-type:disc">decimal, numeric<ul id="1b3d3011-3dd1-80f7-9a5c-f8cfad4c7e45" class="bulleted-list"><li style="list-style-type:circle">decimal(p[,s])] and numeric[(p[,s])]</li></ul><ul id="1b3d3011-3dd1-8086-a86f-e8b126a92135" class="bulleted-list"><li style="list-style-type:circle">decimal and numeric are functionally equivalent</li></ul></li></ul><ul id="1b3d3011-3dd1-8017-9a11-f7afa71a424a" class="bulleted-list"><li style="list-style-type:disc">p (precision): maximum total number of digits to be stored up to<ul id="1b3d3011-3dd1-806e-92ce-de82099679b6" class="bulleted-list"><li style="list-style-type:circle">Range from 1 to 65.</li></ul></li></ul><ul id="1b3d3011-3dd1-8006-8f56-d15cbb7eb982" class="bulleted-list"><li style="list-style-type:disc">s (scale): the number of decimal digits stored to the right of the decimal point.<ul id="1b3d3011-3dd1-807d-a7fd-c58e15b7ab05" class="bulleted-list"><li style="list-style-type:circle">Range from 0 to 30. In MySQL, s must less than or equal to p.</li></ul></li></ul></div><div id="1b3d3011-3dd1-808e-9a4e-d58148e62807" style="width:50%" class="column"><div id="1b3d3011-3dd1-8033-a592-fc6507356e8b" class="column-list"><div id="1b3d3011-3dd1-80d1-a807-d3db56a961dd" style="width:75%" class="column"><figure id="1b3d3011-3dd1-80d3-a8cb-ec4cf6c7fa8f" class="image"><a href="image.png"><img style="width:80.546875px" src="image.png"/></a></figure><p id="1b3d3011-3dd1-808d-809f-e3346e15be1e" class="">
+</p></div><div id="1b3d3011-3dd1-805b-9911-da3119cdf9ac" style="width:125%" class="column"><table id="1b3d3011-3dd1-8042-a468-f68eadf7a8a5" class="simple-table"><thead class="simple-table-header"><tr id="1b3d3011-3dd1-8063-9dd5-fb15b8a67d82"><th id="h&gt;?L" class="simple-table-header-color simple-table-header">Precision</th><th id="OBxJ" class="simple-table-header-color simple-table-header">Storage bytes</th></tr></thead><tbody><tr id="1b3d3011-3dd1-804c-b825-e2005ebf40ea"><td id="h&gt;?L" class="">1-9</td><td id="OBxJ" class="">5</td></tr><tr id="1b3d3011-3dd1-805f-88b2-e5c2b8ec538b"><td id="h&gt;?L" class="">10-19</td><td id="OBxJ" class="">9</td></tr><tr id="1b3d3011-3dd1-80c5-a652-da1e893ce1f8"><td id="h&gt;?L" class="">20-28</td><td id="OBxJ" class="">13</td></tr><tr id="1b3d3011-3dd1-8091-adc5-d5a53a9a9171"><td id="h&gt;?L" class="">29-38</td><td id="OBxJ" class="">17</td></tr></tbody></table></div></div></div></div><h3 id="1b3d3011-3dd1-8042-a7c7-cd549830bf8c" class="">Approximate Numeric </h3><hr id="1b3d3011-3dd1-801b-a011-f9fa021108fe"/><p id="1b3d3011-3dd1-800a-9229-f0fd78a21b99" class="">commonly used when dealing with data what precision beyond a certain level is not required such as scientific calculation or statistic analysis where approximate are acceptable.</p><div id="1b3d3011-3dd1-80d5-9dba-f439a33837eb" class="column-list"><div id="1b3d3011-3dd1-80e8-b27e-f356c0441513" style="width:50%" class="column"><table id="1b3d3011-3dd1-809b-ad01-fbd3da0d3d95" class="simple-table"><thead class="simple-table-header"><tr id="1b3d3011-3dd1-80cc-973c-fbf934dd1710"><th id="L}VN" class="simple-table-header-color simple-table-header">Data Type</th><th id="K_zc" class="simple-table-header-color simple-table-header" style="width:329px">Range</th><th id=":|`U" class="simple-table-header-color simple-table-header" style="width:71px">Storage</th></tr></thead><tbody><tr id="1b3d3011-3dd1-8014-88ec-c6e34805fc47"><td id="L}VN" class="">FLOAT or REAL</td><td id="K_zc" class="" style="width:329px">-3.402823466E+38 to -1.175494351E-38<br/>0<br/>1.175494351E-38 to 3.402823466E+38<br/></td><td id=":|`U" class="" style="width:71px">4 bytes</td></tr><tr id="1b3d3011-3dd1-80c0-a427-c01c6964ed9b"><td id="L}VN" class="">DOUBLE</td><td id="K_zc" class="" style="width:329px">-1.7976931348623157E+308 to -2.225074e-308<br/>0<br/>2.225074e-308 to 1.7976931348623157E+308<br/></td><td id=":|`U" class="" style="width:71px">8 bytes</td></tr></tbody></table></div><div id="1b3d3011-3dd1-8040-bbc0-eeedf47a3f9a" style="width:50%" class="column"><p id="1b3d3011-3dd1-8081-b220-fe47c337167f" class="">The FLOAT and DOUBLE data types are used to store approximate numeric values, while the DECIMAL data type is used to <mark class="highlight-red"><strong>store exact numeric values</strong></mark>.</p></div></div><h2 id="1b3d3011-3dd1-808f-b187-fef25aa9ef40" class="">String</h2><hr id="1b3d3011-3dd1-80b9-b12a-ff8f70de34d3"/><h3 id="1b3d3011-3dd1-8051-a73f-d80ddeaf5f3c" class="">Fixed-Length String: <code>CHAR(n)</code></h3><hr id="1b3d3011-3dd1-80f2-b724-f523373f8fcc"/><ul id="1b3d3011-3dd1-80d7-9cb7-f473ce67a3b3" class="bulleted-list"><li style="list-style-type:disc">Fixed-length string with a maximum length of <strong>n</strong> characters (value 0 to 255)</li></ul><ul id="1b3d3011-3dd1-80d3-8ff8-d2a31ab250b7" class="bulleted-list"><li style="list-style-type:disc">Require exactly <strong>n</strong> bytes of storage.<ul id="1b3d3011-3dd1-8015-ab8b-f0041859396c" class="bulleted-list"><li style="list-style-type:circle">If the string value is <mark class="highlight-blue">shorter</mark> than <mark class="highlight-red">n</mark> characters, <span style="border-bottom:0.05em solid">the remaining bytes will be filled with blank spaces</span>.</li></ul><ul id="1b3d3011-3dd1-8008-b2c0-e66cf115c875" class="bulleted-list"><li style="list-style-type:circle">If the string value is <mark class="highlight-blue">longer</mark> than <mark class="highlight-red">n</mark> characters, <span style="border-bottom:0.05em solid">mysql will not allow to insert data</span>. (unless the restrict mode is disabled)</li></ul></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-80df-a24d-ea1e797ffc05"><div style="width:100%"><p id="1b3d3011-3dd1-8013-b317-ee620c236618" class=""><strong>Example</strong></p><hr id="1b3d3011-3dd1-809f-a1d9-efc685461395"/><div id="1b3d3011-3dd1-802b-9d30-cd752e537273" class="column-list"><div id="1b3d3011-3dd1-809c-a2e6-fafb90c8095c" style="width:37.5%" class="column"><p id="1b3d3011-3dd1-8026-b783-f1c05c35dfb8" class="">Create the following table with CHAR(5) column and try insert with different string values:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-80f7-a430-f840d538e9c6" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE example_table(
+	msg CHAR(5)
+);</code></pre></div><div id="1b3d3011-3dd1-8085-bf73-cd5ae25c2796" style="width:62.5%" class="column"><p id="1b3d3011-3dd1-80de-823a-ec648f570293" class="">What will happened after insert the following value ?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-80c4-84f2-db812cced54d" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO example_table VALUE (&#x27;Hello&#x27;); -- Query OK, 1 row affected (0.00 sec)
+INSERT INTO example_table VALUE (&#x27;World&#x27;); -- Query OK, 1 row affected (0.00 sec)
+INSERT INTO example_table VALUE (&#x27;Message&#x27;); -- ERROR 1406 (22001): Data too long for column &#x27;msg&#x27; at row 1</code></pre></div></div></div></figure><h3 id="1b3d3011-3dd1-8021-b0ab-fb3447c7ca9a" class="">Variable-Length String: <code>VARCHAR(n)</code>, <code>TEXT</code></h3><hr id="1b3d3011-3dd1-8063-bad3-d7c8ef84829a"/><ul id="1b4d3011-3dd1-80a1-90f4-eecbfe590662" class="bulleted-list"><li style="list-style-type:disc">Variable-length string with a maximum length of n characters (value 0 to 65,535)</li></ul><ul id="1b3d3011-3dd1-8092-892a-dd806db7c578" class="bulleted-list"><li style="list-style-type:disc">It will use storage as necessary to store the actual string value PLUS 1 byte (overhead) storing an actual size value of the string.</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b3d3011-3dd1-805e-8cbe-d1c2a32eb5c6"><div style="width:100%"><p id="1b3d3011-3dd1-8089-8c9e-d27d524ae91f" class=""><strong>Example</strong></p><hr id="1b3d3011-3dd1-8063-8044-f054c0e90a3b"/><div id="1b3d3011-3dd1-8004-a900-f0618351a8e6" class="column-list"><div id="1b3d3011-3dd1-80a4-8981-c9a50721b6d4" style="width:37.5%" class="column"><p id="1b3d3011-3dd1-8015-920d-f1e52cd48a93" class="">Create the following table with VARCHAR(10) column and try insert with different string values:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-8018-91f6-d7fb2cf68716" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE example_table(
+	msg VARCHAR(10)
+);</code></pre></div><div id="1b3d3011-3dd1-80ac-a165-eea08e2bfa0e" style="width:62.5%" class="column"><p id="1b3d3011-3dd1-8079-b902-fc01f97f3c26" class="">What will happened after insert the following value ?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b3d3011-3dd1-806e-9218-ca8604f955dd" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO example_table VALUE (&#x27;Hello&#x27;); -- Query OK, 1 row affected (0.00 sec)
+INSERT INTO example_table VALUE (&#x27;World&#x27;); -- Query OK, 1 row affected (0.00 sec)
+INSERT INTO example_table VALUE (&#x27;This is a longer string&#x27;); -- ERROR 1406 (22001): Data too long for column &#x27;msg&#x27; at row 1</code></pre></div></div></div></figure><div id="1b4d3011-3dd1-807f-bf24-c97967b1c717" class="column-list"><div id="1b4d3011-3dd1-800b-844c-da641ae30dd7" style="width:37.5%" class="column"><table id="1b3d3011-3dd1-8063-b9f3-ce571b4da4da" class="simple-table"><thead class="simple-table-header"><tr id="1b3d3011-3dd1-80f5-a40f-deeeafc5dc2b"><th id="C&gt;|_" class="simple-table-header-color simple-table-header" style="width:86px">Valur</th><th id="Sv@m" class="simple-table-header-color simple-table-header" style="width:74px">CHAR(4)</th><th id="s\G@" class="simple-table-header-color simple-table-header" style="width:61px">Bytes</th><th id=";npu" class="simple-table-header-color simple-table-header" style="width:101px">VARCHAR(4)</th><th id=":p&gt;n" class="simple-table-header-color simple-table-header" style="width:56px">Bytes</th></tr></thead><tbody><tr id="1b3d3011-3dd1-80ea-91e2-c8964d46d029"><td id="C&gt;|_" class="" style="width:86px">‘’</td><td id="Sv@m" class="" style="width:74px">‘    ’</td><td id="s\G@" class="" style="width:61px">4</td><td id=";npu" class="" style="width:101px">‘’</td><td id=":p&gt;n" class="" style="width:56px">1</td></tr><tr id="1b3d3011-3dd1-8003-beef-cab96f75d3be"><td id="C&gt;|_" class="" style="width:86px">‘ab’</td><td id="Sv@m" class="" style="width:74px">‘ab  ’</td><td id="s\G@" class="" style="width:61px">4</td><td id=";npu" class="" style="width:101px">‘ab’</td><td id=":p&gt;n" class="" style="width:56px">3</td></tr><tr id="1b3d3011-3dd1-80c6-bb0d-cef6596d863c"><td id="C&gt;|_" class="" style="width:86px">‘abcd’</td><td id="Sv@m" class="" style="width:74px">‘abcd’</td><td id="s\G@" class="" style="width:61px">4</td><td id=";npu" class="" style="width:101px">‘abcd’</td><td id=":p&gt;n" class="" style="width:56px">5</td></tr><tr id="1b3d3011-3dd1-80f1-a179-dc2c9f640da8"><td id="C&gt;|_" class="" style="width:86px">‘abcdefgh’</td><td id="Sv@m" class="" style="width:74px">‘abcd’</td><td id="s\G@" class="" style="width:61px">4</td><td id=";npu" class="" style="width:101px">‘abcd’</td><td id=":p&gt;n" class="" style="width:56px">5</td></tr></tbody></table></div><div id="1b4d3011-3dd1-8002-96d9-e0c398624ca7" style="width:62.5%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-80cf-83ff-cf81d6906457"><div style="width:100%"><p id="1b4d3011-3dd1-80f6-9d0e-cd24eb01e3fd" class=""><strong>Example</strong></p><hr id="1b4d3011-3dd1-80cb-893e-f2961cb33480"/><div id="1b4d3011-3dd1-806b-b26a-c6a14a374b5c" class="column-list"><div id="1b4d3011-3dd1-804f-bf07-ddd6b7bdd640" style="width:50%" class="column"><p id="1b4d3011-3dd1-80d4-a214-f83e410932d9" class="">Create the following table with TEXT column and try insert with different string values:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-8070-8171-dbb676bb6af7" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE example_table(
+	msg VARCHAR(10)
+);</code></pre></div><div id="1b4d3011-3dd1-802c-b144-eeabf7e80031" style="width:50%" class="column"><p id="1b4d3011-3dd1-8028-a352-c3b4dd35ed13" class="">What will happened after insert the following value?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-8074-95ac-f5b26dd59fb1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO example_table VALUE (&#x27;This is a longer string&#x27;); -- Query OK, 1 row affected (0.00 sec)</code></pre></div></div></div></figure><p id="1b4d3011-3dd1-807e-8152-c33daffd9165" class="">How different between <strong>VARCHAR(n)</strong> and <strong>TEXT</strong></p></div></div><ul id="1b4d3011-3dd1-80a2-85f9-fad531e3422f" class="bulleted-list"><li style="list-style-type:disc">Key differences between VARCHAR and TEXT.</li></ul><ul id="1b4d3011-3dd1-807e-a5d1-d1f8dd73aa1c" class="bulleted-list"><li style="list-style-type:disc">TEXT forces the maximum value to be 65,535 bytes.</li></ul><ul id="1b4d3011-3dd1-807c-a133-f07601a6bc2e" class="bulleted-list"><li style="list-style-type:disc">VARCHAR is based on the actual length value which uses less storage for the shorter string.</li></ul><ul id="1b4d3011-3dd1-801c-88cc-c34dc4430424" class="bulleted-list"><li style="list-style-type:disc">TEXT is suitable for storing large String values that exceed the maximum length limit of VARCHAR.</li></ul><ul id="1b4d3011-3dd1-80a2-b0b9-e4c0177a3caa" class="bulleted-list"><li style="list-style-type:disc">For larger String, MEDIUMTEXT and LONGTEXT are considered.</li></ul><h2 id="1b4d3011-3dd1-800f-a501-c2f85c5b7e70" class="">Date and Time Data Types</h2><hr id="1b4d3011-3dd1-804a-bf3e-c6808d268fdc"/><table id="1b4d3011-3dd1-80fe-81d8-d6d778bb49e9" class="simple-table"><thead class="simple-table-header"><tr id="1b4d3011-3dd1-8064-923f-fd42445b07bb"><th id="nHjW" class="simple-table-header-color simple-table-header">Data Type</th><th id="L\h{" class="simple-table-header-color simple-table-header" style="width:175px">Format</th><th id="gaHP" class="simple-table-header-color simple-table-header" style="width:784px">Range</th><th id="dI]_" class="simple-table-header-color simple-table-header" style="width:72px">Storage</th></tr></thead><tbody><tr id="1b4d3011-3dd1-8060-a375-d22e9e1edb42"><td id="nHjW" class="">DATE</td><td id="L\h{" class="" style="width:175px">‘YYYY-MM-DD’</td><td id="gaHP" class="" style="width:784px">‘1000-01-01’ to ‘9999-12-31’<mark class="highlight-red">*</mark></td><td id="dI]_" class="" style="width:72px">3 bytes</td></tr><tr id="1b4d3011-3dd1-80c7-b7fc-d05a08b78bda"><td id="nHjW" class="">TIME</td><td id="L\h{" class="" style="width:175px">‘hh:mm:ss’</td><td id="gaHP" class="" style="width:784px">‘-838:59:59’ to ‘838:59:59’<mark class="highlight-red">*</mark></td><td id="dI]_" class="" style="width:72px">3 bytes</td></tr><tr id="1b4d3011-3dd1-801a-8fdd-cf4737542bf8"><td id="nHjW" class="">DATETIME</td><td id="L\h{" class="" style="width:175px">‘YYYY-MM-DD hh:mm:ss’</td><td id="gaHP" class="" style="width:784px">‘1000-01-01’ to ‘9999-12-31’<mark class="highlight-red">*<br/><br/></mark>with a precision of up to 6 decimal places for fractional seconds</td><td id="dI]_" class="" style="width:72px">8 bytes</td></tr><tr id="1b4d3011-3dd1-804a-8739-f77c7faf6314"><td id="nHjW" class="">TIMESTAMP</td><td id="L\h{" class="" style="width:175px">‘YYYY-MM-DD hh:mm:ss’</td><td id="gaHP" class="" style="width:784px">‘1970-01-01’ to ‘2037-12-31’<mark class="highlight-red">*</mark><br/>with a precision of up to 6 decimal places for fractional seconds<br/><br/><strong>Note that</strong>: MySQL does not store time zone information, when you insert a value into ‘TIMESTAMP’ column it will convert to UTC for storage. When you retrieve, it will automatically convert back based on the session’s time zone setting.</td><td id="dI]_" class="" style="width:72px">4 bytes</td></tr></tbody></table><p id="1b4d3011-3dd1-80b7-8052-cbbd075037ce" class=""><mark class="highlight-red">*Note that</mark>: if you want to store dates apart from this range you can use other non-temporal formats such as INT.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-801d-85be-e04dc773d38a"><div style="width:100%"><p id="1b4d3011-3dd1-8000-8036-f0df517271d0" class=""><strong>Example</strong></p><hr id="1b4d3011-3dd1-8038-a716-f378e3839402"/><p id="1b4d3011-3dd1-8020-ab15-c4c55aaf03d5" class="">Create the following table</p><div id="1b4d3011-3dd1-806a-bde1-c8dad8cf2024" class="column-list"><div id="1b4d3011-3dd1-80ed-afdd-fddad8816ffd" style="width:25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-80ea-aa92-fde11e77e6c9" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE my_table (
+	event_date DATE,
+	event_time TIME,
+	event_datetime DATETIME,
+	event_timestamp TIMESTAMP
+);</code></pre></div><div id="1b4d3011-3dd1-80bd-96d5-f770e19d4417" style="width:75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-8078-a1c3-d9141f5028e1" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO my_table VALUE (&#x27;2023-03-20&#x27;, &#x27;09:30:00&#x27;, &#x27;2023-03-20 09:30:00’, CURRENT_TIMESTAMP)</code></pre></div></div></div></figure><table id="1b4d3011-3dd1-8044-abec-ddccf3b7dca4" class="simple-table"><thead class="simple-table-header"><tr id="1b4d3011-3dd1-80a0-b2e3-da21c90ce8fe"><th id="Z[og" class="simple-table-header-color simple-table-header" style="width:82.828125px">Function</th><th id="\We?" class="simple-table-header-color simple-table-header" style="width:227.828125px">Description</th><th id="FhjG" class="simple-table-header-color simple-table-header" style="width:188.83333333333334px">Example</th><th id="S{XF" class="simple-table-header-color simple-table-header" style="width:119.828125px">Function</th><th id="=WNe" class="simple-table-header-color simple-table-header" style="width:214.828125px">Description</th><th id="@vY&gt;" class="simple-table-header-color simple-table-header" style="width:318.828125px">Example</th></tr></thead><tbody><tr id="1b4d3011-3dd1-8046-81a8-c364ea1ec6f0"><td id="Z[og" class="" style="width:82.828125px">NOW()</td><td id="\We?" class="" style="width:227.828125px">Returns the current date and time in MySQL server&#x27;s timezone</td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT NOW()</td><td id="S{XF" class="" style="width:119.828125px">DATE_FORMAT()</td><td id="=WNe" class="" style="width:214.828125px">Formats a datetime expression into a specified format</td><td id="@vY&gt;" class="" style="width:318.828125px">SELECT DATE_FORMAT<br/>(&#x27;2023-03-19 12:34:56&#x27;, &#x27;%Y-%m-%d %H:%i:%s&#x27;);<br/></td></tr><tr id="1b4d3011-3dd1-8091-86e6-fe04154a0dec"><td id="Z[og" class="" style="width:82.828125px">DATE()</td><td id="\We?" class="" style="width:227.828125px">Extracts the date part of a datetime expression</td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT DATE(&#x27;2023-03-19 12:34:56&#x27;);</td><td id="S{XF" class="" style="width:119.828125px">ADDDATE()</td><td id="=WNe" class="" style="width:214.828125px">Adds a specified interval to a date or datetime expression</td><td id="@vY&gt;" class="" style="width:318.828125px">SELECT ADDDATE(&#x27;2022-09-30&#x27;, INTERVAL 1 MONTH);</td></tr><tr id="1b4d3011-3dd1-80e1-8fc9-f89c6ae93cbb"><td id="Z[og" class="" style="width:82.828125px">YEAR()</td><td id="\We?" class="" style="width:227.828125px">Extracts the year part of a datetime expression</td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT YEAR(&#x27;2023-03-19 12:34:56&#x27;);</td><td id="S{XF" class="" style="width:119.828125px">DATEDIFF()</td><td id="=WNe" class="" style="width:214.828125px">Calculates the difference between two dates</td><td id="@vY&gt;" class="" style="width:318.828125px">SELECT DATEDIFF(&#x27;2023-01-01&#x27;, ‘2022-09-30&#x27;);</td></tr><tr id="1b4d3011-3dd1-808c-a82d-ea4c8a2ad4aa"><td id="Z[og" class="" style="width:82.828125px">MONTH()</td><td id="\We?" class="" style="width:227.828125px">Extracts the month part of a datetime expression</td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT MONTH(&#x27;2023-03-19 12:34:56&#x27;);</td><td id="S{XF" class="" style="width:119.828125px">TIMEDIFF()</td><td id="=WNe" class="" style="width:214.828125px">Calculates the difference between two times </td><td id="@vY&gt;" class="" style="width:318.828125px">SELECT TIMEDIFF(&#x27;12:00:00&#x27;, &#x27;09:00:00&#x27;);</td></tr><tr id="1b4d3011-3dd1-80c3-a187-e70c21dba5f6"><td id="Z[og" class="" style="width:82.828125px">DAY()</td><td id="\We?" class="" style="width:227.828125px">Extracts the day part of a datetime expression</td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT DAY(&#x27;2023-03-19 12:34:56&#x27;);</td><td id="S{XF" class="" style="width:119.828125px">TIME_TO_SEC()</td><td id="=WNe" class="" style="width:214.828125px">Converts a time expression to seconds</td><td id="@vY&gt;" class="" style="width:318.828125px">SELECT TIME_TO_SEC(&#x27;01:30:00&#x27;);</td></tr><tr id="1b4d3011-3dd1-80ed-981f-ec7aaced42e6"><td id="Z[og" class="" style="width:82.828125px">HOUR()</td><td id="\We?" class="" style="width:227.828125px">Extracts the hour part of a datetime expression</td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT HOUR(&#x27;2023-03-19 12:34:56&#x27;);</td><td id="S{XF" class="" style="width:119.828125px">SEC_TO_TIME()</td><td id="=WNe" class="" style="width:214.828125px">Converts a number of seconds to a time expression</td><td id="@vY&gt;" class="" style="width:318.828125px">SELECT SEC_TO_TIME(5400);</td></tr><tr id="1b4d3011-3dd1-801e-abdd-c6a1ece0f946"><td id="Z[og" class="" style="width:82.828125px">MINUTE()</td><td id="\We?" class="" style="width:227.828125px">Extracts the minute part of a datetime expression</td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT MINUTE(&#x27;2023-03-19 12:34:56&#x27;);</td><td id="S{XF" class="" style="width:119.828125px">LAST_DAY()</td><td id="=WNe" class="" style="width:214.828125px">Returns the date of the last day of the month for a given date</td><td id="@vY&gt;" class="" style="width:318.828125px">SELECT LAST_DAY(‘2022-09-15&#x27;);</td></tr><tr id="1b4d3011-3dd1-8006-9391-e38fbb3aa2b8"><td id="Z[og" class="" style="width:82.828125px">SECOND()</td><td id="\We?" class="" style="width:227.828125px">Extracts the second part of a datetime expression </td><td id="FhjG" class="" style="width:188.83333333333334px">SELECT SECOND(&#x27;2023-03-19 12:34:56&#x27;);</td><td id="S{XF" class="" style="width:119.828125px"></td><td id="=WNe" class="" style="width:214.828125px"></td><td id="@vY&gt;" class="" style="width:318.828125px"></td></tr></tbody></table><h2 id="1b4d3011-3dd1-808b-af4b-d6ecae37db57" class="">Miscellaneous Data Types</h2><hr id="1b4d3011-3dd1-8068-a264-cb62730fdea9"/><table id="1b4d3011-3dd1-80c1-9308-dd4898a0458b" class="simple-table"><thead class="simple-table-header"><tr id="1b4d3011-3dd1-8053-ad6c-eaad0f7ba6a7"><th id="@_[l" class="simple-table-header-color simple-table-header" style="width:86px">Data Type</th><th id="zu@s" class="simple-table-header-color simple-table-header">Range</th><th id="AvER" class="simple-table-header-color simple-table-header" style="width:421px">Storage</th></tr></thead><tbody><tr id="1b4d3011-3dd1-80d7-a1ec-d22c0abf7fbe"><td id="@_[l" class="" style="width:86px">BOOLEAN</td><td id="zu@s" class="">True/False or 1/0</td><td id="AvER" class="" style="width:421px">1 byte</td></tr><tr id="1b4d3011-3dd1-800b-b90f-e37b97e9a808"><td id="@_[l" class="" style="width:86px">ENUM</td><td id="zu@s" class="">A list of up to 65,535 distinct values</td><td id="AvER" class="" style="width:421px">1 or 2 bytes, depending on the number of distinct values</td></tr><tr id="1b4d3011-3dd1-803f-be6b-dbe22419bce4"><td id="@_[l" class="" style="width:86px">SET</td><td id="zu@s" class="">A list of up to 64 distinct values</td><td id="AvER" class="" style="width:421px">1, 2, 3, 4, or 8 bytes, depending on the number of distinct values</td></tr></tbody></table><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-807d-a056-fcc6d1bd5c25"><div style="width:100%"><p id="1b4d3011-3dd1-8058-8eca-f71efb61721d" class=""><strong>Example - Boolean</strong></p><hr id="1b4d3011-3dd1-8087-9e59-dcf6abd4454e"/><div id="1b4d3011-3dd1-80e5-b891-f5d8a04f604c" class="column-list"><div id="1b4d3011-3dd1-8082-af12-f9bbf6e52729" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-8081-9e0a-d732a03ccb07" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE my_table (
+	is_active BOOLEAN NOT NULL DEFAULT FALSE,
+);</code></pre></div><div id="1b4d3011-3dd1-8065-9f99-d659c7806d7b" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-80cb-8428-e3ca22c90865" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO my_table (name, is_active) VALUES (&#x27;My Item&#x27;, TRUE);
+INSERT INTO my_table (name, is_active) VALUES (&#x27;My Item&#x27;, 1);</code></pre></div></div></div></figure><ul id="1b4d3011-3dd1-8061-a04b-d448015612de" class="bulleted-list"><li style="list-style-type:disc"><strong>ENUM</strong> - is used to define a column that can contain a finite set of values.</li></ul><ul id="1b4d3011-3dd1-8026-8dd0-eacd2d554be4" class="bulleted-list"><li style="list-style-type:disc">Use to store value, which are defined when the table is created.</li></ul><ul id="1b4d3011-3dd1-8059-bf14-f49bf40a8803" class="bulleted-list"><li style="list-style-type:disc">It is useful when you want to restrict the possible values</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-80ad-a85e-d5815f1f02bf"><div style="width:100%"><p id="1b4d3011-3dd1-8001-b42f-ec220f4b33ec" class=""><strong>Example - ENUM</strong></p><hr id="1b4d3011-3dd1-80d3-8011-ea8aa93f9ab1"/><div id="1b4d3011-3dd1-8093-97b5-f741e7eccbb4" class="column-list"><div id="1b4d3011-3dd1-8026-961e-c527eeb9eaec" style="width:31.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-8091-b893-eaed3509792e" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE example_enum (
+ department ENUM(&#x27;Sales&#x27;, &#x27;Marketing&#x27;, &#x27;Finance&#x27;, &#x27;IT&#x27;) NOT NULL
+);</code></pre></div><div id="1b4d3011-3dd1-80b9-a0a6-f5e7f129f64e" style="width:68.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-8021-9280-c9ec84a69fbf" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO example_enum VALUES (&#x27;Marketing&#x27;); -- Query OK, 0 rows affected (0.00 sec)
+INSERT INTO example_enum VALUES (&#x27;Marketing&#x27;); -- Query OK, 0 rows affected (0.00 sec)
+INSERT INTO example_enum VALUES (&#x27;ICT&#x27;); -- ERROR 1265 (01000): Data truncated for column &#x27;department&#x27; at row 1
+</code></pre></div></div></div></figure><p id="1b4d3011-3dd1-805b-a469-c009601b9db3" class=""><strong>Note that</strong> when inserting data into an ENUM column, the value must be one of the predefined values. If you try to insert a value that is not in the list, MySQL will <mark class="highlight-red">throw an error</mark>.</p><ul id="1b4d3011-3dd1-803d-927a-d5d4952e8bc5" class="bulleted-list"><li style="list-style-type:disc">SET - is used to define a column that can contain a set of values.</li></ul><ul id="1b4d3011-3dd1-80dc-8be8-c287243a563a" class="bulleted-list"><li style="list-style-type:disc">Use to store zero or more values from a predefined set.</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-8033-8dd1-e9fdda0b2720"><div style="width:100%"><p id="1b4d3011-3dd1-802a-9cde-cf0b1af17419" class=""><strong>Example - SET</strong></p><hr id="1b4d3011-3dd1-805f-97be-d59ca900b5cc"/><div id="1b4d3011-3dd1-808d-90e7-d25c4525a255" class="column-list"><div id="1b4d3011-3dd1-8048-84e4-ccda5cf25381" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-80e2-8832-d41343833757" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CREATE TABLE example_set (
+	interests SET(&#x27;books&#x27;, &#x27;movies&#x27;, &#x27;music&#x27;, &#x27;sports&#x27;, &#x27;travel&#x27;)
+);</code></pre></div><div id="1b4d3011-3dd1-8037-8aa3-d2790de0cacd" style="width:50%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-804e-84b1-e1923ee4812c" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">INSERT INTO example_set VALUES
+ (&#x27;books,movies&#x27;), (&#x27;music,sports,travel&#x27;), (&#x27;travel&#x27;), (&#x27;sports&#x27;);</code></pre></div></div><p id="1b4d3011-3dd1-80fa-abe8-e73c2bd57660" class="block-color-red"><strong>Can we select only the customer who play sport?</strong></p></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-80e3-85dd-d2396b624dad"><div style="width:100%"><p id="1b4d3011-3dd1-80ed-9cd8-c26a7f7cbbe5" class=""><code><strong>FIND_IN_SET</strong></code><strong> function</strong></p><hr id="1b4d3011-3dd1-807a-824f-cdcbee595f65"/><ul id="1b4d3011-3dd1-800b-86eb-de11f685b6c8" class="bulleted-list"><li style="list-style-type:disc">Syntax: FIND_IN_SET(string, set)<ul id="1b4d3011-3dd1-806b-bc32-f35d072fa018" class="bulleted-list"><li style="list-style-type:circle">It will return the position of a string within a set of strings.</li></ul><ul id="1b4d3011-3dd1-80e4-8c5e-ea6c4a39b87e" class="bulleted-list"><li style="list-style-type:circle">It is used to determine if a string value is present in the set of values stored in the column, if ‘yes’ return position (which will always greater than zero).</li></ul></li></ul><ul id="1b4d3011-3dd1-80c8-a569-e9358c6908c3" class="bulleted-list"><li style="list-style-type:disc">Try the following statement:<p id="1b4d3011-3dd1-8098-aae3-d762159ee0d0" class=""><code>SELECT * FROM example_set WHERE FIND_IN_SET(&#x27;sports&#x27;, interests) &gt; 0;</code></p></li></ul></div></figure><h1 id="1b3d3011-3dd1-8053-988d-f32e879fa6e2" class="">Pre-defined Function</h1><hr id="1b3d3011-3dd1-8072-8eb6-c4dd03b01ea4"/><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-8025-bf31-ca01f0caf623"><div style="width:100%"><div id="1b4d3011-3dd1-809c-b5fd-cccae1f38863" class="column-list"><div id="1b4d3011-3dd1-8060-b16d-c4512579dc12" style="width:50%" class="column"><p id="1b4d3011-3dd1-801a-a6de-c9aee1a1f7e4" class=""><strong>Useful Function</strong></p><hr id="1b4d3011-3dd1-80d4-a96c-c9800fdb55b2"/><table id="1b4d3011-3dd1-80a8-9704-e7ab637b4364" class="simple-table"><thead class="simple-table-header"><tr id="1b4d3011-3dd1-80a1-b1d7-c2621a413ec6"><th id="WmaW" class="simple-table-header-color simple-table-header">Function</th><th id="dCil" class="simple-table-header-color simple-table-header" style="width:536px">Description</th><th id="euqy" class="simple-table-header-color simple-table-header">Example</th></tr></thead><tbody><tr id="1b4d3011-3dd1-8004-8b09-c07ee9ae3976"><td id="WmaW" class="">UUID()</td><td id="dCil" class="" style="width:536px">Generates a <mark class="highlight-teal">universally</mark> <mark class="highlight-red">unique identifier</mark> (UUID) using the standard UUID algorithm.<br/>• UUID values <br/><strong>do not expose the information</strong> about your data.<br/>• UUID values are <br/><strong>unique across tables, databases</strong>.</td><td id="euqy" class="">UUID()</td></tr><tr id="1b4d3011-3dd1-8033-ba8a-e19e185dc87e"><td id="WmaW" class="">UUID_SHORT()</td><td id="dCil" class="" style="width:536px">Generates a 64-bit UUID using a non-standard algorithm.</td><td id="euqy" class="">UUID_SHORT()</td></tr><tr id="1b4d3011-3dd1-8058-a3b9-e578b8aff9f8"><td id="WmaW" class="">MD5(str)</td><td id="dCil" class="" style="width:536px">Calculates the MD5 hash of the input string str.</td><td id="euqy" class="">MD5(str)</td></tr><tr id="1b4d3011-3dd1-80a3-9059-fdc8d984fe69"><td id="WmaW" class="">SHA1(str)</td><td id="dCil" class="" style="width:536px">Calculates the SHA-1 hash of the input string str.</td><td id="euqy" class="">SHA1(str)</td></tr><tr id="1b4d3011-3dd1-80af-a5b6-c191398afeb2"><td id="WmaW" class="">SHA2(str, len)</td><td id="dCil" class="" style="width:536px">Calculates the SHA-2 hash of the input string str, where len specifies the length of the hash output (either 256 or 512 bits).</td><td id="euqy" class="">SHA2(str, len)</td></tr></tbody></table><p id="1b4d3011-3dd1-8038-83d8-e08c706c47d2" class="">UUID is a Universally Unique Identifier. It&#x27;s a 128-bit number used as a unique identifier for digital objects.</p><p id="1b4d3011-3dd1-8089-9fd9-ce944a008123" class=""><strong>An important character set</strong></p><hr id="1b4d3011-3dd1-8020-b913-cb56ae8c8acf"/><table id="1b4d3011-3dd1-808f-a62e-e1d26af4c016" class="simple-table"><thead class="simple-table-header"><tr id="1b4d3011-3dd1-809e-8875-f07647748082"><th id="kxL{" class="simple-table-header-color simple-table-header">Character Set</th><th id="pqd=" class="simple-table-header-color simple-table-header" style="width:353px">Description</th><th id="Xg&lt;]" class="simple-table-header-color simple-table-header" style="width:312px">Common Use Cases</th></tr></thead><tbody><tr id="1b4d3011-3dd1-8009-ada0-dbb40ec55074"><th id="kxL{" class="simple-table-header-color simple-table-header">utf8</th><td id="pqd=" class="" style="width:353px">UTF-8 Unicode encoding. Supports a wide range of characters from various languages and symbol sets.</td><td id="Xg&lt;]" class="" style="width:312px">General-purpose text storage, internationalization, web content, messaging.</td></tr><tr id="1b4d3011-3dd1-802f-b61c-d158de52a870"><th id="kxL{" class="simple-table-header-color simple-table-header">utf8mb4</th><td id="pqd=" class="" style="width:353px">UTF-8 Unicode encoding extended to support characters beyond the Basic Multilingual Plane (BMP).</td><td id="Xg&lt;]" class="" style="width:312px">Same as utf8 but includes support for emojis and less common characters.</td></tr><tr id="1b4d3011-3dd1-8017-8e71-c3d1926320f6"><th id="kxL{" class="simple-table-header-color simple-table-header">latin1</th><td id="pqd=" class="" style="width:353px">ISO 8859-1 Latin-1 encoding. Covers most Western European languages.</td><td id="Xg&lt;]" class="" style="width:312px">Legacy applications, systems predominantly using Western European languages.</td></tr><tr id="1b4d3011-3dd1-80c0-b0dc-cc06219f3c2a"><th id="kxL{" class="simple-table-header-color simple-table-header">latin2</th><td id="pqd=" class="" style="width:353px"> ISO 8859-2 Latin-2 encoding. Supports<br/>Central European languages such as Czech, Polish, and Hungarian.<br/></td><td id="Xg&lt;]" class="" style="width:312px">Systems requiring support for Central European languages.</td></tr><tr id="1b4d3011-3dd1-8096-b282-dee6a154505b"><th id="kxL{" class="simple-table-header-color simple-table-header">utf16</th><td id="pqd=" class="" style="width:353px">UTF-16 Unicode encoding. Uses two bytes (or more) to represent each character.</td><td id="Xg&lt;]" class="" style="width:312px">Compatibility with systems using UTF-16,<br/>specialized text processing scenarios.<br/></td></tr><tr id="1b4d3011-3dd1-802c-9acd-cfbae8c28df0"><th id="kxL{" class="simple-table-header-color simple-table-header">utf32</th><td id="pqd=" class="" style="width:353px">UTF-32 Unicode encoding. Uses four bytes to represent each character.</td><td id="Xg&lt;]" class="" style="width:312px">Specialized applications requiring fixed-width<br/>encoding for all Unicode characters.<br/></td></tr><tr id="1b4d3011-3dd1-8007-8497-ccd649d06d74"><th id="kxL{" class="simple-table-header-color simple-table-header">ascii</th><td id="pqd=" class="" style="width:353px"> 7-bit ASCII encoding. Covers basic English alphabet, numerals, and a few special characters.</td><td id="Xg&lt;]" class="" style="width:312px">Legacy applications, systems with strict ASCII<br/>requirements.<br/></td></tr><tr id="1b4d3011-3dd1-804b-b4c8-f1e1522d2bb4"><th id="kxL{" class="simple-table-header-color simple-table-header">binary</th><td id="pqd=" class="" style="width:353px">Binary data type. Used for storing non-textual binary data such as images or documents.</td><td id="Xg&lt;]" class="" style="width:312px">Storing non-textual binary data, such as images, documents, or serialized objects.</td></tr></tbody></table></div><div id="1b4d3011-3dd1-8032-89e4-eea30e86fef7" style="width:50%" class="column"><p id="1b4d3011-3dd1-8078-85b1-e37473f1c67c" class=""><strong>Cast and Conversion</strong></p><hr id="1b4d3011-3dd1-8056-a411-e02e22debf99"/><ul id="1b4d3011-3dd1-809d-b58a-cc73090d392e" class="bulleted-list"><li style="list-style-type:disc">In MYSQL you can convert between different data types using the CAST and CONVERT functions.</li></ul><ul id="1b4d3011-3dd1-80a2-95bc-fc429760716e" class="bulleted-list"><li style="list-style-type:disc">The CAST function allows you to convert a value of one data type to another data type.</li></ul><ul id="1b4d3011-3dd1-806c-b0ee-dbeab150418e" class="bulleted-list"><li style="list-style-type:disc">The CONVERT function allows you to convert a value of one data type to another data type <mark class="highlight-red">with a specific character set</mark>.</li></ul><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-8095-9acf-d1cb4ffc21db"><div style="width:100%"><p id="1b4d3011-3dd1-80ca-8983-fd5a067b2614" class=""><strong>CAST</strong></p><hr id="1b4d3011-3dd1-80cf-857b-f4f06753f33b"/><ul id="1b4d3011-3dd1-80be-bcef-eab53b3110fa" class="bulleted-list"><li style="list-style-type:disc">Syntax: CAST(value AS data_type).<ul id="1b4d3011-3dd1-8048-81c2-f492dfe863c1" class="bulleted-list"><li style="list-style-type:circle">The <em><code>value</code></em> is the value that you want to convert.</li></ul><ul id="1b4d3011-3dd1-8059-8369-c2724804d56d" class="bulleted-list"><li style="list-style-type:circle">The <em><code>data_type</code></em> the data type to which you want to convert the value.</li></ul></li></ul><ul id="1b4d3011-3dd1-8095-a7c2-f6a25d113333" class="bulleted-list"><li style="list-style-type:disc">The data types that you can cast to depend on the original data type of the value you want to convert.</li></ul><ul id="1b4d3011-3dd1-80c0-a252-c2c8016f57f5" class="bulleted-list"><li style="list-style-type:disc">Some examples of data types that you can cast to include INT, FLOAT, DECIMAL, CHAR, VARCHAR, DATE, TIME, and DATETIME.</li></ul><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-80ad-9413-fca05bce8c82"><div style="width:100%"><p id="1b4d3011-3dd1-8028-8e5f-cb971573a7b3" class=""><strong>Example</strong></p><hr id="1b4d3011-3dd1-8050-9124-df8366be4c37"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-8068-8bea-e90f66196d63" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT CAST(12345 AS DECIMAL(7,2)) AS decimal_col;
+SELECT CAST(123.45 AS SIGNED) AS signed_col;
+SELECT CAST(&#x27;123.12&#x27; AS UNSIGNED INTEGER) AS unsigned_col;
+SELECT CAST(2.718 AS CHAR) AS char_col;
+SELECT CAST(&#x27;2023-03-19&#x27; AS CHAR) as string_col;
+SELECT CAST(&#x27;2023-03-19&#x27; AS DATE) as date_col;</code></pre></div></figure></div></figure><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-802a-9550-d99a7b90092d"><div style="width:100%"><p id="1b4d3011-3dd1-80de-acc1-ffc23b659ffa" class=""><strong>CONVERT</strong></p><hr id="1b4d3011-3dd1-8062-989b-c2b3fcb37053"/><ul id="1b4d3011-3dd1-80b1-a532-e740390e1474" class="bulleted-list"><li style="list-style-type:disc">Syntax:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-80fa-ab25-cbfb8496afe8" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">CONVERT(value, data_type CHARACTER SET character_set)
+CONVERT(value, data_type USING character_set)</code></pre><ul id="1b4d3011-3dd1-8017-8d2e-fad9bcd05171" class="bulleted-list"><li style="list-style-type:circle">The value is the value that you want to convert.</li></ul><ul id="1b4d3011-3dd1-802d-9330-dbea4d0e97de" class="bulleted-list"><li style="list-style-type:circle">The data_type the data type to which you want to convert the value.</li></ul><ul id="1b4d3011-3dd1-806e-996d-f4f858a034ab" class="bulleted-list"><li style="list-style-type:circle">the character_set is the character set that you want to use for the conversion.</li></ul></li></ul><ul id="1b4d3011-3dd1-807f-99fd-e975534b080c" class="bulleted-list"><li style="list-style-type:disc">Some examples of data types that you can convert to include CHAR, VARCHAR, TEXT, BINARY, VARBINARY, BLOB, DATE, TIME, and DATETIME.</li></ul><figure class="block-color-red_background callout" style="white-space:pre-wrap;display:flex" id="1b4d3011-3dd1-80a8-b7cd-fe32aa281e6c"><div style="width:100%"><p id="1b4d3011-3dd1-8061-bff2-ef84e9bb0d92" class=""><strong>Example</strong></p><hr id="1b4d3011-3dd1-8089-b57b-f01e2fc96358"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b4d3011-3dd1-80b1-ab24-dedbbc6128ba" class="code"><code class="language-SQL" style="white-space:pre-wrap;word-break:break-all">SELECT CONVERT(&#x27;hello&#x27;, CHAR(10) CHARACTER SET utf8) as char_value;
+SELECT CONVERT(&#x27;convert char set&#x27; USING utf8) as char_set_col;
+SELECT CONVERT(&#x27;convert char set to ASCII&#x27; USING ascii) as char_set_col;
+SELECT CONVERT(&#x27;2023-03-19&#x27;, DATETIME) as datetime_col;</code></pre></div></figure></div></figure></div></div></div></figure></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
