@@ -157297,7 +157297,7 @@ s($,"bo6","b4G",()=>{var q=t.T,p=A.ak("fe")
 return A.aY0(A.bbw(A.b9G(A.aSG("^",null),t.N),$.b4K(),q,p),new A.aN7(),q,p,p)})
 s($,"bly","aOW",()=>A.aVP())
 s($,"bob","b4J",()=>{var q=null,p=t.yo
-p=A.b([A.za(new A.aNc(),"/",A.b([A.za(new A.aNd(),"/ir_project",B.jx),A.za(new A.aNe(),"/web_project",A.b([A.za(new A.aNf(),"/apisdetail",B.jx)],p)),A.za(new A.aNg(),"/ecart_project",A.b([A.za(new A.aNh(),"/user_manual",B.jx)],p))],p))],p)
+p=A.b([A.za(new A.aNc(),"/",A.b([A.za(new A.aNd(),"/ir_project",B.jx),A.za(new A.aNe(),"/web_project",A.b([A.za(new A.aNf(),"apisdetail",B.jx)],p)),A.za(new A.aNg(),"/ecart_project",A.b([A.za(new A.aNh(),"user_manual",B.jx)],p))],p))],p)
 return A.b8p(!1,q,q,q,q,q,q,q,q,!1,q,!0,q,!1,new A.a18(new A.auV(p,A.bja(),5)))})
 r($,"bp_","aTK",()=>{var q=A.b([],A.ak("q<Tx>"))
 q.push(A.lj("assets/icons/expertises/html5.svg","HTML"))
