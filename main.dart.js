@@ -97632,13 +97632,13 @@ A.aNe.prototype={
 $2(a,b){return B.PE},
 $S:547}
 A.aNf.prototype={
-$2(a,b){return B.Xx},
+$2(a,b){return B.Xy},
 $S:209}
 A.aNg.prototype={
 $2(a,b){return B.OG},
 $S:549}
 A.aNh.prototype={
-$2(a,b){return B.Xy},
+$2(a,b){return B.Xx},
 $S:209}
 A.Vh.prototype={
 Y(a){var s=null
@@ -155319,8 +155319,8 @@ B.Xv=new A.HP(null)
 B.a9R=new A.VB(0,"start")
 B.Xw=new A.VB(1,"end")
 B.zu=new A.aoI(0,"max")
-B.Xx=new A.qN("assets/web_project/webproject_report.pdf","FESTA Project's APIs Detail",null)
-B.Xy=new A.qN("assets/ecart_project/user_manual.pdf","User Manual",null)
+B.Xx=new A.qN("ecart_project/user_manual.pdf","User Manual",null)
+B.Xy=new A.qN("web_project/webproject_report.pdf","FESTA Project's APIs Detail",null)
 B.Xz=new A.HT(null)
 B.XA=new A.qP("boomarkview",A.ak("qP<h>"))
 B.c3=new A.VI(0,"fill")
