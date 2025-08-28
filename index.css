@@ -1,0 +1,146 @@
+* {font-family: 'DM Sans', sans-serif;}
+
+body{
+  margin: 0px;
+  display:flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #FFFFC9;
+}
+
+nav{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background-color: #006c6ce0;
+}
+
+nav a{
+  color: #FFFFC9;
+  text-decoration: none;
+}
+
+nav a:hover{
+  color: #006c6ce0;
+  background-color: #FFFFC9;
+  text-decoration: none;
+}
+
+header{
+  text-align: center;
+  background-color: #006C6C;
+  color: #FFFFC9;
+}
+
+#listtile{
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-evenly;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.tile{
+  margin-left: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  background-color: #006C6C;
+  color: #FFFFC9;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.svg-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  border: 2px solid #006C6C;
+  background-color: #FFFFC9;
+  border-radius: 50%;
+}
+
+svg{
+  width: 40px;
+  height: 40px;
+}
+
+fieldset{
+  padding: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #006C6C;
+  border-radius: 5px;
+  width: 75vw;
+}
+
+h4 a, li a{
+  padding: 5px;
+  color: #006C6C;
+  text-decoration: none;
+}
+
+h4 a:hover, li a:hover{
+  color: #FFFFC9;
+  background-color: #006C6C;
+  padding: 5px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.collapsible {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #006C6C;
+  color: #FFFFC9;
+  cursor: pointer;
+  width: 75vw;
+  border: none;
+  border-radius: 5px;
+  text-align: left;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.collapsible:hover {
+  background-color: #FFFFC9;
+  color: #006C6C;
+  
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  background-color: #FFFFC9;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75vw;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.content.expanded {
+  background-color: #FFFFC9;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75vw;
+  overflow: visible;
+  border: 2px solid #006C6C;
+  border-radius: 5px;
+}
+
+footer{
+  margin-top: auto;
+  background-color: #006C6C;
+  color: #FFFFC9;
+  text-align: center;
+  padding: 5px;
+}
+footer a{color: #FFFFC9;}
+
+footer a:hover{color: #ffff62;}
+
+label{font-weight: bold;}
