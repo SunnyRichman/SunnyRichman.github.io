@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Xiang Cao Project Exhibition</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans">
+    <link rel="stylesheet" href="xiang_cao_project_exhibition.css">
+  </head>
+  <body>
+    <header><h1>Xiang Cao Project Exhibition</h1></header>
+    <nav>
+      <a href="index.html"><h3>Home</h3></a>
+      <a href="xiang_cao_project_exhibition.html"><h3>Xiang Cao Project Exhibition</h3></a>
+      <!-- <a href="festa_project_exhibition.html"><h3>FESTA Project Exhibition</h3></a> -->
+      <!-- <a href="e_cart_commerce_project.html"><h3>E-Cart Commerce Project</h3></a> -->
+    </nav>
+    <br>
+    <section>
+      <article id="article-container"></article>
+      <div>
+        <button id="leftArrow" onclick=previousImg()>❮</button>
+        <button id="rightArrow" onclick=nextImg()>❯</button>
+      </div>
+    </section>
+    <p id="caption"></p>
+    <button class="collapsible"><h3>Members and Roles</h3></button> 
+    <div class="content">
+      <ul>
+        <li>Mr.Ziyan Cheng (Data cleaner, Report)</li>
+        <li>Mr.Raweerot Bhasidhchirapiroch (Co-worker, Full-stack developer, Data cleaner, Report)</li>
+        <li>Mr.Napat Cholkuljana (Data cleaner, Report)</li>
+      </ul>
+    </div><br>
+
+    <button class="collapsible"><h3>Purpose</h3></button>
+    <div class="content">
+      <ul>
+        <li>introduce a web search engine dedicated to Chinese herbs, their properties</li>
+        <li>provide informative knowledge to people</li>
+        <li>help individuals use herbs efficiently and properly by offering detailed insights</li>
+      </ul>
+    </div><br>
+
+    <button class="collapsible"><h3>Existing Relavance Systems</h3></button>
+    <div class="content">
+      <ul>
+        <li style="font-weight: bold;">MeandQi.com</li>
+        <ul>
+          <li>offers a comprehensive database of Chinese herbs</li>
+          <li>providing information on their nature, taste, meridians, and usage</li>
+          <li>includes pictures and detailed descriptions of the herbs</li>
+        </ul>
+        <li style="font-weight: bold;">The Chinese Medicine Database (CMDB)</li>
+        <ul>
+          <li>an indispensable clinical tool and resource for practitioners, students, and scholars of Chinese medicine</li>
+          <li>includes monographs of over 690 single herbs, 1510 formulas, acupuncture points, and a medical Chinese dictionary with over 103,000 words</li>
+        </ul>
+      </ul>
+    </div><br>
+
+    <button class="collapsible"><h3>Tools</h3></button>
+    <div class="content">
+      <fieldset style="display: flex; padding: 0px; border: none;">
+        <div style="width: 50%;">
+          <ul>
+            <p style="font-weight: bold;">Web Page Part</p>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JavaScript</li>
+            <li>Node.js</li>
+          </ul>
+        </div>
+        <div style="width: 50%;">
+          <ul>
+            <p style="font-weight: bold;">Data Part</p>
+            <li>ElasticSearch</li>
+            <li>Kibana</li>
+          </ul>
+        </div>
+      </fieldset>
+    </div><br>
+
+    <button class="collapsible"><h3>Limitation</h3></button>
+    <div class="content">
+      <ul>
+        <p>Despite its many benefits, the search engine still faces several limitations:</p>
+        <li>The current database lacks a variety of herbs, limiting the scope of information available</li>
+        <li>Searching with common words often returns all herbs, making it difficult to find specific results</li>
+        <li>The user interface could benefit from further improvements to enhance usability and aesthetics</li>
+      </ul>
+    </div><br>
+
+    <button class="collapsible"><h3>Technical Difficulties</h3></button>
+    <div class="content">
+      <ul>
+        <p>Developing this search engine presented several technical challenges:</p>
+        <li>Implementing Kibana and Elasticsearch took considerable time due to their complexity</li>
+        <li>Data cleaning was a time-consuming process, necessary to ensure the accuracy and relevance of the information</li>
+        <li>Managing large datasets efficiently to prevent lag and ensure smooth operation</li>
+        <li>Integrating diverse sources of herbal information without causing data discrepancies.</li>
+      </ul>
+    </div><br>
+
+    <button class="collapsible"><h3>Lesson Learned</h3></button>
+    <div class="content">
+      <ul>
+        <p>Throughout this project, we gained valuable experience:</p>
+        <li>We learned how to effectively use Kibana and Elasticsearch to create a responsive and efficient search engine</li>
+        <li>We mastered the essential process of data cleaning to maintain a high-quality database.</li>
+        <li>We developed skills in managing and integrating large datasets efficiently.</li>
+      </ul>
+    </div><br>
+
+    <button class="collapsible"><h3>Opportunities for Future Improvements</h3></button>
+    <div class="content">
+      <ul>
+        <p>There are several opportunities for enhancing the search engine in future iterations:</p>
+        <li><p style="font-weight: bold;">Improve the interface:</p>Redesigning the user interface to make it more user-friendly and visually appealing</li>
+        <li><p style="font-weight: bold;">Expand the database:</p>Adding a wider variety of herbs to provide more comprehensive information</li>
+        <li><p style="font-weight: bold;">Enhance search accuracu:</p>Improving search algorithms to better handle common terms and deliver more precise results</li>
+        <li><p style="font-weight: bold;">Increase Data Sources:</p>Incorporating additional reliable sources for a more extensive and enriched herb database.</li>
+      </ul>
+    </div><br>
+
+    <button class="collapsible"><h3>Conclusion</h3></button>
+    <div class="content">
+      <ul>
+        <li>developed a web search engine for Chinese herbs using Kibana and Elasticsearch</li>
+        <li>aiding efficient use of traditional Chinese medicine</li>
+        <li>faced challenges like complex implementation and data cleaning but gained valuable skills</li>
+        <li>overall, this project has advanced our technical expertise and made Chinese medicinal knowledge more accessible</li>
+      </ul>
+    </div><br>
+    <br>
+
+    <footer>More info, see <a href ="https://github.com/SunnyRichman/2024_IR_Project.git">2024 IR Project - Repository</a></footer>
+    <script src="xiang_cao_project_exhibition.js"></script>
+  </body>
+</html>
