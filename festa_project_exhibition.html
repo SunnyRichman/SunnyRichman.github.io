@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>FESTA Project Exhibition</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans">
+    <link rel="stylesheet" href="festa_project_exhibition.css">
+  </head>
+  <body>
+    <header><h1>FESTA Project Exhibition</h1></header>
+    <nav>
+      <a href="index.html"><h3>Home</h3></a>
+      <a href="xiang_cao_project_exhibition.html"><h3>Xiang Cao Project Exhibition</h3></a>
+      <a href="festa_project_exhibition.html"><h3>FESTA Project Exhibition</h3></a>
+      <!-- <a href="e_cart_commerce_project.html"><h3>E-Cart Commerce Project</h3></a> -->
+    </nav>
+    <br>
+    <section>
+      <article id="article-container"></article>
+      <div>
+        <button id="leftArrow" onclick=previousImg()>❮</button>
+        <button id="rightArrow" onclick=nextImg()>❯</button>
+      </div>
+    </section>
+    <p id="caption"></p>
+    <button class="collapsible"><h3>Project Advisors</h3></button> 
+    <div class="content">
+      <ul>
+        <li><a class="advisor" href="https://www.ict.mahidol.ac.th/en/people/computer-science-academic-group/jidapa_kraisangka/">Asst. Prof. Dr. Jidapa Kraisangka</a></li>
+        <li><a class="advisor" href="https://www.ict.mahidol.ac.th/en/people/computer-science-academic-group/wudhichart_sawangphol/">Lect. Dr. Wudhichart Sawangphol</a></li>
+      </ul>
+    </div><br>
+    <button class="collapsible"><h3>Members and Roles</h3></button> 
+    <div class="content">
+      <ul>
+        <li>Mr.Engaugsorn Augsornthueng (Report)</li>
+        <li>Mr.Kongpum Bunkueakarunrak (Database, Report)</li>
+        <li>Mr.Shalom Inchoi (Front-end, Database, Report)</li>
+        <li>Mr.Punnavit Amatasriprasert (UX/UI, Report)</li>
+        <li>Mr.Raweerot Bhasidhchirapiroch (Full-stack, Database, Report)</li>
+      </ul>
+    </div><br>
+    <button class="collapsible"><h3>About this project</h3></button>
+    <div class="content">
+      <ul>
+        <li>The platform that sells the cassette tapes and vinyl discs from many artist of Thailand and International</li>
+        <li>Interface is based on some websites on the internet, but improved the appearance of ours to be attractive and easy to use for both customers and admin to manage the webpage</li>
+        <li>The information for each album is based on reliable sources such as MusicStax or Spotify</li>
+      </ul>
+    </div><br>
+    <button class="collapsible"><h3>Tools</h3></button>
+    <div class="content">
+      <div id = "listtile">
+      </div>
+    </div><br>
+
+    <button class="collapsible"><h3>APIs Detail</h3></button>
+    <div class="content">
+      <a id="api-button" href="assets/festa_project/webproject_report.pdf" class="api-link">Tap to see APIs detail</a>
+    </div><br>
+    <footer>More info, see <a href ="https://github.com/SunnyRichman/FESTA-Project.git">Festa Project - Github Repository</a></footer>
+    <script src="festa_project_exhibition.js"></script>
+  </body>
+</html>
