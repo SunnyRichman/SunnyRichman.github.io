@@ -17,7 +17,7 @@
       <img src="assets/profile.png" style="width: 150px; height: 150px; border-radius: 50%;">&nbsp;&nbsp;&nbsp;&nbsp;
       <div>
         <h1 style="text-align: center">Raweerot Bhasidhchirapiroch</h1>
-        <p>As a Software Engineering student at Mahidol University, I specialize in web development, search engine implementation, and mobile programming. Driven by curiosity and continuous learning, I am seeking opportunities to gain industry experience and contribute to impactful projects beyond my academic studies.</p>
+        <p style="font-style: italic;">"As a Software Engineering student at Mahidol University, I specialize in web development, search engine implementation, and mobile programming. Driven by curiosity and continuous learning, I am seeking opportunities to gain industry experience and contribute to impactful projects beyond my academic studies."</p>
       </div>
     </div>
 
@@ -44,28 +44,51 @@
     </div>
     </div><br>
 
-    <button class="collapsible"><h3>Experiences/Activities</h3></button>
+    <button class="collapsible"><h3>Course Projects</h3></button>
     <div class="content">
       <ul>
-        <li>Xiang Cao Project(Course Project, 2024, September - November)
+        <li>Xiang Cao Project (Course Project, 2024, September - November)
           <ul>
             <li>A part of ITCS414 Introduction to Information Retrieval Systems</li>
             <li>Search engine implementation for Chinese herb seeking</li>
-            <li>Tools: ElasticSearch, Kibana, HTML, CSS, JavaScript, and Node.js.</li>
+            <li>Tools:
+              <select class="toolSelect" onchange="showToolInfo(event)">
+                <option value="">-- Select a tool --</option>
+                <option value="elasticsearch">ElasticSearch</option>
+                <option value="kibana">Kibana</option>
+                <option value="openai">OpenAI</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="nodejs">Node.js</option>
+              </select>&nbsp;<span class="toolInfo"></span>
+            </li>
+            <li><a href = "https://github.com/SunnyRichman/Xiang-Cao-Project.git">Link to Github Repository</a></li>
           </ul>
         </li>
         <li>FESTA Project(Course Project, 2024, January - April)
           <ul>
             <li>A part of ITCS212 Web Programming</li>
             <li>Web application for selling vinyl discs and cassette tapes</li>
-            <li>Tools: HTML, CSS, JavaScript, Node.js, and MySQL</li>
+            <li>Tools:
+              <select class="toolSelect" onchange="showToolInfo(event)">
+                <option value="">-- Select a tool --</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="nodejs">Node.js</option>
+                <option value="mysql">MySQL</option>
+              </select>&nbsp;<span class="toolInfo"></span>
+            </li>
+            <li><a href = "https://github.com/SunnyRichman/FESTA-Project.git">Link to Github Repository</a></li>
           </ul>
         </li>
         <li>E-Cart Commerce System Project(Course Project, 2023, August - September)
           <ul>
             <li>A part of ITCS231 Data Structure and Algorithms</li>
             <li>Console-based application for selling the product</li>
-            <li>Tools: Java</li>
+            <li>Tools: Java: A versatile, object-oriented programming language widely used for building cross-platform applications.</li>
+            <li><a href = "https://github.com/SunnyRichman/E-Commerce-Cart-System">Link to Github Repository</a></li>
           </ul>
         </li>
       </ul>

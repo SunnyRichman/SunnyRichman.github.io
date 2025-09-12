@@ -69,6 +69,11 @@ svg{
   height: 40px;
 }
 
+select{
+  background-color: #FFFFC9;
+  border-radius: 5px;
+}
+
 fieldset{
   padding: 0px;
   margin-left: auto;

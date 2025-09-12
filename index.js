@@ -37,6 +37,29 @@ for(let i=0;i<skillArr.length;i++){
   listtile.appendChild(tile);
 }
 
+const toolDescriptions = {
+  elasticsearch: "A powerful search and analytics engine used for full-text search.",
+  kibana: "A data visualization dashboard for Elasticsearch.",
+  openai: "Generative AI use to clean data",
+  html: "The standard markup language for creating web pages.",
+  css: "Stylesheet language used to control the appearance of web pages.",
+  javascript: "Programming language that enables interactivity in web applications.",
+  nodejs: "JavaScript runtime environment for building scalable server-side applications.",
+  mysql: "A widely used relational database management system for storing and managing data.",
+};
+
+function showToolInfo(event) {
+  const select = event.target; // the dropdown that was changed
+  const selected = select.value;
+  const infoSpan = select.nextElementSibling; // the <span> right after the select
+
+  if (selected && toolDescriptions[selected]) {
+    infoSpan.textContent = toolDescriptions[selected];
+  } else {
+    infoSpan.textContent = "";
+  }
+}
+
 
 var coll = document.getElementsByClassName("collapsible");
 var i;
