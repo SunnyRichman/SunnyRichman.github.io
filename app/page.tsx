@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TypewriterHeading } from "@/components/typewriter-heading";
 import {
   ArrowUpRight,
   Check,
@@ -172,12 +173,7 @@ export default function Page() {
               </figcaption>
             </figure>
             <div className="order-1 min-w-0 sm:order-2">
-              <h1 className="max-w-4xl font-mono text-3xl font-bold leading-[1.1] tracking-[-0.04em] text-[#006C6C] sm:text-6xl lg:text-8xl">
-                &gt; Hello, I&apos;m
-                <br />
-                <span className="text-[#0035AD]">Raweerot</span>
-                <span className="text-[#AA800E]">_</span>
-              </h1>
+              <TypewriterHeading />
             </div>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-3">
