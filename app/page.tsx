@@ -1,0 +1,435 @@
+"use client";
+
+import { useState } from "react";
+import {
+  ArrowUpRight,
+  Check,
+  Code2,
+  ExternalLink,
+  GitBranch,
+  Mail,
+  Menu,
+  Phone,
+  Terminal,
+  UsersRound,
+  X,
+} from "lucide-react";
+
+const projects = [
+  {
+    number: "01",
+    title: "AFC — Audit Financial Management",
+    type: "Enterprise web application",
+    description:
+      "A decision-support platform that evaluates customer financial performance and investment viability through focused dashboards and secure data workflows.",
+    stack: ["VueJS", "Vuetify", "PHP Laravel", "PostgreSQL"],
+    accent: "navy",
+  },
+  {
+    number: "02",
+    title: "AMS — Audit Management System",
+    type: "Document audit platform",
+    description:
+      "A multi-tier document verification platform with clear status tracking, audit logs, and RESTful APIs designed for stakeholder collaboration.",
+    stack: ["VueJS", "PHP Laravel", "REST API", "GitLab"],
+    accent: "green",
+  },
+];
+
+const skillGroups = [
+  {
+    label: "development",
+    items: [
+      "Java",
+      "Python",
+      "JavaScript",
+      "HTML / CSS",
+      "VueJS",
+      "Dart",
+      "Flutter",
+    ],
+  },
+  {
+    label: "backend + data",
+    items: [
+      "Node.js",
+      "Express",
+      "Spring",
+      "PHP Laravel",
+      "MySQL",
+      "PostgreSQL",
+    ],
+  },
+  {
+    label: "cloud + delivery",
+    items: [
+      "AWS VPC / EC2",
+      "Docker",
+      "GitHub Actions",
+      "Git",
+      "GitHub",
+      "GitLab",
+      "GCP",
+    ],
+  },
+  {
+    label: "observability",
+    items: ["Elasticsearch", "Kibana", "JUnit", "Agile", "Scrum"],
+  },
+];
+
+export default function Page() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <main className="min-h-screen overflow-x-hidden bg-[#FAFAFA] text-[#17202A]">
+      <nav className="sticky top-0 z-50 border-b border-[#006C6C]/15 bg-[#FAFAFA]/90 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-10">
+          <a
+            href="#top"
+            className="font-mono text-sm font-bold tracking-tight text-[#006C6C]"
+            aria-label="Sunny home"
+          >
+            sunny<span className="text-[#AA800E]">.</span>dev
+          </a>
+          <div className="hidden items-center gap-8 md:flex">
+            {["about", "work", "stack", "contact"].map((item) => (
+              <a
+                key={item}
+                href={`#${item}`}
+                className="font-mono text-xs uppercase tracking-[0.18em] text-[#17202A]/65 transition-colors hover:text-[#AA800E]"
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+          <div className="hidden items-center gap-3 md:flex">
+            <a
+              href="https://github.com/SunnyRichman"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+              className="rounded-full p-2 text-[#0035AD] transition-colors hover:bg-[#FFFFC9] hover:text-[#AA800E]"
+            >
+              <GitBranch size={17} />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/sunnyict20/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="rounded-full p-2 text-[#0035AD] transition-colors hover:bg-[#FFFFC9] hover:text-[#AA800E]"
+            >
+              <UsersRound size={17} />
+            </a>
+          </div>
+          <button
+            className="md:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+        {menuOpen && (
+          <div className="border-t border-[#006C6C]/10 bg-[#FAFAFA] px-6 py-4 md:hidden">
+            {["about", "work", "stack", "contact"].map((item) => (
+              <a
+                onClick={() => setMenuOpen(false)}
+                key={item}
+                href={`#${item}`}
+                className="block py-2 font-mono text-xs uppercase tracking-[0.18em] text-[#17202A]/70"
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        )}
+      </nav>
+
+      <section
+        id="top"
+        className="relative mx-auto max-w-6xl px-6 pb-24 pt-24 lg:px-10 lg:pb-36 lg:pt-36"
+      >
+        <div
+          className="absolute right-10 top-16 hidden h-56 w-56 rounded-full bg-[#FFFFC9] blur-3xl lg:block"
+          aria-hidden="true"
+        />
+        <div className="relative max-w-4xl">
+          <div className="mb-7 flex items-center gap-3 font-mono text-xs tracking-[0.2em] text-[#006C6C]">
+            <span className="h-px w-8 bg-[#AA800E]" /> AVAILABLE FOR
+            OPPORTUNITIES
+          </div>
+          <div className="flex flex-row items-center gap-5 sm:gap-8">
+            <figure className="order-2 shrink-0 text-center sm:order-1 flex flex-col items-center">
+              <img
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/624473819_1882084552400402_5295881247465332127_n-tx2f1vNaLnu1KXBFrytsCKGs4IlhTS.jpg"
+                alt="Raweerot in a denim jacket at a shopping mall"
+                className="h-44 w-44 rounded-full border-4 border-white object-cover object-center shadow-[0_8px_28px_rgba(0,53,173,0.18)] sm:h-80 sm:w-80 lg:h-96 lg:w-96"
+              />
+              <figcaption className="mt-2.5 max-w-[200px] text-center font-mono text-[20px] leading-4 text-[#17202A]/60 sm:max-w-[400px]">
+                Raweerot Bhasidhchirapiroch (Sunny)
+              </figcaption>
+            </figure>
+            <div className="order-1 min-w-0 sm:order-2">
+              <h1 className="max-w-4xl font-mono text-3xl font-bold leading-[1.1] tracking-[-0.04em] text-[#006C6C] sm:text-6xl lg:text-8xl">
+                &gt; Hello, I&apos;m
+                <br />
+                <span className="text-[#0035AD]">Raweerot</span>
+                <span className="text-[#AA800E]">_</span>
+              </h1>
+            </div>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <span className="rounded-full border border-[#0035AD] bg-[#0035AD] px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white">
+              Software Engineering · Full Stack Developer
+            </span>
+            <span className="font-mono text-xs text-[#17202A]/55">
+              / mahidol ICT
+            </span>
+          </div>
+          <p className="mt-8 max-w-2xl text-lg leading-8 text-[#17202A]/70">
+            Software Engineering graduate with enterprise experience building
+            full-stack systems. I care about cloud infrastructure, workflow
+            automation, and clean architecture that keeps teams moving.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <a
+              href="#work"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#006C6C] px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#0035AD]"
+            >
+              Explore my work{" "}
+              <ArrowUpRight
+                size={15}
+                className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+              />
+            </a>
+            <a
+              href="mailto:hoylordzbaby@gmail.com"
+              className="inline-flex items-center gap-2 rounded-full border border-[#006C6C]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.15em] text-[#006C6C] transition-colors hover:border-[#AA800E] hover:text-[#AA800E]"
+            >
+              Get in touch <Mail size={14} />
+            </a>
+          </div>
+        </div>
+        <div className="mt-24 grid max-w-3xl grid-cols-2 gap-y-8 border-t border-[#006C6C]/15 pt-6 sm:grid-cols-4">
+          <Stat value="3.16" label="GPA / 4.00" />
+          <Stat value="2026" label="Graduating" />
+          <Stat value="2+" label="Enterprise systems" />
+          <Stat value="B2" label="English level" />
+        </div>
+      </section>
+
+      <section id="about" className="border-y border-[#006C6C]/15 bg-white">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-28">
+          <SectionLabel index="01" title="About me" />
+          <div>
+            <p className="max-w-2xl text-2xl leading-relaxed text-[#17202A]">
+              I enjoy sitting between product code and production systems —
+              making software useful, observable, and easier to operate.
+            </p>
+            <div className="mt-10 grid gap-6 sm:grid-cols-2">
+              <Info
+                label="education"
+                value="B.Sc. ICT · Software Engineering"
+                detail="Mahidol University · 2022—2026"
+              />
+              <Info
+                label="experience"
+                value="Full-stack Developer Intern"
+                detail="Toyota Tsusho Nexty · Jan—Mar 2026"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="work"
+        className="mx-auto max-w-6xl px-6 py-20 lg:px-10 lg:py-28"
+      >
+        <div className="mb-12 flex items-end justify-between">
+          <SectionLabel index="02" title="Selected work" />
+          <span className="hidden font-mono text-xs text-[#17202A]/45 sm:block">
+            (01-02)
+          </span>
+        </div>
+        <div className="grid gap-5 lg:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard key={project.number} project={project} />
+          ))}
+        </div>
+      </section>
+
+      <section id="stack" className="bg-[#0035AD] text-white">
+        <div className="mx-auto max-w-6xl px-6 py-20 lg:px-10 lg:py-28">
+          <div className="mb-12 flex items-end justify-between">
+            <div>
+              <span className="font-mono text-xs tracking-[0.2em] text-[#FFC726]">
+                03 / TOOLKIT
+              </span>
+              <h2 className="mt-3 font-mono text-3xl font-bold sm:text-4xl">
+                Built with intention<span className="text-[#FFC726]">.</span>
+              </h2>
+            </div>
+            <Terminal className="hidden text-[#FFC726] sm:block" size={30} />
+          </div>
+          <div className="grid gap-px overflow-hidden rounded-2xl border border-white/20 bg-white/20 sm:grid-cols-2 lg:grid-cols-4">
+            {skillGroups.map((group) => (
+              <div key={group.label} className="bg-[#0035AD] p-6">
+                <h3 className="mb-6 font-mono text-xs uppercase tracking-[0.16em] text-[#FFC726]">
+                  {group.label}
+                </h3>
+                <ul className="space-y-3">
+                  {group.items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-center gap-2 text-sm text-white/80"
+                    >
+                      <Check size={14} className="text-[#FFC726]" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="contact"
+        className="mx-auto max-w-6xl px-6 py-20 lg:px-10 lg:py-28"
+      >
+        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <SectionLabel index="04" title="Let's connect" />
+          <div>
+            <h2 className="max-w-xl font-mono text-3xl font-bold leading-tight text-[#006C6C] sm:text-5xl">
+              Have a problem worth solving?
+            </h2>
+            <p className="mt-6 max-w-lg leading-7 text-[#17202A]/65">
+              Whether it&apos;s building a better workflow, shipping a new
+              product, or making infrastructure less mysterious — I&apos;d love
+              to hear about it.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="mailto:hoylordzbaby@gmail.com"
+                className="inline-flex items-center gap-2 rounded-full border border-[#AA800E]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#AA800E] hover:border-[#AA800E]"
+              >
+                <Mail size={14} /> Email me
+              </a>
+              <a
+                href="tel:0648131412"
+                className="inline-flex items-center gap-2 rounded-full border border-[#006C6C]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#006C6C] hover:border-[#006C6C]"
+              >
+                <Phone size={14} /> 064-8131412
+              </a>
+              <a
+                href="https://www.linkedin.com/in/sunnyict20/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-[#0035AD]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#0035AD] hover:border-[#0035AD]"
+              >
+                <ExternalLink size={14} /> LinkedIn
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-[#006C6C]/15">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-7 font-mono text-xs text-[#17202A]/50 sm:flex-row sm:items-center sm:justify-between lg:px-10">
+          <span>© 2026 Raweerot Bhasidhchirapiroch</span>
+          <span>
+            made with curiosity + care<span className="text-[#AA800E]">.</span>
+          </span>
+        </div>
+      </footer>
+    </main>
+  );
+}
+
+function Stat({ value, label }: { value: string; label: string }) {
+  return (
+    <div>
+      <div className="font-mono text-2xl font-bold text-[#0035AD]">{value}</div>
+      <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[#17202A]/45">
+        {label}
+      </div>
+    </div>
+  );
+}
+function SectionLabel({ index, title }: { index: string; title: string }) {
+  return (
+    <div>
+      <span className="font-mono text-xs tracking-[0.2em] text-[#AA800E]">
+        {index} /
+      </span>
+      <h2 className="mt-2 font-mono text-2xl font-bold text-[#006C6C]">
+        {title}
+        <span className="text-[#AA800E]">.</span>
+      </h2>
+    </div>
+  );
+}
+function Info({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+}) {
+  return (
+    <div className="border-l-2 border-[#AA800E] pl-4">
+      <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#17202A]/45">
+        {label}
+      </div>
+      <div className="mt-2 font-mono text-sm font-bold text-[#006C6C]">
+        {value}
+      </div>
+      <div className="mt-1 text-sm text-[#17202A]/55">{detail}</div>
+    </div>
+  );
+}
+function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+  const color =
+    project.accent === "navy"
+      ? "#0035AD"
+      : project.accent === "gold"
+        ? "#AA800E"
+        : "#006C6C";
+  return (
+    <article className="group flex min-h-[390px] flex-col rounded-2xl border border-[#006C6C]/20 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#AA800E] hover:shadow-[6px_6px_0_#FFFFC9]">
+      <div className="flex items-center justify-between font-mono text-xs text-[#17202A]/40">
+        <span>
+          {project.number} / 0{projects.length}
+        </span>
+        <span style={{ color }}>●</span>
+      </div>
+      <div className="mt-10">
+        <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-[#17202A]/45">
+          {project.type}
+        </div>
+        <h3 className="font-mono text-xl font-bold leading-snug text-[#006C6C]">
+          {project.title}
+        </h3>
+        <p className="mt-5 text-sm leading-6 text-[#17202A]/65">
+          {project.description}
+        </p>
+      </div>
+      <div className="mt-auto flex flex-wrap gap-2 pt-8">
+        {project.stack.map((item) => (
+          <span
+            key={item}
+            className="rounded-full bg-[#FFFFC9] px-2 py-1 font-mono text-[10px] text-[#0035AD]"
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+    </article>
+  );
+}
