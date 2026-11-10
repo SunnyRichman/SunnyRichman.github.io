@@ -3,7 +3,17 @@
 import { useState } from "react";
 import { TypewriterHeading } from "@/components/typewriter-heading";
 import { GitHubLogo, LinkedInLogo, GmailLogo } from "@/components/social-logos";
-import { ArrowUpRight, Check, ExternalLink, Mail, Menu, Phone, Terminal, X } from "lucide-react";
+import {
+  ArrowUp,
+  ArrowUpRight,
+  Check,
+  ExternalLink,
+  Mail,
+  Menu,
+  Phone,
+  Terminal,
+  X,
+} from "lucide-react";
 
 const projects = [
   {
@@ -307,6 +317,13 @@ export default function Page() {
                 <LinkedInLogo />
               </a>
             </div>
+            <a
+              href="#top"
+              aria-label="Back to top"
+              className="ml-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#006C6C]/25 text-[#006C6C] transition-colors hover:border-[#006C6C]"
+            >
+              <ArrowUp size={16} aria-hidden="true" />
+            </a>
           </div>
         </div>
       </section>
