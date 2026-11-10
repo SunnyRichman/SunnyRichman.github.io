@@ -2,19 +2,8 @@
 
 import { useState } from "react";
 import { TypewriterHeading } from "@/components/typewriter-heading";
-import {
-  ArrowUpRight,
-  Check,
-  Code2,
-  ExternalLink,
-  GitBranch,
-  Mail,
-  Menu,
-  Phone,
-  Terminal,
-  UsersRound,
-  X,
-} from "lucide-react";
+import { GitHubLogo, LinkedInLogo, GmailLogo } from "@/components/social-logos";
+import { ArrowUpRight, Check, ExternalLink, Mail, Menu, Phone, Terminal, X } from "lucide-react";
 
 const projects = [
   {
@@ -103,26 +92,6 @@ export default function Page() {
                 {item}
               </a>
             ))}
-          </div>
-          <div className="hidden items-center gap-3 md:flex">
-            <a
-              href="https://github.com/SunnyRichman"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-              className="rounded-full p-2 text-[#0035AD] transition-colors hover:bg-[#FFFFC9] hover:text-[#AA800E]"
-            >
-              <GitBranch size={17} />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/sunnyict20/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              className="rounded-full p-2 text-[#0035AD] transition-colors hover:bg-[#FFFFC9] hover:text-[#AA800E]"
-            >
-              <UsersRound size={17} />
-            </a>
           </div>
           <button
             className="md:hidden"
@@ -313,21 +282,29 @@ export default function Page() {
                 href="mailto:hoylordzbaby@gmail.com"
                 className="inline-flex items-center gap-2 rounded-full border border-[#AA800E]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#AA800E] hover:border-[#AA800E]"
               >
-                <Mail size={14} /> Email me
+                <GmailLogo />
               </a>
               <a
                 href="tel:0648131412"
                 className="inline-flex items-center gap-2 rounded-full border border-[#006C6C]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#006C6C] hover:border-[#006C6C]"
               >
-                <Phone size={14} /> 064-8131412
+                <Phone size={14} />
+              </a>
+              <a
+                href="https://github.com/SunnyRichman"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-[#17202A]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#17202A] hover:border-[#17202A]"
+              >
+                <GitHubLogo />
               </a>
               <a
                 href="https://www.linkedin.com/in/sunnyict20/"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-[#0035AD]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#0035AD] hover:border-[#0035AD]"
+                className="inline-flex items-center gap-2 rounded-full border border-[#0A66C2]/25 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#0A66C2] hover:border-[#0A66C2]"
               >
-                <ExternalLink size={14} /> LinkedIn
+                <LinkedInLogo />
               </a>
             </div>
           </div>
