@@ -7,7 +7,6 @@ import {
   ArrowUp,
   ArrowUpRight,
   Check,
-  ExternalLink,
   Mail,
   Menu,
   Phone,
@@ -15,24 +14,83 @@ import {
   X,
 } from "lucide-react";
 
-const projects = [
+const projectGroups = [
   {
-    number: "01",
-    title: "AFC — Audit Financial Management",
-    type: "Enterprise web application",
-    description:
-      "A decision-support platform that evaluates customer financial performance and investment viability through focused dashboards and secure data workflows.",
-    stack: ["VueJS", "Vuetify", "PHP Laravel", "PostgreSQL"],
-    accent: "navy",
+    title: "Enterprise Experience",
+    projects: [
+      {
+        number: "01",
+        title: "AFC — Audit Financial Management",
+        type: "Enterprise web application",
+        organization: "Toyota Tsusho Nexty Electronics (Thailand) Co., Ltd.",
+        description:
+          "A decision-support platform that evaluates customer financial performance and investment viability through focused dashboards and secure data workflows.",
+        details: [],
+        stack: ["VueJS", "Vuetify", "PHP Laravel", "PostgreSQL"],
+        accent: "navy",
+      },
+      {
+        number: "02",
+        title: "AMS — Audit Management System",
+        type: "Document audit platform",
+        organization: "Toyota Tsusho Nexty Electronics (Thailand) Co., Ltd.",
+        description:
+          "A multi-tier document verification platform with clear status tracking, audit logs, and RESTful APIs designed for stakeholder collaboration.",
+        details: [],
+        stack: ["VueJS", "PHP Laravel", "REST API", "GitLab"],
+        accent: "green",
+      },
+    ],
   },
   {
-    number: "02",
-    title: "AMS — Audit Management System",
-    type: "Document audit platform",
-    description:
-      "A multi-tier document verification platform with clear status tracking, audit logs, and RESTful APIs designed for stakeholder collaboration.",
-    stack: ["VueJS", "PHP Laravel", "REST API", "GitLab"],
-    accent: "green",
+    title: "Senior Project",
+    projects: [
+      {
+        number: "03",
+        title: "Wachsia",
+        type: "Eco-friendly shopping mobile app",
+        description:
+          "A mobile application encouraging eco-friendly purchasing through a tree-growing mini-game powered by real-time reward point accumulation.",
+        details: [
+          "Built the cross-platform frontend and application logic with Dart and Flutter for a responsive, intuitive experience.",
+          "Developed Node.js REST APIs for product catalogs, user statistics, and point transactions.",
+          "Containerized backend services with Docker and deployed to Google Cloud Platform Compute Engine.",
+        ],
+        stack: ["Dart", "Flutter", "Node.js", "Docker", "GCP"],
+        accent: "gold",
+      },
+    ],
+  },
+  {
+    title: "Selected Course Projects",
+    projects: [
+      {
+        number: "04",
+        title: "Xiang Cao Project",
+        type: "ITCS414 · Information Retrieval and Storage",
+        description:
+          "Implemented a search engine system using Elasticsearch and Kibana for effective data indexing, retrieval, and visualization.",
+        details: [
+          "Built a responsive web interface with HTML, CSS, JavaScript, and Node.js, integrated through RESTful APIs.",
+          "Used generative AI tools to assist with data cleaning and improve data quality and search precision.",
+        ],
+        stack: ["Elasticsearch", "Kibana", "Node.js", "JavaScript"],
+        accent: "navy",
+      },
+      {
+        number: "05",
+        title: "FESTA Project",
+        type: "ITCS212 · Web Programming",
+        description:
+          "Demonstrated dynamic web application development with an interactive webpage built using HTML, CSS, and JavaScript.",
+        details: [
+          "Integrated backend functionality through RESTful APIs.",
+          "Connected a MySQL database for structured data management and client-server communication.",
+        ],
+        stack: ["HTML", "CSS", "JavaScript", "REST API", "MySQL"],
+        accent: "green",
+      },
+    ],
   },
 ];
 
@@ -127,10 +185,7 @@ export default function Page() {
         )}
       </nav>
 
-      <section
-        id="top"
-        className="relative mx-auto max-w-6xl px-6 pb-24 pt-24 lg:px-10 lg:pb-36 lg:pt-36"
-      >
+      <section id="top" className="relative mx-auto max-w-6xl px-6 pb-16 pt-16">
         <div
           className="absolute right-10 top-16 hidden h-56 w-56 rounded-full bg-[#FFFFC9] blur-3xl lg:block"
           aria-hidden="true"
@@ -187,7 +242,7 @@ export default function Page() {
             </a>
           </div>
         </div>
-        <div className="mt-24 grid max-w-3xl grid-cols-2 gap-y-8 border-t border-[#006C6C]/15 pt-6 sm:grid-cols-4">
+        <div className="mt-12 grid max-w-3xl grid-cols-2 gap-y-8 border-t border-[#006C6C]/15 pt-6 sm:grid-cols-4">
           <Stat value="3.16" label="GPA / 4.00" />
           <Stat value="2026" label="Graduating" />
           <Stat value="2+" label="Enterprise systems" />
@@ -196,7 +251,7 @@ export default function Page() {
       </section>
 
       <section id="about" className="border-y border-[#006C6C]/15 bg-white">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-28">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-16 lg:grid-cols-[0.8fr_1.2fr]">
           <SectionLabel index="01" title="About me" />
           <div>
             <p className="max-w-2xl text-2xl leading-relaxed text-[#17202A]">
@@ -219,25 +274,35 @@ export default function Page() {
         </div>
       </section>
 
-      <section
-        id="work"
-        className="mx-auto max-w-6xl px-6 py-20 lg:px-10 lg:py-28"
-      >
+      <section id="work" className="mx-auto max-w-6xl px-6 pb-16 pt-16">
         <div className="mb-12 flex items-end justify-between">
           <SectionLabel index="02" title="Selected work" />
           <span className="hidden font-mono text-xs text-[#17202A]/45 sm:block">
-            (01-02)
+            (01-05)
           </span>
         </div>
-        <div className="grid gap-5 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.number} project={project} />
+        <div className="space-y-14">
+          {projectGroups.map((group) => (
+            <div key={group.title}>
+              <h3 className="mb-5 font-mono text-sm font-bold uppercase tracking-[0.14em] text-[#0035AD]">
+                {group.title}
+              </h3>
+              <div className="grid gap-5 md:grid-cols-2">
+                {group.projects.map((project) => (
+                  <ProjectCard
+                    key={project.number}
+                    project={project}
+                    total={5}
+                  />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </section>
 
       <section id="stack" className="bg-[#0035AD] text-white">
-        <div className="mx-auto max-w-6xl px-6 py-20 lg:px-10 lg:py-28">
+        <div className="mx-auto max-w-6xl px-6 pb-16 pt-16">
           <div className="mb-12 flex items-end justify-between">
             <div>
               <span className="font-mono text-xs tracking-[0.2em] text-[#FFC726]">
@@ -272,10 +337,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section
-        id="contact"
-        className="mx-auto max-w-6xl px-6 py-20 lg:px-10 lg:py-28"
-      >
+      <section id="contact" className="mx-auto max-w-6xl px-6 pb-16 pt-16">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <SectionLabel index="04" title="Let's connect" />
           <div>
@@ -384,7 +446,13 @@ function Info({
     </div>
   );
 }
-function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+function ProjectCard({
+  project,
+  total,
+}: {
+  project: (typeof projectGroups)[number]["projects"][number];
+  total: number;
+}) {
   const color =
     project.accent === "navy"
       ? "#0035AD"
@@ -395,20 +463,38 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
     <article className="group flex min-h-[390px] flex-col rounded-2xl border border-[#006C6C]/20 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#AA800E] hover:shadow-[6px_6px_0_#FFFFC9]">
       <div className="flex items-center justify-between font-mono text-xs text-[#17202A]/40">
         <span>
-          {project.number} / 0{projects.length}
+          {project.number} / {String(total).padStart(2, "0")}
         </span>
         <span style={{ color }}>●</span>
       </div>
-      <div className="mt-10">
+      <div className="mt-8">
         <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-[#17202A]/45">
           {project.type}
         </div>
-        <h3 className="font-mono text-xl font-bold leading-snug text-[#006C6C]">
+        <h4 className="font-mono text-xl font-bold leading-snug text-[#006C6C]">
           {project.title}
-        </h3>
-        <p className="mt-5 text-sm leading-6 text-[#17202A]/65">
+        </h4>
+        {"organization" in project && (
+          <p className="mt-2 font-mono text-xs font-semibold leading-5 text-[#AA800E]">
+            {project.organization}
+          </p>
+        )}
+        <p className="mt-4 text-sm leading-6 text-[#17202A]/65">
           {project.description}
         </p>
+        {project.details.length > 0 && (
+          <ul className="mt-4 space-y-2 text-sm leading-6 text-[#17202A]/65">
+            {project.details.map((detail) => (
+              <li key={detail} className="flex gap-2">
+                <span
+                  aria-hidden="true"
+                  className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#AA800E]"
+                />
+                <span>{detail}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div className="mt-auto flex flex-wrap gap-2 pt-8">
         {project.stack.map((item) => (
