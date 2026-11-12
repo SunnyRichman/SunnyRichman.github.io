@@ -145,12 +145,20 @@ export default function Page() {
     const topSection = document.getElementById("top");
     if (!topSection) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setShowBackToTop(!entry.isIntersecting);
-    });
-    observer.observe(topSection);
+    const updateVisibility = () => {
+      const shouldShow =
+        topSection.getBoundingClientRect().bottom <= window.innerHeight * 0.5;
+      setShowBackToTop(shouldShow);
+    };
 
-    return () => observer.disconnect();
+    updateVisibility();
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    window.addEventListener("resize", updateVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", updateVisibility);
+      window.removeEventListener("resize", updateVisibility);
+    };
   }, []);
 
   return (
@@ -399,15 +407,7 @@ export default function Page() {
                 <LinkedInLogo />
               </a>
             </div>
-            {showBackToTop && (
-              <a
-                href="#top"
-                aria-label="Back to top"
-                className="ml-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#006C6C]/25 text-[#006C6C] transition-colors hover:border-[#006C6C]"
-              >
-                <ArrowUp size={16} aria-hidden="true" />
-              </a>
-            )}
+
           </div>
         </div>
       </section>
@@ -420,6 +420,15 @@ export default function Page() {
           </span>
         </div>
       </footer>
+      {showBackToTop && (
+        <a
+          href="#top"
+          aria-label="Back to top"
+          className="animate-float-up fixed bottom-6 right-6 z-[60] flex h-11 w-11 items-center justify-center rounded-full border border-[#006C6C]/30 bg-[#FAFAFA] text-[#006C6C] shadow-md transition-colors hover:border-[#006C6C] hover:bg-[#FFFFC9] sm:bottom-8 sm:right-8"
+        >
+          <ArrowUp size={16} aria-hidden="true" />
+        </a>
+      )}
     </main>
   );
 }
