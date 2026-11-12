@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TypewriterHeading } from "@/components/typewriter-heading";
 import { GitHubLogo, LinkedInLogo, GmailLogo } from "@/components/social-logos";
 import {
   ArrowUp,
   ArrowUpRight,
   Check,
+  ExternalLink,
   Mail,
   Menu,
   Phone,
@@ -138,6 +139,19 @@ const skillGroups = [
 
 export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const topSection = document.getElementById("top");
+    if (!topSection) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowBackToTop(!entry.isIntersecting);
+    });
+    observer.observe(topSection);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#FAFAFA] text-[#17202A]">
@@ -274,7 +288,10 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="work" className="mx-auto max-w-6xl px-6 pb-16 pt-16">
+      <section
+        id="work"
+        className="mx-auto max-w-6xl px-6 pb-16 pt-16"
+      >
         <div className="mb-12 flex items-end justify-between">
           <SectionLabel index="02" title="Selected work" />
           <span className="hidden font-mono text-xs text-[#17202A]/45 sm:block">
@@ -337,7 +354,10 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="contact" className="mx-auto max-w-6xl px-6 pb-16 pt-16">
+      <section
+        id="contact"
+        className="mx-auto max-w-6xl px-6 pb-16 pt-16"
+      >
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <SectionLabel index="04" title="Let's connect" />
           <div>
@@ -379,13 +399,15 @@ export default function Page() {
                 <LinkedInLogo />
               </a>
             </div>
-            <a
-              href="#top"
-              aria-label="Back to top"
-              className="ml-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#006C6C]/25 text-[#006C6C] transition-colors hover:border-[#006C6C]"
-            >
-              <ArrowUp size={16} aria-hidden="true" />
-            </a>
+            {showBackToTop && (
+              <a
+                href="#top"
+                aria-label="Back to top"
+                className="ml-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#006C6C]/25 text-[#006C6C] transition-colors hover:border-[#006C6C]"
+              >
+                <ArrowUp size={16} aria-hidden="true" />
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -486,10 +508,7 @@ function ProjectCard({
           <ul className="mt-4 space-y-2 text-sm leading-6 text-[#17202A]/65">
             {project.details.map((detail) => (
               <li key={detail} className="flex gap-2">
-                <span
-                  aria-hidden="true"
-                  className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#AA800E]"
-                />
+                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#AA800E]" />
                 <span>{detail}</span>
               </li>
             ))}
